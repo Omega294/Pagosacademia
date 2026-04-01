@@ -13,7 +13,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="dark-theme">
-    <div class="app-container">
+    <!-- Login View -->
+    <div id="view-login" class="login-view">
+        <div class="login-card glass-panel bounce-in">
+            <div class="logo large">
+                <i class="fas fa-graduation-cap"></i>
+                <span>ACADEMIA</span>
+            </div>
+            <h3>Gestión de Pagos</h3>
+            <div class="form-group">
+                <input type="password" id="login-password" placeholder="Ingrese contraseña de admin">
+                <p id="login-error" class="login-error hidden">Contraseña incorrecta</p>
+            </div>
+            <button id="btn-do-login" class="btn-primary full-width">Iniciar Sesión</button>
+        </div>
+    </div>
+
+    <div class="app-container hidden" id="app-container">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -23,11 +39,11 @@
                 </div>
             </div>
             <nav class="sidebar-nav">
-                <ul>
-                    <li class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> Dashboard</li>
-                    <li data-page="students"><i class="fas fa-users"></i> Estudiantes</li>
-                    <li data-page="payments"><i class="fas fa-money-bill-wave"></i> Registrar Pago</li>
-                    <li data-page="inventory"><i class="fas fa-box-open"></i> Material POP</li>
+                <ul id="main-nav">
+                    <li class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> <span>Dashboard</span></li>
+                    <li data-page="students"><i class="fas fa-users"></i> <span>Estudiantes</span></li>
+                    <li data-page="payments"><i class="fas fa-money-bill-wave"></i> <span>Registrar Pago</span></li>
+                    <li data-page="inventory"><i class="fas fa-box-open"></i> <span>Material POP</span></li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
