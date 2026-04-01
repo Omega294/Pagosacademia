@@ -11,6 +11,18 @@
     <link rel="stylesheet" href="style.css">
     <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .pass-container { position: relative; width: 100%; }
+        .toggle-pass {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body class="dark-theme">
     <!-- Login View -->
@@ -22,10 +34,13 @@
             </div>
             <h3>Gestión de Pagos</h3>
             <div class="form-group">
-                <input type="password" id="login-password" placeholder="Ingrese contraseña de admin">
+                <div class="pass-container">
+                    <input type="password" id="login-password" placeholder="Contraseña: admin123" autocomplete="off">
+                    <i class="fas fa-eye toggle-pass" id="toggle-p"></i>
+                </div>
                 <p id="login-error" class="login-error hidden">Contraseña incorrecta</p>
             </div>
-            <button id="btn-do-login" class="btn-primary full-width">Iniciar Sesión</button>
+            <button id="btn-do-login" class="btn-primary full-width">ENTRAR</button>
         </div>
     </div>
 

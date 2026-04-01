@@ -21,9 +21,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     initElements();
     updateAuthUI();
     
+    // Toggle Visibility
+    const toggler = document.getElementById('toggle-p');
+    if (toggler) {
+        toggler.onclick = () => {
+            const pin = document.getElementById('login-password');
+            const isPass = pin.type === 'password';
+            pin.type = isPass ? 'text' : 'password';
+            toggler.className = isPass ? 'fas fa-eye-slash toggle-pass' : 'fas fa-eye toggle-pass';
+        };
+    }
+
     // Auth Button
-    document.getElementById('btn-do-login').onclick = handleLogin;
-    document.getElementById('login-password').onkeypress = (e) => e.key === 'Enter' && handleLogin();
+    const loginBtn = document.getElementById('btn-do-login');
+    if (loginBtn) {
+        loginBtn.onclick = handleLogin;
+    }
+    
+    const loginPass = document.getElementById('login-password');
+    if (loginPass) {
+        loginPass.onkeypress = (e) => e.key === 'Enter' && handleLogin();
+    }
 
     if (session) {
         await startApp();
@@ -51,21 +69,21 @@ async function startApp() {
 }
 
 function handleLogin() {
-    const passInput = document.getElementById('login-password');
-    const pass = passInput.value.trim();
-    const error = document.getElementById('login-error');
+    const pw = document.getElementById('login-password');
+    const val = pw.value.trim().toLowerCase();
+    const err = document.getElementById('login-error');
     
-    console.log('Intento de login con:', pass === ADMIN_PASS ? 'Contraseña Correcta' : 'Contraseña Incorrecta');
+    console.log('Login attempt:', val);
     
-    if (pass === ADMIN_PASS || pass === 'admin123') {
+    if (val === 'admin123') {
         session = true;
         sessionStorage.setItem('academy_session', 'true');
         updateAuthUI();
         startApp();
     } else {
-        error.classList.remove('hidden');
-        passInput.value = '';
-        setTimeout(() => error.classList.add('hidden'), 3000);
+        err.classList.remove('hidden');
+        pw.value = '';
+        setTimeout(() => err.classList.add('hidden'), 2000);
     }
 }
 
