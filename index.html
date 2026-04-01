@@ -12,7 +12,13 @@
         .search-results { background:#1e293b; border-radius:10px; margin-top:5px; max-height:200px; overflow-y:auto; border:1px solid #334155; }
         .search-item { padding:10px; cursor:pointer; color:white; font-size:0.9rem; border-bottom:1px solid #334155; }
         .search-item:hover { background:#334155; }
-        .search-item.new { color:#0ea5e9; font-weight:bold; }
+        .service-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap:10px; margin-top:15px; }
+        .service-btn { background:#1e293b; border:1px solid #334155; color:white; padding:15px 10px; border-radius:10px; cursor:pointer; text-align:center; font-size:0.85rem; transition:all 0.2s; }
+        .service-btn:hover { border-color:#0ea5e9; }
+        .service-btn.active { background:#0ea5e9; border-color:#0ea5e9; font-weight:600; box-shadow: 0 0 10px rgba(14,165,233,0.3); }
+        .price-input-group { display:flex; align-items:center; gap:5px; margin-bottom:10px; }
+        .price-input-group label { flex:1; font-size:0.85rem; }
+        .price-input-group input { width:80px; padding:5px; text-align:right; }
     </style>
 </head>
 <body class="dark-theme">
@@ -20,10 +26,10 @@
     <div id="view-login" style="display: flex;">
         <div class="login-card glass-panel bounce-in">
             <div class="logo large"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div>
-            <h2>Gestión de Pagos</h2>
+            <h2>Gestión Administrativa</h2>
             <div class="form-group"><div style="position: relative;"><input type="password" id="login-password" placeholder="admin123"><i class="fas fa-eye" id="toggle-p" style="position: absolute; right: 10px; top: 12px; cursor: pointer;"></i></div></div>
-            <button id="btn-do-login" class="btn-primary full-width">ENTRAR</button>
-            <div id="debug-bypass" style="margin-top:20px; font-size:0.7rem; color: #64748b; cursor:pointer;" onclick="bypass()">ACCESO DE EMERGENCIA</div>
+            <button id="btn-do-login" class="btn-primary full-width">INGRESAR</button>
+            <div id="debug-bypass" style="margin-top:20px; font-size:0.7rem; color: #64748b; cursor:pointer;" onclick="bypass()">OVERRIDE SEGURIDAD</div>
         </div>
     </div>
 
@@ -35,13 +41,13 @@
                 <ul id="main-nav">
                     <li class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> <span>Dashboard</span></li>
                     <li data-page="students"><i class="fas fa-users"></i> <span>Alumnos</span></li>
-                    <li data-page="payments"><i class="fas fa-money-bill-wave"></i> <span>Cobrar</span></li>
-                    <li data-page="inventory"><i class="fas fa-box-open"></i> <span>Material POP</span></li>
+                    <li data-page="payments"><i class="fas fa-money-bill-wave"></i> <span>Facturar</span></li>
+                    <li data-page="inventory"><i class="fas fa-box-open"></i> <span>Catálogo POP</span></li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <div class="cloud-status" id="cloud-status"><i class="fas fa-cloud"></i> <span>Nube</span> <button id="open-sync-settings"><i class="fas fa-cog"></i></button></div>
-                <div class="currency-status"><label>Tasa:</label> <input type="number" id="global-rate" value="40.0" step="0.1"></div>
+                <div class="cloud-status"><i class="fas fa-cog"></i> <span>Ajustar Precios</span> <button id="open-price-settings" class="btn-icon"><i class="fas fa-sliders-h"></i></button></div>
+                <div class="currency-status" style="border-top:1px solid #334155; padding-top:10px;"><label>Tasa USD:</label> <input type="number" id="global-rate" value="40.0" step="0.1"></div>
             </div>
         </aside>
 
@@ -53,165 +59,243 @@
 
             <div id="content-area">
                 <section id="dashboard" class="page-section active">
-                    <div class="welcome-banner"><h1>Dashboard</h1><p>Panel de ingresos diarios</p></div>
+                    <div class="welcome-banner"><h1>Resumen de Operaciones</h1><p id="current-day-label">Ventas y Mensualidades</p></div>
                     <div class="stats-grid">
-                        <div class="stat-card glass-panel"><h3>Totales (USD)</h3><p id="stat-total-income">$ 0.00</p></div>
-                        <div class="stat-card glass-panel"><h3>Totales (BS)</h3><p id="stat-total-income-bs">0 BS</p></div>
+                        <div class="stat-card glass-panel"><h3>Ingresos Totales (USD)</h3><p id="stat-total-income">$ 0.00</p></div>
+                        <div class="stat-card glass-panel"><h3>Ingresos Totales (BS)</h3><p id="stat-total-income-bs">0 BS</p></div>
                         <div class="stat-card glass-panel"><h3>Alumnos</h3><p id="stat-active-students">0</p></div>
                     </div>
-                    <div class="glass-panel" style="margin-top:20px; padding:20px;"><table style="width:100%; border-collapse:collapse;" id="recent-payments-table"><tbody id="recent-payments-body"></tbody></table></div>
+                    <div class="glass-panel" style="margin-top:20px; padding:20px;"><h2>Actividad Reciente</h2><table style="width:100%; border-collapse:collapse;" id="recent-payments-table"><tbody id="recent-payments-body"></tbody></table></div>
                 </section>
 
                 <section id="students" class="page-section">
-                    <div class="page-header"><h2>Alumnos Registrados</h2> <button class="btn-primary" id="btn-new-student">Registrar Nuevo</button></div>
-                    <div class="glass-panel"><table style="width:100%;"><thead><tr align="left"><th>Nombre</th><th>Cédula</th><th>Cat.</th><th>Acciones</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
+                    <div class="page-header"><h2>Gestión de Alumnos</h2> <button class="btn-primary" id="btn-new-student">NUEVO FICHA</button></div>
+                    <div class="glass-panel"><table style="width:100%;"><thead><tr align="left"><th>Nombre / CI</th><th>Categoría</th><th>Asistencia</th><th>Acciones</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
                 </section>
 
                 <section id="payments" class="page-section">
-                    <div class="page-header"><h2>Registrar Cobro</h2></div>
-                    <div class="glass-panel" style="padding:30px; max-width:600px; margin:0 auto;">
+                    <div class="page-header"><h2>Facturación de Cobros</h2></div>
+                    <div class="glass-panel" style="padding:25px; max-width:800px; margin:0 auto;">
                         <div class="form-group">
-                            <label>Buscar Alumno (Nombre o Cédula)</label>
-                            <input type="text" id="pay-student-search" placeholder="Escriba para buscar..." class="full-width">
+                            <label>1. Buscar Alumno por Nombre o Cédula</label>
+                            <input type="text" id="pay-student-search" placeholder="Buscar..." class="full-width">
                             <div id="search-results-list" class="search-results hidden"></div>
                         </div>
 
-                        <form id="payment-form">
-                            <input type="hidden" id="pay-student-id">
-                            <div id="selected-student-box" class="glass-panel" style="padding:15px; margin-bottom:20px; display:none; border-color:#0ea5e9;">
-                                <p style="margin:0; font-weight:bold; color:#0ea5e9;"><i class="fas fa-user-check"></i> Alumno Seleccionado:</p>
-                                <p id="selected-student-name" style="margin:5px 0 0 0; font-size:1.1rem;"></p>
+                        <div id="selected-student-box" class="glass-panel" style="padding:15px; margin-bottom:20px; display:none; border-color:#0ea5e9;">
+                            <p style="margin:0; font-weight:bold; color:#0ea5e9;"><i class="fas fa-check-circle"></i> Alumno:</p>
+                            <p id="selected-student-name" style="margin:5px 0 0 0; font-size:1.1rem;"></p>
+                        </div>
+
+                        <div id="payment-flow-fields" class="hidden">
+                            <label>2. Seleccione el Servicio o Producto</label>
+                            <div class="service-grid" id="service-chips-container">
+                                <!-- Service buttons will be injected here -->
                             </div>
 
-                            <div class="form-group"><label>Servicio Académico / Producto</label>
-                            <select id="pay-service" class="full-width">
-                                <optgroup label="Servicios">
-                                    <option value="Práctica General">Práctica General</option>
-                                    <option value="Mensualidad">Mensualidad (1 Mes)</option>
-                                    <option value="Membresía 3 Meses">Membresía 3 Meses</option>
-                                    <option value="Membresía 6 Meses">Membresía 6 Meses</option>
-                                </optgroup>
-                                <optgroup label="Uniforme">
-                                    <option value="Inscripción">Inscripción</option>
-                                    <option value="Camisa">Camisa Oficial</option>
-                                    <option value="Shorts">Shorts Academia</option>
-                                    <option value="Gorra">Gorra Academia</option>
-                                </optgroup>
-                            </select></div>
-                            <div class="form-group"><label>Monto</label><div style="display:flex; gap:10px;"><input type="number" id="pay-amount" placeholder="0.00" step="0.01" required style="flex:1;"><select id="pay-currency"><option value="USD">USD</option><option value="BS">BS</option></select></div></div>
-                            <button type="submit" id="btn-save-payment" class="btn-primary full-width" style="margin-top:20px; padding:15px;" disabled>PROCESAR COBRO</button>
-                        </form>
+                            <form id="payment-form" style="margin-top:25px; padding-top:20px; border-top:1px solid #334155;">
+                                <input type="hidden" id="pay-student-id">
+                                <input type="hidden" id="pay-service-selected">
+                                
+                                <div style="display:flex; gap:20px;">
+                                    <div class="form-group" style="flex:1;">
+                                        <label>Precio Unitario (USD)</label>
+                                        <input type="number" id="pay-amount" step="0.01" required class="full-width">
+                                    </div>
+                                    <div class="form-group" style="flex:1;">
+                                        <label>Moneda de Pago</label>
+                                        <select id="pay-currency" class="full-width"><option value="USD">USD ($)</option><option value="BS">BOLIVARES (BS)</option></select>
+                                    </div>
+                                </div>
+
+                                <div id="payment-summary-text" style="background:#0f172a; padding:15px; border-radius:10px; margin-top:10px; display:none;">
+                                    <p id="summary-display" style="margin:0; font-weight:600; color:#0ea5e9;"></p>
+                                </div>
+
+                                <button type="submit" class="btn-primary full-width" style="margin-top:20px; padding:15px; font-weight:bold;">CONFIRMAR Y GUARDAR FACTURA</button>
+                            </form>
+                        </div>
                     </div>
                 </section>
 
                 <section id="inventory" class="page-section">
-                    <div class="page-header"><h2>Material POP</h2></div>
-                    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:20px;">
-                        <div class="pop-card glass-panel" style="padding:25px; text-align:center;"><h4>Camisa</h4><p>$25</p><button onclick="buyPop('Camisa', 25)" class="btn-primary full-width">VENDER</button></div>
-                        <div class="pop-card glass-panel" style="padding:25px; text-align:center;"><h4>Gorra</h4><p>$15</p><button onclick="buyPop('Gorra', 15)" class="btn-primary full-width">VENDER</button></div>
-                        <div class="pop-card glass-panel" style="padding:25px; text-align:center;"><h4>Shorts</h4><p>$20</p><button onclick="buyPop('Shorts', 20)" class="btn-primary full-width">VENDER</button></div>
-                    </div>
+                    <div class="page-header"><h2>Catálogo de Ventas POP</h2></div>
+                    <div id="pop-catalog-view" class="pop-catalog-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:20px;"></div>
                 </section>
             </div>
         </main>
     </div>
 
     <!-- Modals -->
+    <div id="modal-prices" class="modal hidden">
+        <div class="modal-content glass-panel" style="width:400px; padding:25px;">
+            <h2 style="margin-bottom:20px;">Configurar Precios (USD)</h2>
+            <div id="price-settings-list" style="max-height:400px; overflow-y:auto; padding-right:10px;"></div>
+            <hr style="margin:20px 0; border-color:#334155;">
+            <button onclick="saveAllPrices()" class="btn-primary full-width">GUARDAR TODO</button>
+            <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:10px;">CERRAR</button>
+        </div>
+    </div>
+
     <div id="modal-student" class="modal hidden">
         <div class="modal-content glass-panel" style="width:340px; padding:25px;">
-            <h2 style="margin-bottom:20px;">Registrar Alumno</h2>
+            <h2>Nuevo Registro</h2>
             <form id="student-form">
                 <input type="hidden" id="st-auto-select" value="false">
-                <div class="form-group"><label>Cédula</label><input type="text" id="st-cedula" placeholder="Ej: 30123456" class="full-width"></div>
-                <div class="form-group"><label>Nombre Completo</label><input type="text" id="st-name" placeholder="Ej: Juan Perez" required class="full-width"></div>
-                <div class="form-group"><label>Categoría</label><select id="st-cat" class="full-width"><option value="Infantil">Infantil</option><option value="Juvenil">Juvenil</option><option value="Adulto">Adulto</option></select></div>
-                <button type="submit" class="btn-primary full-width" style="padding:12px;">GUARDAR</button>
-                <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:10px; background:none; border:1px solid #334155;">CANCELAR</button>
+                <div class="form-group"><label>Cédula</label><input type="text" id="st-cedula" class="full-width"></div>
+                <div class="form-group"><label>Nombre Completo</label><input type="text" id="st-name" required class="full-width"></div>
+                <div class="form-group"><label>Categoria</label><select id="st-cat" class="full-width"><option value="Infantil">Infantil</option><option value="Juvenil">Juvenil</option><option value="Adulto">Adulto</option></select></div>
+                <button type="submit" class="btn-primary full-width">GUARDAR FICHA</button>
+                <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:5px;">SALIR</button>
             </form>
         </div>
     </div>
 
     <script>
-        var state = { students: [], payments: [], rate: 40.0, session: false };
+        var state = { 
+            students: [], 
+            payments: [], 
+            rate: 40.0, 
+            prices: {
+                'Práctica General': 10,
+                'Mensualidad': 40,
+                'Membresía 3 Meses': 110,
+                'Membresía 6 Meses': 200,
+                'Inscripción': 15,
+                'Camisa': 25,
+                'Gorra': 15,
+                'Shorts': 20
+            }
+        };
 
-        function loadLocal() {
+        function initApp() {
             try {
                 if(window.localStorage) {
                     state.students = JSON.parse(localStorage.getItem('acad_st')) || [];
                     state.payments = JSON.parse(localStorage.getItem('acad_pay')) || [];
                     state.rate = parseFloat(localStorage.getItem('acad_rate')) || 40.0;
+                    var savedPrices = JSON.parse(localStorage.getItem('acad_prices'));
+                    if(savedPrices) state.prices = savedPrices;
                     if(sessionStorage.getItem('acad_session')==='true') bypass();
                 }
             } catch(e){}
         }
 
-        function saveLocal() {
+        function saveAll() {
             try {
                 localStorage.setItem('acad_st', JSON.stringify(state.students));
                 localStorage.setItem('acad_pay', JSON.stringify(state.payments));
                 localStorage.setItem('acad_rate', state.rate);
+                localStorage.setItem('acad_prices', JSON.stringify(state.prices));
             } catch(e){}
         }
 
         function bypass() {
-            state.session = true;
             document.getElementById('view-login').style.display='none';
             document.getElementById('app-container').style.display='flex';
             document.getElementById('app-container').classList.remove('hidden');
+            document.getElementById('global-rate').value = state.rate;
             renderDashboard();
             initNav();
-            document.getElementById('global-rate').value = state.rate;
+            renderCatalog();
         }
 
         window.onload = function() {
-            loadLocal();
+            initApp();
             document.getElementById('btn-do-login').onclick = function() {
                 var p = document.getElementById('login-password').value.trim().toLowerCase();
-                if(p==='admin123' || p==='entrar' || p==='godmode') {
-                    try { sessionStorage.setItem('acad_session', 'true'); } catch(e){}
-                    bypass();
-                } else { alert("Acceso denegado"); }
+                if(p==='admin123' || p==='entrar') { try { sessionStorage.setItem('acad_session', 'true'); } catch(e){} bypass(); }
+                else { alert("Acceso Incorrecto"); }
             };
             document.getElementById('toggle-p').onclick = function() {
                 var p = document.getElementById('login-password');
                 p.type = p.type === 'password' ? 'text' : 'password';
             };
-            // Search LOGIC
+            document.getElementById('global-rate').onchange = function() {
+                state.rate = parseFloat(this.value) || 40.0;
+                saveAll();
+                renderDashboard();
+            };
             document.getElementById('pay-student-search').oninput = function() {
                 var q = this.value.toLowerCase().trim();
                 var results = document.getElementById('search-results-list');
                 if(!q) { results.classList.add('hidden'); return; }
-                
-                var filtered = state.students.filter(function(s){
-                    return s.name.toLowerCase().includes(q) || (s.cedula || "").includes(q);
-                });
-
-                var html = filtered.map(function(s){
-                    return `<div class="search-item" onclick="selectStudent('${s.id}', '${s.name}')">${s.name} <small>(${s.cedula||'No CI'})</small></div>`;
-                }).join('');
-
-                html += `<div class="search-item new" onclick="quickNewStudent('${q}')"><i class="fas fa-plus"></i> Registrar nuevo: "${q}"</div>`;
-                
+                var filtered = state.students.filter(function(s){ return s.name.toLowerCase().includes(q) || (s.cedula||"").includes(q); });
+                var html = filtered.map(function(s){ return `<div class="search-item" onclick="selectStudent('${s.id}', '${s.name}')">${s.name} <small>(${s.cedula||'No CI'})</small></div>`; }).join('');
+                html += `<div class="search-item" onclick="quickNewStudent('${q}')" style="color:#0ea5e9; font-weight:bold;">+ Registrar Nuevo: "${q}"</div>`;
                 results.innerHTML = html;
                 results.classList.remove('hidden');
             };
+            document.getElementById('open-price-settings').onclick = renderPriceSettings;
+            document.getElementById('pay-amount').oninput = updateLiveSummary;
+            document.getElementById('pay-currency').onchange = updateLiveSummary;
         };
+
+        function renderChips() {
+            var container = document.getElementById('service-chips-container');
+            container.innerHTML = Object.keys(state.prices).map(function(key){
+                return `<div class="service-btn" id="chip-${key.replace(/\s/g, '')}" onclick="selectService('${key}')">${key}<br><b>$${state.prices[key]}</b></div>`;
+            }).join('');
+        }
+
+        function selectService(key) {
+            document.querySelectorAll('.service-btn').forEach(function(b){ b.classList.remove('active'); });
+            document.getElementById('chip-'+key.replace(/\s/g, '')).classList.add('active');
+            document.getElementById('pay-service-selected').value = key;
+            document.getElementById('pay-amount').value = state.prices[key];
+            updateLiveSummary();
+        }
+
+        function updateLiveSummary() {
+            var amt = parseFloat(document.getElementById('pay-amount').value) || 0;
+            var cur = document.getElementById('pay-currency').value;
+            var summary = document.getElementById('payment-summary-text');
+            var disp = document.getElementById('summary-display');
+            var rate = state.rate;
+            
+            if(amt <= 0) { summary.style.display = 'none'; return; }
+            summary.style.display = 'block';
+            
+            if(cur === 'USD') {
+                disp.innerHTML = `Total USD: $${amt.toFixed(2)} &nbsp; | &nbsp; Total BS: ${(amt * rate).toFixed(2)} BS`;
+            } else {
+                disp.innerHTML = `Total BS: ${amt.toFixed(2)} BS &nbsp; | &nbsp; Total USD: $${(amt / rate).toFixed(2)}`;
+            }
+        }
+
+        function renderPriceSettings() {
+            var list = document.getElementById('price-settings-list');
+            list.innerHTML = Object.keys(state.prices).map(function(key){
+                return `<div class="price-input-group"><label>${key}</label><input type="number" step="0.1" value="${state.prices[key]}" id="price-set-${key.replace(/\s/g, '')}"></div>`;
+            }).join('');
+            document.getElementById('modal-prices').style.display = 'flex';
+        }
+
+        function saveAllPrices() {
+            Object.keys(state.prices).forEach(function(key){
+                var val = parseFloat(document.getElementById('price-set-'+key.replace(/\s/g, '')).value);
+                state.prices[key] = val || 0;
+            });
+            saveAll();
+            closeModals();
+            renderCatalog();
+            alert("Precios actualizados");
+        }
 
         function selectStudent(id, name) {
             document.getElementById('pay-student-id').value = id;
             document.getElementById('selected-student-name').innerText = name;
-            document.getElementById('selected-student-box').style.display = 'block';
+            document.getElementById('selected-student-box').style.display='block';
+            document.getElementById('payment-flow-fields').classList.remove('hidden');
             document.getElementById('search-results-list').classList.add('hidden');
-            document.getElementById('pay-student-search').value = name;
-            document.getElementById('btn-save-payment').disabled = false;
+            renderChips();
         }
 
-        function quickNewStudent(name) {
-            document.getElementById('st-auto-select').value = "true";
-            document.getElementById('st-name').value = isNaN(name) ? name.toUpperCase() : "";
-            document.getElementById('st-cedula').value = !isNaN(name) ? name : "";
+        function quickNewStudent(n) {
+            document.getElementById('st-auto-select').value='true';
+            document.getElementById('st-name').value = isNaN(n) ? n.toUpperCase() : "";
+            document.getElementById('st-cedula').value = !isNaN(n) ? n : "";
             document.getElementById('modal-student').style.display='flex';
-            document.getElementById('search-results-list').classList.add('hidden');
         }
 
         function initNav() {
@@ -224,10 +308,10 @@
                     li.classList.add('active');
                     if(pg==='dashboard') renderDashboard();
                     if(pg==='students') renderStudents();
-                    if(pg==='payments') {
-                        document.getElementById('payment-form').reset();
-                        document.getElementById('selected-student-box').style.display = 'none';
-                        document.getElementById('btn-save-payment').disabled = true;
+                    if(pg==='payments') { 
+                        document.getElementById('selected-student-box').style.display='none';
+                        document.getElementById('payment-flow-fields').classList.add('hidden');
+                        document.getElementById('pay-student-search').value="";
                     }
                 };
             });
@@ -238,14 +322,21 @@
             document.getElementById('stat-total-income').innerText = '$ ' + total.toFixed(2);
             document.getElementById('stat-total-income-bs').innerText = (total * state.rate).toFixed(2) + ' BS';
             document.getElementById('stat-active-students').innerText = state.students.length;
-            document.getElementById('recent-payments-body').innerHTML = state.payments.slice(0,8).map(function(p){
-                return `<tr style="border-bottom:1px solid #334155"><td style="padding:12px">${p.name}</td><td>${p.srv}</td><td align="right" style="color:#0ea5e9;">$ ${p.usd.toFixed(2)}</td></tr>`;
+            document.getElementById('recent-payments-body').innerHTML = state.payments.slice(0,5).map(function(p){
+                return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${p.name}</td><td>${p.srv}</td><td align="right">$ ${p.usd.toFixed(2)}</td></tr>`;
             }).join('');
         }
 
         function renderStudents() {
             document.getElementById('students-table-body').innerHTML = state.students.map(function(s){
-                return `<tr style="border-bottom:1px solid #334155"><td style="padding:12px">${s.name}</td><td>${s.cedula||'---'}</td><td>${s.cat}</td><td align="center"><button class="btn-small" onclick="delSt('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
+                return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${s.name}</td><td align="center">${s.cat}</td><td align="center">Lunes/Martes</td><td align="center"><button class="btn-small" onclick="delSt('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
+            }).join('');
+        }
+
+        function renderCatalog() {
+            var pk = ['Camisa','Gorra','Shorts'];
+            document.getElementById('pop-catalog-view').innerHTML = pk.map(function(k){
+                return `<div class="pop-card glass-panel" style="padding:20px; text-align:center;"><h4>${k}</h4><b>$ ${state.prices[k]}</b><p>${(state.prices[k] * state.rate).toFixed(2)} BS</p><button class="btn-primary full-width" onclick="buyPop('${k}', ${state.prices[k]})">Vender</button></div>`;
             }).join('');
         }
 
@@ -253,41 +344,41 @@
             e.preventDefault();
             var id = Date.now();
             var name = document.getElementById('st-name').value.toUpperCase();
-            var s = { id: id, name: name, cedula: document.getElementById('st-cedula').value, cat: document.getElementById('st-cat').value };
-            state.students.push(s);
-            saveLocal();
+            state.students.push({ id: id, name: name, cedula: document.getElementById('st-cedula').value, cat: document.getElementById('st-cat').value });
+            saveAll();
             closeModals();
             renderStudents();
-            if(document.getElementById('st-auto-select').value === "true") selectStudent(id, name);
-            alert("Alumno Guardado");
+            if(document.getElementById('st-auto-select').value==='true') selectStudent(id, name);
+            alert("Guardado");
         };
 
-        document.getElementById('payment-form').onsubmit = function(e) {
+        document.getElementById('payment-form').onsubmit = function(e){
             e.preventDefault();
             var sid = document.getElementById('pay-student-id').value;
-            var stu = state.students.find(function(s){ return s.id == sid; });
+            var stu = state.students.find(function(s){ return s.id==sid; });
+            var srv = document.getElementById('pay-service-selected').value;
             var amt = parseFloat(document.getElementById('pay-amount').value);
             var cur = document.getElementById('pay-currency').value;
             var usd = cur === 'USD' ? amt : amt / state.rate;
-            state.payments.unshift({ id: Date.now(), name: stu?stu.name:'Anónimo', srv: document.getElementById('pay-service').value, usd: usd, date: new Date().toLocaleDateString() });
-            saveLocal();
+            if(!srv) { alert("Seleccione un servicio"); return; }
+            state.payments.unshift({ id:Date.now(), name:stu?stu.name:'Anon', srv: srv, usd: usd });
+            saveAll();
             renderDashboard();
             this.reset();
-            document.getElementById('selected-student-box').style.display = 'none';
-            document.getElementById('btn-save-payment').disabled = true;
-            alert("Pago Procesado con éxito");
+            document.getElementById('selected-student-box').style.display='none';
+            document.getElementById('payment-flow-fields').classList.add('hidden');
+            alert("Operación exitosa");
         };
 
-        function buyPop(item, price) {
-            state.payments.unshift({ id: Date.now(), name: 'Venta Directa', srv: 'POP: '+item, usd: price, date: new Date().toLocaleDateString() });
-            saveLocal();
+        function buyPop(k, p) {
+            state.payments.unshift({ id:Date.now(), name: 'Venta POP', srv: k, usd: p });
+            saveAll();
             renderDashboard();
-            alert("Venta registrada");
+            alert("Registrado");
         }
 
-        function delSt(id) { if(confirm("¿Borrar?")) { state.students = state.students.filter(function(s){ return s.id != id; }); saveLocal(); renderStudents(); } }
+        function delSt(i) { if(confirm("Borrar?")) { state.students = state.students.filter(function(s){ return s.id!=i; }); saveAll(); renderStudents(); } }
         function closeModals() { document.querySelectorAll('.modal').forEach(function(m){ m.style.display='none'; }); }
-        document.getElementById('btn-new-student').onclick = function() { document.getElementById('student-form').reset(); document.getElementById('st-auto-select').value='false'; document.getElementById('modal-student').style.display='flex'; };
     </script>
 </body>
 </html>
