@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia - Sistema Administrativo</title>
+    <title>Academia - Gestión de Pagos</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -42,12 +42,12 @@
                     <li class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> <span>Dashboard</span></li>
                     <li data-page="students"><i class="fas fa-users"></i> <span>Alumnos</span></li>
                     <li data-page="payments"><i class="fas fa-money-bill-wave"></i> <span>Facturar</span></li>
-                    <li data-page="inventory"><i class="fas fa-box-open"></i> <span>Catálogo POP</span></li>
+                    <li data-page="inventory"><i class="fas fa-box-open"></i> <span>POP</span></li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <div class="cloud-status"><i class="fas fa-cog"></i> <span>Ajustar Precios</span> <button id="open-price-settings" class="btn-icon"><i class="fas fa-sliders-h"></i></button></div>
-                <div class="currency-status" style="border-top:1px solid #334155; padding-top:10px;"><label>Tasa USD:</label> <input type="number" id="global-rate" value="40.0" step="0.1"></div>
+                <div class="cloud-status"><i class="fas fa-cog"></i> <span>Precios</span> <button id="open-price-settings" class="btn-icon"><i class="fas fa-sliders-h"></i></button></div>
+                <div class="currency-status" style="border-top:1px solid #334155; padding-top:10px;"><label>Tasa:</label> <input type="number" id="global-rate" value="40.0" step="0.1"></div>
             </div>
         </aside>
 
@@ -59,67 +59,39 @@
 
             <div id="content-area">
                 <section id="dashboard" class="page-section active">
-                    <div class="welcome-banner"><h1>Resumen de Operaciones</h1><p id="current-day-label">Ventas y Mensualidades</p></div>
+                    <div class="welcome-banner"><h1>Resumen Diario</h1><p>Operaciones del sistema</p></div>
                     <div class="stats-grid">
-                        <div class="stat-card glass-panel"><h3>Ingresos Totales (USD)</h3><p id="stat-total-income">$ 0.00</p></div>
-                        <div class="stat-card glass-panel"><h3>Ingresos Totales (BS)</h3><p id="stat-total-income-bs">0 BS</p></div>
+                        <div class="stat-card glass-panel"><h3>USD Hoy</h3><p id="stat-total-income">$ 0.00</p></div>
+                        <div class="stat-card glass-panel"><h3>BS Hoy</h3><p id="stat-total-income-bs">0 BS</p></div>
                         <div class="stat-card glass-panel"><h3>Alumnos</h3><p id="stat-active-students">0</p></div>
                     </div>
-                    <div class="glass-panel" style="margin-top:20px; padding:20px;"><h2>Actividad Reciente</h2><table style="width:100%; border-collapse:collapse;" id="recent-payments-table"><tbody id="recent-payments-body"></tbody></table></div>
+                    <div class="glass-panel" style="margin-top:20px; padding:20px;"><h2>Ventas Recientes</h2><table style="width:100%;" id="recent-payments-table"><tbody id="recent-payments-body"></tbody></table></div>
                 </section>
 
                 <section id="students" class="page-section">
-                    <div class="page-header"><h2>Gestión de Alumnos</h2> <button class="btn-primary" id="btn-new-student">NUEVO FICHA</button></div>
-                    <div class="glass-panel"><table style="width:100%;"><thead><tr align="left"><th>Nombre / CI</th><th>Categoría</th><th>Asistencia</th><th>Acciones</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
+                    <div class="page-header"><h2>Gestión de Alumnos</h2> <button class="btn-primary" id="btn-new-student">NUEVO ALUMNO</button></div>
+                    <div class="glass-panel"><table style="width:100%;"><thead><tr align="left"><th>Nombre</th><th>Cédula</th><th>Categoría</th><th>Acciones</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
                 </section>
 
                 <section id="payments" class="page-section">
-                    <div class="page-header"><h2>Facturación de Cobros</h2></div>
+                    <div class="page-header"><h2>Facturación Electrónica</h2></div>
                     <div class="glass-panel" style="padding:25px; max-width:800px; margin:0 auto;">
-                        <div class="form-group">
-                            <label>1. Buscar Alumno por Nombre o Cédula</label>
-                            <input type="text" id="pay-student-search" placeholder="Buscar..." class="full-width">
-                            <div id="search-results-list" class="search-results hidden"></div>
-                        </div>
-
-                        <div id="selected-student-box" class="glass-panel" style="padding:15px; margin-bottom:20px; display:none; border-color:#0ea5e9;">
-                            <p style="margin:0; font-weight:bold; color:#0ea5e9;"><i class="fas fa-check-circle"></i> Alumno:</p>
-                            <p id="selected-student-name" style="margin:5px 0 0 0; font-size:1.1rem;"></p>
-                        </div>
-
+                        <div class="form-group"><label>1. Buscar Alumno</label><input type="text" id="pay-student-search" placeholder="Nombre o Cédula..." class="full-width"><div id="search-results-list" class="search-results hidden"></div></div>
+                        <div id="selected-student-box" class="glass-panel" style="padding:15px; margin-bottom:20px; display:none; border-color:#0ea5e9;"><p style="margin:0; font-weight:bold; color:#0ea5e9;"><i class="fas fa-check-circle"></i> Alumno:</p><p id="selected-student-name" style="margin:5px 0 0 0; font-size:1.1rem;"></p></div>
                         <div id="payment-flow-fields" class="hidden">
-                            <label>2. Seleccione el Servicio o Producto</label>
-                            <div class="service-grid" id="service-chips-container">
-                                <!-- Service buttons will be injected here -->
-                            </div>
-
+                            <label>2. Seleccione el Servicio/Producto</label><div class="service-grid" id="service-chips-container"></div>
                             <form id="payment-form" style="margin-top:25px; padding-top:20px; border-top:1px solid #334155;">
-                                <input type="hidden" id="pay-student-id">
-                                <input type="hidden" id="pay-service-selected">
-                                
-                                <div style="display:flex; gap:20px;">
-                                    <div class="form-group" style="flex:1;">
-                                        <label>Precio Unitario (USD)</label>
-                                        <input type="number" id="pay-amount" step="0.01" required class="full-width">
-                                    </div>
-                                    <div class="form-group" style="flex:1;">
-                                        <label>Moneda de Pago</label>
-                                        <select id="pay-currency" class="full-width"><option value="USD">USD ($)</option><option value="BS">BOLIVARES (BS)</option></select>
-                                    </div>
-                                </div>
-
-                                <div id="payment-summary-text" style="background:#0f172a; padding:15px; border-radius:10px; margin-top:10px; display:none;">
-                                    <p id="summary-display" style="margin:0; font-weight:600; color:#0ea5e9;"></p>
-                                </div>
-
-                                <button type="submit" class="btn-primary full-width" style="margin-top:20px; padding:15px; font-weight:bold;">CONFIRMAR Y GUARDAR FACTURA</button>
+                                <input type="hidden" id="pay-student-id"><input type="hidden" id="pay-service-selected">
+                                <div style="display:flex; gap:20px;"><div class="form-group" style="flex:1;"><label>Monto</label><input type="number" id="pay-amount" step="0.01" required class="full-width"></div><div class="form-group" style="flex:1;"><label>Moneda</label><select id="pay-currency" class="full-width"><option value="USD">USD ($)</option><option value="BS">BS</option></select></div></div>
+                                <div id="payment-summary-text" style="background:#0f172a; padding:15px; border-radius:10px; margin-top:10px; display:none;"><p id="summary-display" style="margin:0; font-weight:600; color:#0ea5e9;"></p></div>
+                                <button type="submit" class="btn-primary full-width" style="margin-top:20px; padding:15px;">PROCESAR PAGO</button>
                             </form>
                         </div>
                     </div>
                 </section>
 
                 <section id="inventory" class="page-section">
-                    <div class="page-header"><h2>Catálogo de Ventas POP</h2></div>
+                    <div class="page-header"><h2>Material POP</h2></div>
                     <div id="pop-catalog-view" class="pop-catalog-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap:20px;"></div>
                 </section>
             </div>
@@ -129,11 +101,10 @@
     <!-- Modals -->
     <div id="modal-prices" class="modal hidden">
         <div class="modal-content glass-panel" style="width:400px; padding:25px;">
-            <h2 style="margin-bottom:20px;">Configurar Precios (USD)</h2>
-            <div id="price-settings-list" style="max-height:400px; overflow-y:auto; padding-right:10px;"></div>
-            <hr style="margin:20px 0; border-color:#334155;">
-            <button onclick="saveAllPrices()" class="btn-primary full-width">GUARDAR TODO</button>
-            <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:10px;">CERRAR</button>
+            <h2 style="margin-bottom:20px;">Configurar Precios</h2>
+            <div id="price-settings-list" style="max-height:400px; overflow-y:auto;"></div>
+            <button onclick="saveAllPrices()" class="btn-primary full-width" style="margin-top:20px;">GUARDAR</button>
+            <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:10px;">SALIR</button>
         </div>
     </div>
 
@@ -144,29 +115,15 @@
                 <input type="hidden" id="st-auto-select" value="false">
                 <div class="form-group"><label>Cédula</label><input type="text" id="st-cedula" class="full-width"></div>
                 <div class="form-group"><label>Nombre Completo</label><input type="text" id="st-name" required class="full-width"></div>
-                <div class="form-group"><label>Categoria</label><select id="st-cat" class="full-width"><option value="Infantil">Infantil</option><option value="Juvenil">Juvenil</option><option value="Adulto">Adulto</option></select></div>
-                <button type="submit" class="btn-primary full-width">GUARDAR FICHA</button>
-                <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:5px;">SALIR</button>
+                <div class="form-group"><label>Categoría</label><select id="st-cat" class="full-width"><option value="Infantil">Infantil</option><option value="Juvenil">Juvenil</option><option value="Adulto">Adulto</option></select></div>
+                <button type="submit" class="btn-primary full-width" style="margin-top:10px;">GUARDAR ALUMNO</button>
+                <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:5px;">CANCELAR</button>
             </form>
         </div>
     </div>
 
     <script>
-        var state = { 
-            students: [], 
-            payments: [], 
-            rate: 40.0, 
-            prices: {
-                'Práctica General': 10,
-                'Mensualidad': 40,
-                'Membresía 3 Meses': 110,
-                'Membresía 6 Meses': 200,
-                'Inscripción': 15,
-                'Camisa': 25,
-                'Gorra': 15,
-                'Shorts': 20
-            }
-        };
+        var state = { students: [], payments: [], rate: 40.0, prices: { 'Práctica General': 10, 'Mensualidad': 40, 'Membresía 3 Meses': 110, 'Membresía 6 Meses': 200, 'Inscripción': 15, 'Camisa': 25, 'Gorra': 15, 'Shorts': 20 } };
 
         function initApp() {
             try {
@@ -174,8 +131,7 @@
                     state.students = JSON.parse(localStorage.getItem('acad_st')) || [];
                     state.payments = JSON.parse(localStorage.getItem('acad_pay')) || [];
                     state.rate = parseFloat(localStorage.getItem('acad_rate')) || 40.0;
-                    var savedPrices = JSON.parse(localStorage.getItem('acad_prices'));
-                    if(savedPrices) state.prices = savedPrices;
+                    var sp = JSON.parse(localStorage.getItem('acad_prices')); if(sp) state.prices = sp;
                     if(sessionStorage.getItem('acad_session')==='true') bypass();
                 }
             } catch(e){}
@@ -204,29 +160,50 @@
             initApp();
             document.getElementById('btn-do-login').onclick = function() {
                 var p = document.getElementById('login-password').value.trim().toLowerCase();
-                if(p==='admin123' || p==='entrar') { try { sessionStorage.setItem('acad_session', 'true'); } catch(e){} bypass(); }
+                if(p==='admin123' || p==='entrar') { try { sessionStorage.setItem('acad_session','true'); } catch(e){} bypass(); }
                 else { alert("Acceso Incorrecto"); }
             };
-            document.getElementById('toggle-p').onclick = function() {
-                var p = document.getElementById('login-password');
-                p.type = p.type === 'password' ? 'text' : 'password';
-            };
-            document.getElementById('global-rate').onchange = function() {
-                state.rate = parseFloat(this.value) || 40.0;
-                saveAll();
-                renderDashboard();
-            };
+            document.getElementById('toggle-p').onclick = function() { var p = document.getElementById('login-password'); p.type = p.type === 'password' ? 'text' : 'password'; };
+            document.getElementById('global-rate').onchange = function() { state.rate = parseFloat(this.value) || 40.0; saveAll(); renderDashboard(); };
+            document.getElementById('btn-new-student').onclick = function() { document.getElementById('student-form').reset(); document.getElementById('st-auto-select').value='false'; document.getElementById('modal-student').style.display='flex'; };
+            document.getElementById('open-price-settings').onclick = renderPriceSettings;
+            
             document.getElementById('pay-student-search').oninput = function() {
                 var q = this.value.toLowerCase().trim();
-                var results = document.getElementById('search-results-list');
-                if(!q) { results.classList.add('hidden'); return; }
-                var filtered = state.students.filter(function(s){ return s.name.toLowerCase().includes(q) || (s.cedula||"").includes(q); });
-                var html = filtered.map(function(s){ return `<div class="search-item" onclick="selectStudent('${s.id}', '${s.name}')">${s.name} <small>(${s.cedula||'No CI'})</small></div>`; }).join('');
+                var res = document.getElementById('search-results-list');
+                if(!q) { res.classList.add('hidden'); return; }
+                var filt = state.students.filter(function(s){ return s.name.toLowerCase().includes(q) || (s.cedula||"").includes(q); });
+                var html = filt.map(function(s){ return `<div class="search-item" onclick="selectStudent('${s.id}', '${s.name}')">${s.name} <small>(${s.cedula||'---'})</small></div>`; }).join('');
                 html += `<div class="search-item" onclick="quickNewStudent('${q}')" style="color:#0ea5e9; font-weight:bold;">+ Registrar Nuevo: "${q}"</div>`;
-                results.innerHTML = html;
-                results.classList.remove('hidden');
+                res.innerHTML = html; res.classList.remove('hidden');
             };
-            document.getElementById('open-price-settings').onclick = renderPriceSettings;
+
+            document.getElementById('student-form').onsubmit = function(e) {
+                e.preventDefault();
+                var id = Date.now();
+                var name = document.getElementById('st-name').value.toUpperCase();
+                state.students.push({ id: id, name: name, cedula: document.getElementById('st-cedula').value, cat: document.getElementById('st-cat').value });
+                saveAll(); closeModals(); renderStudents();
+                if(document.getElementById('st-auto-select').value==='true') selectStudent(id, name);
+                alert("Guardado");
+            };
+
+            document.getElementById('payment-form').onsubmit = function(e){
+                e.preventDefault();
+                var sid = document.getElementById('pay-student-id').value;
+                var stu = state.students.find(function(s){ return s.id==sid; });
+                var srv = document.getElementById('pay-service-selected').value;
+                var amt = parseFloat(document.getElementById('pay-amount').value);
+                var cur = document.getElementById('pay-currency').value;
+                var usd = cur === 'USD' ? amt : amt / state.rate;
+                if(!srv) { alert("Seleccione un servicio"); return; }
+                state.payments.unshift({ id:Date.now(), name:stu?stu.name:'Anon', srv: srv, usd: usd });
+                saveAll(); renderDashboard(); this.reset();
+                document.getElementById('selected-student-box').style.display='none';
+                document.getElementById('payment-flow-fields').classList.add('hidden');
+                alert("Pago procesado");
+            };
+            
             document.getElementById('pay-amount').oninput = updateLiveSummary;
             document.getElementById('pay-currency').onchange = updateLiveSummary;
         };
@@ -240,7 +217,7 @@
 
         function selectService(key) {
             document.querySelectorAll('.service-btn').forEach(function(b){ b.classList.remove('active'); });
-            document.getElementById('chip-'+key.replace(/\s/g, '')).classList.add('active');
+            var cid = 'chip-'+key.replace(/\s/g, ''); if(document.getElementById(cid)) document.getElementById(cid).classList.add('active');
             document.getElementById('pay-service-selected').value = key;
             document.getElementById('pay-amount').value = state.prices[key];
             updateLiveSummary();
@@ -251,16 +228,10 @@
             var cur = document.getElementById('pay-currency').value;
             var summary = document.getElementById('payment-summary-text');
             var disp = document.getElementById('summary-display');
-            var rate = state.rate;
-            
             if(amt <= 0) { summary.style.display = 'none'; return; }
             summary.style.display = 'block';
-            
-            if(cur === 'USD') {
-                disp.innerHTML = `Total USD: $${amt.toFixed(2)} &nbsp; | &nbsp; Total BS: ${(amt * rate).toFixed(2)} BS`;
-            } else {
-                disp.innerHTML = `Total BS: ${amt.toFixed(2)} BS &nbsp; | &nbsp; Total USD: $${(amt / rate).toFixed(2)}`;
-            }
+            if(cur === 'USD') disp.innerHTML = `Monto USD: $${amt.toFixed(2)} | BS: ${(amt * state.rate).toFixed(2)} BS`;
+            else disp.innerHTML = `Monto BS: ${amt.toFixed(2)} BS | USD: $${(amt / state.rate).toFixed(2)}`;
         }
 
         function renderPriceSettings() {
@@ -276,10 +247,7 @@
                 var val = parseFloat(document.getElementById('price-set-'+key.replace(/\s/g, '')).value);
                 state.prices[key] = val || 0;
             });
-            saveAll();
-            closeModals();
-            renderCatalog();
-            alert("Precios actualizados");
+            saveAll(); closeModals(); renderCatalog(); alert("Actualizado");
         }
 
         function selectStudent(id, name) {
@@ -291,12 +259,7 @@
             renderChips();
         }
 
-        function quickNewStudent(n) {
-            document.getElementById('st-auto-select').value='true';
-            document.getElementById('st-name').value = isNaN(n) ? n.toUpperCase() : "";
-            document.getElementById('st-cedula').value = !isNaN(n) ? n : "";
-            document.getElementById('modal-student').style.display='flex';
-        }
+        function quickNewStudent(n) { document.getElementById('st-auto-select').value='true'; document.getElementById('st-name').value = isNaN(n) ? n.toUpperCase() : ""; document.getElementById('st-cedula').value = !isNaN(n) ? n : ""; document.getElementById('modal-student').style.display='flex'; }
 
         function initNav() {
             document.querySelectorAll('#main-nav li').forEach(function(li){
@@ -306,13 +269,7 @@
                     document.getElementById(pg).classList.add('active');
                     document.querySelectorAll('#main-nav li').forEach(function(i){ i.classList.remove('active'); });
                     li.classList.add('active');
-                    if(pg==='dashboard') renderDashboard();
-                    if(pg==='students') renderStudents();
-                    if(pg==='payments') { 
-                        document.getElementById('selected-student-box').style.display='none';
-                        document.getElementById('payment-flow-fields').classList.add('hidden');
-                        document.getElementById('pay-student-search').value="";
-                    }
+                    if(pg==='dashboard') renderDashboard(); else if(pg==='students') renderStudents(); else if(pg==='payments') { document.getElementById('selected-student-box').style.display='none'; document.getElementById('payment-flow-fields').classList.add('hidden'); document.getElementById('pay-student-search').value=""; }
                 };
             });
         }
@@ -322,61 +279,12 @@
             document.getElementById('stat-total-income').innerText = '$ ' + total.toFixed(2);
             document.getElementById('stat-total-income-bs').innerText = (total * state.rate).toFixed(2) + ' BS';
             document.getElementById('stat-active-students').innerText = state.students.length;
-            document.getElementById('recent-payments-body').innerHTML = state.payments.slice(0,5).map(function(p){
-                return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${p.name}</td><td>${p.srv}</td><td align="right">$ ${p.usd.toFixed(2)}</td></tr>`;
-            }).join('');
+            document.getElementById('recent-payments-body').innerHTML = state.payments.slice(0,5).map(function(p){ return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${p.name}</td><td>${p.srv}</td><td align="right">$ ${p.usd.toFixed(2)}</td></tr>`; }).join('');
         }
 
-        function renderStudents() {
-            document.getElementById('students-table-body').innerHTML = state.students.map(function(s){
-                return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${s.name}</td><td align="center">${s.cat}</td><td align="center">Lunes/Martes</td><td align="center"><button class="btn-small" onclick="delSt('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
-            }).join('');
-        }
-
-        function renderCatalog() {
-            var pk = ['Camisa','Gorra','Shorts'];
-            document.getElementById('pop-catalog-view').innerHTML = pk.map(function(k){
-                return `<div class="pop-card glass-panel" style="padding:20px; text-align:center;"><h4>${k}</h4><b>$ ${state.prices[k]}</b><p>${(state.prices[k] * state.rate).toFixed(2)} BS</p><button class="btn-primary full-width" onclick="buyPop('${k}', ${state.prices[k]})">Vender</button></div>`;
-            }).join('');
-        }
-
-        document.getElementById('student-form').onsubmit = function(e) {
-            e.preventDefault();
-            var id = Date.now();
-            var name = document.getElementById('st-name').value.toUpperCase();
-            state.students.push({ id: id, name: name, cedula: document.getElementById('st-cedula').value, cat: document.getElementById('st-cat').value });
-            saveAll();
-            closeModals();
-            renderStudents();
-            if(document.getElementById('st-auto-select').value==='true') selectStudent(id, name);
-            alert("Guardado");
-        };
-
-        document.getElementById('payment-form').onsubmit = function(e){
-            e.preventDefault();
-            var sid = document.getElementById('pay-student-id').value;
-            var stu = state.students.find(function(s){ return s.id==sid; });
-            var srv = document.getElementById('pay-service-selected').value;
-            var amt = parseFloat(document.getElementById('pay-amount').value);
-            var cur = document.getElementById('pay-currency').value;
-            var usd = cur === 'USD' ? amt : amt / state.rate;
-            if(!srv) { alert("Seleccione un servicio"); return; }
-            state.payments.unshift({ id:Date.now(), name:stu?stu.name:'Anon', srv: srv, usd: usd });
-            saveAll();
-            renderDashboard();
-            this.reset();
-            document.getElementById('selected-student-box').style.display='none';
-            document.getElementById('payment-flow-fields').classList.add('hidden');
-            alert("Operación exitosa");
-        };
-
-        function buyPop(k, p) {
-            state.payments.unshift({ id:Date.now(), name: 'Venta POP', srv: k, usd: p });
-            saveAll();
-            renderDashboard();
-            alert("Registrado");
-        }
-
+        function renderStudents() { document.getElementById('students-table-body').innerHTML = state.students.map(function(s){ return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${s.name}</td><td align="center">${s.cedula||'---'}</td><td align="center">${s.cat}</td><td align="center"><button class="btn-small" onclick="delSt('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`; }).join(''); }
+        function renderCatalog() { var pk = ['Camisa','Gorra','Shorts']; document.getElementById('pop-catalog-view').innerHTML = pk.map(function(k){ return `<div class="pop-card glass-panel" style="padding:20px; text-align:center;"><h4>${k}</h4><b>$ ${state.prices[k]}</b><p>${(state.prices[k] * state.rate).toFixed(2)} BS</p><button class="btn-primary full-width" onclick="buyPop('${k}', ${state.prices[k]})">Vender</button></div>`; }).join(''); }
+        function buyPop(k, p) { state.payments.unshift({ id:Date.now(), name: 'Venta POP', srv: k, usd: p }); saveAll(); renderDashboard(); alert("Registrado"); }
         function delSt(i) { if(confirm("Borrar?")) { state.students = state.students.filter(function(s){ return s.id!=i; }); saveAll(); renderStudents(); } }
         function closeModals() { document.querySelectorAll('.modal').forEach(function(m){ m.style.display='none'; }); }
     </script>
