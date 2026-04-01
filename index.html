@@ -3,92 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia - Sistema de Pagos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+    <title>Academia - Sistema Administrativo</title>
+    <!-- Modern Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="dark-theme">
-    <!-- Pantalla de Carga/Login -->
-    <div id="view-login" style="display: flex; position: fixed; width: 100%; height: 100%; top: 0; left: 0; background: #0f172a; z-index: 1000; align-items: center; justify-content: center;">
-        <div class="login-card glass-panel" style="text-align: center; padding: 40px; border-radius: 20px; width: 320px;">
-            <i class="fas fa-graduation-cap" style="font-size:3rem; color: #0ea5e9; margin-bottom: 20px;"></i>
-            <h2 style="color: white; margin-bottom: 5px;">Academia De Pagos</h2>
-            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 25px;">Control administrativo v6</p>
-            <div style="position: relative; margin-bottom: 15px;">
-                <input type="password" id="login-password" placeholder="admin123" style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #334155; background: #1e293b; color: white;">
-                <i class="fas fa-eye" id="toggle-p" style="position: absolute; right: 12px; top: 12px; cursor: pointer; color: #64748b;"></i>
+    <!-- UI Layer: Login -->
+    <div id="view-login" style="display: flex;">
+        <div class="login-card glass-panel bounce-in">
+            <div class="logo large"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div>
+            <h2>Gestión de Pagos</h2>
+            <div class="form-group">
+                <div style="position: relative;">
+                    <input type="password" id="login-password" placeholder="admin123">
+                    <i class="fas fa-eye" id="toggle-p" style="position: absolute; right: 10px; top: 12px; cursor: pointer;"></i>
+                </div>
             </div>
-            <p id="login-error" style="color: #ef4444; font-size: 0.8rem; display: none; margin-bottom: 10px;">Acceso denegado</p>
-            <button id="btn-do-login" style="width: 100%; padding: 12px; border-radius: 10px; border: none; background: #0ea5e9; color: white; font-weight: bold; cursor: pointer;">ENTRAR</button>
-            <div id="debug-bypass" style="margin-top: 20px; font-size: 0.7rem; color: #475569; cursor: pointer; text-decoration: underline;">ACCESO DE EMERGENCIA</div>
+            <button id="btn-do-login" class="btn-primary full-width">ENTRAR</button>
+            <div id="debug-bypass" style="margin-top:20px; font-size:0.7rem; color: #64748b; cursor:pointer;" onclick="bypass()">ACCESO DE EMERGENCIA</div>
         </div>
     </div>
 
-    <!-- Contenido Principal (Oculto al inicio) -->
-    <div id="app-container" class="hidden" style="display: none;">
-        <!-- Seccion Dashboard -->
-        <div style="padding: 20px;">
-            <h1>Sistema Operativo</h1>
-            <button onclick="location.reload()" class="btn-small">Cerrar Sesión</button>
-        </div>
-        <!-- Pagos -->
-        <div class="glass-panel" style="margin: 20px; padding: 20px;">
-            <h2>Panel Administrativo</h2>
-            <p>Estado del sistema: Conectado</p>
-            <div style="margin-top: 40px; display: grid; gap: 10px; grid-template-columns: 1fr 1fr;">
-                <button class="btn-primary" onclick="alert('Estudiantes ready')">Alumnos</button>
-                <button class="btn-primary" onclick="alert('Pagos ready')">Pagos</button>
+    <!-- UI Layer: Main App -->
+    <div id="app-container" class="hidden">
+        <aside class="sidebar">
+            <div class="sidebar-header"><div class="logo"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div></div>
+            <nav class="sidebar-nav">
+                <ul id="main-nav">
+                    <li class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> <span>Dashboard</span></li>
+                    <li data-page="students"><i class="fas fa-users"></i> <span>Alumnos</span></li>
+                    <li data-page="payments"><i class="fas fa-money-bill-wave"></i> <span>Pagos</span></li>
+                    <li data-page="inventory"><i class="fas fa-box-open"></i> <span>Material POP</span></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="cloud-status" id="cloud-status"><i class="fas fa-cloud"></i> <span>Cloud Sync</span> <button id="open-sync-settings"><i class="fas fa-cog"></i></button></div>
+                <div class="currency-status"><label>Tasa:</label> <input type="number" id="global-rate" value="40.0" step="0.1"></div>
             </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="search-bar"><i class="fas fa-search"></i> <input type="text" placeholder="Buscar alumno..."></div>
+                <div class="user-profile"><div class="avatar"><img src="https://ui-avatars.com/api/?name=Admin&background=0284c7&color=fff" alt="User"></div></div>
+            </header>
+
+            <div id="content-area">
+                <section id="dashboard" class="page-section active">
+                    <div class="stats-grid">
+                        <div class="stat-card glass-panel"><h3>Ingresos Totales</h3><p id="stat-total-income">$ 0.00</p></div>
+                        <div class="stat-card glass-panel"><h3>Alumnos Activos</h3><p id="stat-active-students">0</p></div>
+                        <div class="stat-card glass-panel"><h3>Material POP</h3><p id="stat-pop-sales">$ 0.00</p></div>
+                    </div>
+                    <div class="glass-panel" style="margin-top:20px; padding:20px;">
+                        <h2>Actividad Reciente</h2>
+                        <table style="width:100%; margin-top:20px; border-collapse:collapse;" id="recent-payments-table"><tbody id="recent-payments-body"></tbody></table>
+                    </div>
+                </section>
+                <!-- Students SECTION -->
+                <section id="students" class="page-section">
+                    <div class="page-header"><h2>Gestión de Alumnos</h2> <button class="btn-primary" id="btn-new-student">Nuevo Alumno</button></div>
+                    <div class="glass-panel"><table style="width:100%;"><thead><tr><th align="left">Nombre</th><th>Categoría</th><th>Días</th><th>Acciones</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
+                </section>
+                <!-- Payments SECTION -->
+                <section id="payments" class="page-section">
+                    <div class="page-header"><h2>Registrar Pago</h2></div>
+                    <div class="glass-panel" style="padding:20px; max-width:500px;">
+                        <form id="payment-form">
+                            <select id="pay-student" required><option value="">Seleccione Alumno...</option></select>
+                            <select id="pay-service"><option value="Mensualidad">Mensualidad</option><option value="Membresía">Membresía</option><option value="POP">Material POP</option></select>
+                            <input type="number" id="pay-amount" placeholder="Monto" step="0.01" required>
+                            <select id="pay-currency"><option value="USD">USD</option><option value="BS">BS</option></select>
+                            <button type="submit" class="btn-primary full-width" style="margin-top:10px;">Guardar Pago</button>
+                        </form>
+                    </div>
+                </section>
+                <!-- POP SECTION -->
+                <section id="inventory" class="page-section">
+                    <div class="page-header"><h2>Material POP</h2></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                        <div class="glass-panel" style="text-align:center; padding:20px;"><h4>Camisa</h4><p>$25</p><button onclick="buyPop('Camisa', 25)" class="btn-primary">Vender</button></div>
+                        <div class="glass-panel" style="text-align:center; padding:20px;"><h4>Gorra</h4><p>$15</p><button onclick="buyPop('Gorra', 15)" class="btn-primary">Vender</button></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-student" class="modal hidden">
+        <div class="modal-content glass-panel" style="width:300px; padding:20px;">
+            <h2>Nuevo Alumno</h2>
+            <form id="student-form">
+                <input type="text" id="st-name" placeholder="Nombre Completo" required style="width:100%; margin:10px 0;">
+                <select id="st-cat" style="width:100%; margin:10px 0;"><option value="Infantil">Infantil</option><option value="Juvenil">Juvenil</option><option value="Adulto">Adulto</option></select>
+                <div style="margin:10px 0;"><label><input type="checkbox" value="Lunes" checked> Lun</label> <label><input type="checkbox" value="Martes" checked> Mar</label></div>
+                <button type="submit" class="btn-primary full-width">Guardar</button>
+                <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:5px;">Cerrar</button>
+            </form>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Cloud Modal -->
+    <div id="modal-cloud" class="modal hidden">
+        <div class="modal-content glass-panel" style="width:300px; padding:20px;">
+            <h2>Supabase Cloud</h2>
+            <input type="text" id="sb-url" placeholder="URL Supabase" style="width:100%; margin:5px 0;">
+            <input type="password" id="sb-key" placeholder="Anon Key" style="width:100%; margin:5px 0;">
+            <button onclick="saveCloud()" class="btn-primary full-width">Conectar</button>
+            <button onclick="closeModals()" class="btn-small full-width">Cerrar</button>
+        </div>
+    </div>
+
     <script>
-        // --- CODIGO BLINDADO V6 ---
-        (function() {
-            var state = { session: false };
+        var state = { students: [], payments: [], rate: 40.0, session: false };
 
-            function alCargar() {
-                var eye = document.getElementById('toggle-p');
-                var pass = document.getElementById('login-password');
-                var btn = document.getElementById('btn-do-login');
-                var bypass = document.getElementById('debug-bypass');
-
-                if (eye && pass) {
-                    eye.onclick = function() {
-                        var esPassword = pass.type === 'password';
-                        pass.type = esPassword ? 'text' : 'password';
-                        eye.className = esPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
-                    };
+        function loadLocal() {
+            try {
+                if(window.localStorage) {
+                    state.students = JSON.parse(localStorage.getItem('acad_st')) || [];
+                    state.payments = JSON.parse(localStorage.getItem('acad_pay')) || [];
+                    state.rate = parseFloat(localStorage.getItem('acad_rate')) || 40.0;
+                    if(sessionStorage.getItem('acad_session')==='true') bypass();
                 }
+            } catch(e){}
+        }
 
-                if (btn) {
-                    btn.onclick = function() {
-                        var val = pass.value.toLowerCase().trim();
-                        if (val === 'admin123' || val === 'entrar' || val === 'godmode') {
-                            ingresar();
-                        } else {
-                            document.getElementById('login-error').style.display = 'block';
-                        }
-                    };
-                }
+        function saveLocal() {
+            try {
+                localStorage.setItem('acad_st', JSON.stringify(state.students));
+                localStorage.setItem('acad_pay', JSON.stringify(state.payments));
+                localStorage.setItem('acad_rate', state.rate);
+            } catch(e){}
+        }
 
-                if (bypass) {
-                    bypass.onclick = ingresar;
-                }
-            }
+        function bypass() {
+            state.session = true;
+            document.getElementById('view-login').style.display='none';
+            document.getElementById('app-container').style.display='flex';
+            document.getElementById('app-container').classList.remove('hidden');
+            renderDashboard();
+            initNav();
+        }
 
-            function ingresar() {
-                document.getElementById('view-login').style.display = 'none';
-                document.getElementById('app-container').style.display = 'block';
-                document.getElementById('app-container').classList.remove('hidden');
-                console.log("Sistema desbloqueado");
-            }
+        window.onload = function() {
+            loadLocal();
+            document.getElementById('btn-do-login').onclick = function() {
+                var p = document.getElementById('login-password').value.trim().toLowerCase();
+                if(p==='admin123' || p==='entrar') {
+                    try { sessionStorage.setItem('acad_session', 'true'); } catch(e){}
+                    bypass();
+                } else { alert("Acceso Incorrecto"); }
+            };
+            document.getElementById('toggle-p').onclick = function() {
+                var p = document.getElementById('login-password');
+                p.type = p.type === 'password' ? 'text' : 'password';
+            };
+        };
 
-            // Ejecucion inicial
-            window.onload = alCargar;
-        })();
+        function initNav() {
+            document.querySelectorAll('#main-nav li').forEach(function(li){
+                li.onclick = function() {
+                    var pg = li.dataset.page;
+                    document.querySelectorAll('.page-section').forEach(function(s){ s.classList.remove('active'); });
+                    document.getElementById(pg).classList.add('active');
+                    document.querySelectorAll('#main-nav li').forEach(function(i){ i.classList.remove('active'); });
+                    li.classList.add('active');
+                    if(pg==='dashboard') renderDashboard();
+                    if(pg==='students') renderStudents();
+                    if(pg==='payments') renderPaymentList();
+                };
+            });
+        }
+
+        function renderDashboard() {
+            var total = state.payments.reduce(function(a,b){ return a + (b.usd||0); }, 0);
+            var pop = state.payments.filter(function(p){ return p.srv.includes('POP'); }).reduce(function(a,b){ return a + (b.usd||0); }, 0);
+            document.getElementById('stat-total-income').innerText = '$ ' + total.toFixed(2);
+            document.getElementById('stat-active-students').innerText = state.students.length;
+            document.getElementById('stat-pop-sales').innerText = '$ ' + pop.toFixed(2);
+            document.getElementById('recent-payments-body').innerHTML = state.payments.slice(0,5).map(function(p){
+                return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${p.name}</td><td>${p.srv}</td><td align="right">$ ${p.usd.toFixed(2)}</td></tr>`;
+            }).join('');
+        }
+
+        function renderStudents() {
+            document.getElementById('students-table-body').innerHTML = state.students.map(function(s){
+                return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${s.name}</td><td align="center">${s.cat}</td><td align="center">Lun/Mar</td><td align="center"><button class="btn-small" onclick="delSt('${s.id}')">X</button></td></tr>`;
+            }).join('');
+        }
+
+        function renderPaymentList() {
+            var sel = document.getElementById('pay-student');
+            sel.innerHTML = '<option value="">Seleccione Alumno...</option>' + state.students.map(function(s){
+                return `<option value="${s.id}">${s.name}</option>`;
+            }).join('');
+        }
+
+        document.getElementById('student-form').onsubmit = function(e) {
+            e.preventDefault();
+            var n = document.getElementById('st-name').value;
+            state.students.push({ id: Date.now(), name: n, cat: document.getElementById('st-cat').value });
+            saveLocal();
+            closeModals();
+            renderStudents();
+            alert("Alumno Guardado");
+        };
+
+        document.getElementById('payment-form').onsubmit = function(e) {
+            e.preventDefault();
+            var sid = document.getElementById('pay-student').value;
+            var stu = state.students.find(function(s){ return s.id == sid; });
+            var amt = parseFloat(document.getElementById('pay-amount').value);
+            var cur = document.getElementById('pay-currency').value;
+            var usd = cur === 'USD' ? amt : amt / state.rate;
+            state.payments.unshift({ id: Date.now(), name: stu?stu.name:'Anon', srv: document.getElementById('pay-service').value, usd: usd, date: new Date().toLocaleDateString() });
+            saveLocal();
+            renderDashboard();
+            alert("Pago Registrado");
+        };
+
+        function buyPop(item, price) {
+            state.payments.unshift({ id: Date.now(), name: 'Venta POP', srv: 'POP: '+item, usd: price, date: new Date().toLocaleDateString() });
+            saveLocal();
+            renderDashboard();
+            alert("Venta procesada");
+        }
+
+        function delSt(id) { state.students = state.students.filter(function(s){ return s.id != id; }); saveLocal(); renderStudents(); }
+        function closeModals() { document.querySelectorAll('.modal').forEach(function(m){ m.style.display='none'; }); }
+        document.getElementById('btn-new-student').onclick = function() { document.getElementById('student-form').reset(); document.getElementById('modal-student').style.display='flex'; };
+        document.getElementById('open-sync-settings').onclick = function() { document.getElementById('modal-cloud').style.display='flex'; };
     </script>
 </body>
 </html>
