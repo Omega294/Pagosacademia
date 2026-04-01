@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia de Pagos | Gestión Profesional</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="dark-theme">
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>ACADEMIA</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> Dashboard</li>
+                    <li data-page="students"><i class="fas fa-users"></i> Estudiantes</li>
+                    <li data-page="payments"><i class="fas fa-money-bill-wave"></i> Registrar Pago</li>
+                    <li data-page="inventory"><i class="fas fa-box-open"></i> Material POP</li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="cloud-status" id="cloud-status">
+                    <i class="fas fa-cloud"></i>
+                    <span>Desconectado</span>
+                    <button class="btn-icon" id="open-sync-settings" title="Configurar Nube"><i class="fas fa-cog"></i></button>
+                </div>
+                <div class="currency-status">
+                    <label>Tasa USD/BS:</label>
+                    <input type="number" id="global-rate" value="40.00" step="0.1">
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="main-search" placeholder="Buscar estudiante o pago...">
+                </div>
+                <div class="user-profile">
+                    <div class="notifications"><i class="fas fa-bell"></i></div>
+                    <div class="avatar"><img src="https://ui-avatars.com/api/?name=Admin&background=0284c7&color=fff" alt="User"></div>
+                </div>
+            </header>
+
+            <div id="content-area">
+                <!-- Dashboard (Default View) -->
+                <section id="dashboard" class="page-section active">
+                    <div class="welcome-banner">
+                        <h1>Bienvenido al Panel de Control</h1>
+                        <p>Gestión de pagos para Lunes y Martes</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card glass-panel bounce-in">
+                            <div class="stat-icon income"><i class="fas fa-dollar-sign"></i></div>
+                            <div class="stat-info">
+                                <h3>Total Recaudado</h3>
+                                <p id="stat-total-income">$ 0.00</p>
+                                <span class="income-bs" id="stat-total-income-bs">0.00 BS</span>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel bounce-in" style="animation-delay: 0.1s">
+                            <div class="stat-icon students"><i class="fas fa-user-graduate"></i></div>
+                            <div class="stat-info">
+                                <h3>Estudiantes Activos</h3>
+                                <p id="stat-active-students">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel bounce-in" style="animation-delay: 0.2s">
+                            <div class="stat-icon pending"><i class="fas fa-clock"></i></div>
+                            <div class="stat-info">
+                                <h3>Mensualidades Pendientes</h3>
+                                <p id="stat-pending-payments">0</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel bounce-in" style="animation-delay: 0.3s">
+                            <div class="stat-icon pop"><i class="fas fa-shopping-bag"></i></div>
+                            <div class="stat-info">
+                                <h3>Ventas POP</h3>
+                                <p id="stat-pop-sales">$ 0.00</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-details">
+                        <div class="recent-payments-card glass-panel">
+                            <div class="card-header">
+                                <h2>Actividad Reciente</h2>
+                                <button class="btn-small">Ver Todo</button>
+                            </div>
+                            <div class="table-container">
+                                <table id="recent-payments-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Estudiante</th>
+                                            <th>Servicio</th>
+                                            <th>Monto</th>
+                                            <th>Fecha</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-payments-body">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="schedule-card glass-panel">
+                            <div class="card-header">
+                                <h2>Horario Academia</h2>
+                            </div>
+                            <div class="schedule-list">
+                                <div class="day-item active">
+                                    <span class="day-dot blue"></span>
+                                    <div class="day-info">
+                                        <h4>Lunes</h4>
+                                        <p>Clases Generales & Entrenamientos</p>
+                                    </div>
+                                </div>
+                                <div class="day-item active">
+                                    <span class="day-dot gold"></span>
+                                    <div class="day-info">
+                                        <h4>Martes</h4>
+                                        <p>Juegos Amistosos & Práctica Especial</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Students Page -->
+                <section id="students" class="page-section">
+                    <div class="page-header">
+                        <h2>Gestión de Estudiantes</h2>
+                        <button class="btn-primary" id="add-student-btn-top"><i class="fas fa-plus"></i> Nuevo Estudiante</button>
+                    </div>
+                    <div class="glass-panel">
+                        <div class="table-container">
+                            <table id="students-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Categoría</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="students-table-body">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Payments Page -->
+                <section id="payments" class="page-section">
+                    <div class="page-header">
+                        <h2>Registrar Pago</h2>
+                    </div>
+                    <div class="payment-layout">
+                        <div class="payment-form-container glass-panel">
+                            <form id="payment-form">
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Seleccionar Estudiante</label>
+                                        <select id="pay-student-id" required>
+                                            <option value="">Seleccione...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Tipo de Servicio</label>
+                                        <select id="pay-service-type" required>
+                                            <option value="Clase General">Clase General</option>
+                                            <option value="Juego Amistoso">Juego Amistoso</option>
+                                            <option value="Mensualidad">Mensualidad</option>
+                                            <option value="Membresía">Membresía</option>
+                                            <option value="Material POP">Material POP</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Monto</label>
+                                        <div class="input-with-currency">
+                                            <input type="number" id="pay-amount" step="0.01" required placeholder="0.00">
+                                            <select id="pay-currency">
+                                                <option value="USD">USD</option>
+                                                <option value="BS">BS</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Método</label>
+                                        <select id="pay-method">
+                                            <option value="Efectivo">Efectivo</option>
+                                            <option value="Transferencia">Transferencia</option>
+                                            <option value="Pago Móvil">Pago Móvil</option>
+                                            <option value="Zelle">Zelle</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-primary">Confirmar Pago</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="payment-summary glass-panel">
+                            <h3>Resumen de Transacción</h3>
+                            <div class="summary-details">
+                                <div class="summary-row"><span>Total USD:</span> <span id="summary-usd">$ 0.00</span></div>
+                                <div class="summary-row"><span>Total BS:</span> <span id="summary-bs">0.00 BS</span></div>
+                                <div class="summary-row divider"></div>
+                                <p class="summary-note">* Basado en la tasa del día.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- POP Inventory (Simplified for now) -->
+                <section id="inventory" class="page-section">
+                    <div class="page-header">
+                        <h2>Material POP</h2>
+                    </div>
+                    <div class="pop-grid">
+                        <div class="pop-item glass-panel">
+                            <div class="pop-img"><i class="fas fa-tshirt"></i></div>
+                            <div class="pop-info">
+                                <h4>Camisa Academia</h4>
+                                <p>$25.00</p>
+                                <button class="btn-small buy-pop" data-item="Camisa" data-price="25">Vender</button>
+                            </div>
+                        </div>
+                        <div class="pop-item glass-panel">
+                            <div class="pop-img"><i class="fas fa-hat-cowboy"></i></div>
+                            <div class="pop-info">
+                                <h4>Gorra</h4>
+                                <p>$15.00</p>
+                                <button class="btn-small buy-pop" data-item="Gorra" data-price="15">Vender</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="sync-modal" class="modal">
+        <div class="modal-content glass-panel bounce-in">
+            <span class="close-modal" id="close-sync-modal">&times;</span>
+            <div class="modal-header">
+                <h2>Configuración de Nube (Supabase)</h2>
+            </div>
+            <form id="sync-form">
+                <div class="form-group">
+                    <label>Supabase URL</label>
+                    <input type="text" id="supabase-url" placeholder="https://xxxx.supabase.co">
+                </div>
+                <div class="form-group">
+                    <label>Supabase Anon Key</label>
+                    <input type="password" id="supabase-key" placeholder="Su clave anónima...">
+                </div>
+                <p class="summary-note">Verifique que sus tablas esten configuradas segun el plan.</p>
+                <div class="form-actions-modal">
+                    <button type="submit" class="btn-primary">Conectar y Sincronizar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="student-modal" class="modal">
+        <div class="modal-content glass-panel bounce-in">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h2>Nuevo Estudiante</h2>
+            </div>
+            <form id="student-form">
+                <input type="hidden" id="student-id">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="student-name" required placeholder="Ej: Juan Pérez">
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="student-category">
+                        <option value="Infantil">Infantil</option>
+                        <option value="Juvenil">Juvenil</option>
+                        <option value="Adulto">Adulto</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Clases (Días)</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="days" value="Lunes" checked> Lunes</label>
+                        <label><input type="checkbox" name="days" value="Martes" checked> Martes</label>
+                    </div>
+                </div>
+                <div class="form-actions-modal">
+                    <button type="submit" class="btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
