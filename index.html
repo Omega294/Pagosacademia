@@ -351,33 +351,43 @@
     <script>
         /**
          * ACADEMIA DE PAGOS - Secure & Cloud Integrated
-         * INLINED VERSION FOR MAXIMUM COMPATIBILITY
+         * v3 - Ultra resilient
          */
 
-        // --- STATE ---
-        let students = JSON.parse(localStorage.getItem('academy_students')) || [];
-        let payments = JSON.parse(localStorage.getItem('academy_payments')) || [];
-        let currentRate = parseFloat(localStorage.getItem('academy_rate')) || 40.0;
-        let supabase = null;
-        let isConnected = false;
-        let session = sessionStorage.getItem('academy_session') === 'true';
+        let students = [], payments = [], currentRate = 40.0, session = false;
+        let supabase = null, isConnected = false;
 
-        const cloudConfig = JSON.parse(localStorage.getItem('academy_cloud_config')) || { url: '', key: '' };
+        // --- SAFE STORAGE ---
+        try {
+            students = JSON.parse(localStorage.getItem('academy_students')) || [];
+            payments = JSON.parse(localStorage.getItem('academy_payments')) || [];
+            currentRate = parseFloat(localStorage.getItem('academy_rate')) || 40.0;
+            session = sessionStorage.getItem('academy_session') === 'true';
+        } catch(e) { console.warn("Storage blocked:", e); }
+
+        const cloudConfig = (() => {
+            try { return JSON.parse(localStorage.getItem('academy_cloud_config')) || { url: '', key: '' }; }
+            catch(e) { return { url: '', key: '' }; }
+        })();
 
         // --- ERROR HANDLING ---
         window.onerror = (msg, url, line) => {
             console.error(`JS ERROR: ${msg} @ ${line}`);
-            alert('Error detectado: ' + msg);
         };
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            // First things first: Basic UI interaction
+            setupLoginUI();
             updateAuthUI();
-            
+            if (session) startApp();
+        });
+
+        function setupLoginUI() {
             const toggler = document.getElementById('toggle-p');
-            if (toggler) {
+            const pin = document.getElementById('login-password');
+            if (toggler && pin) {
                 toggler.onclick = () => {
-                    const pin = document.getElementById('login-password');
                     const isPass = pin.type === 'password';
                     pin.type = isPass ? 'text' : 'password';
                     toggler.className = isPass ? 'fas fa-eye-slash toggle-pass' : 'fas fa-eye toggle-pass';
@@ -386,12 +396,8 @@
 
             const loginBtn = document.getElementById('btn-do-login');
             if (loginBtn) loginBtn.onclick = handleLogin;
-            
-            const loginPass = document.getElementById('login-password');
-            if (loginPass) loginPass.onkeypress = (e) => e.key === 'Enter' && handleLogin();
-
-            if (session) startApp();
-        });
+            if (pin) pin.onkeypress = (e) => e.key === 'Enter' && handleLogin();
+        }
 
         function handleLogin() {
             const pwInput = document.getElementById('login-password');
