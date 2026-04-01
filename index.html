@@ -9,281 +9,93 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <!-- Supabase Library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .pass-container { position: relative; width: 100%; }
-        .toggle-pass {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
+        .pass-container { position: relative; width: 100%; display: flex; align-items: center; }
+        #login-password { flex: 1; padding-right: 40px; }
+        .toggle-pass { position: absolute; right: 12px; cursor: pointer; color: #94a3b8; z-index: 10; font-size: 1.1rem; padding: 5px; }
+        .toggle-pass:hover { color: #f8fafc; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body class="dark-theme">
     <!-- Login View -->
     <div id="view-login" class="login-view">
         <div class="login-card glass-panel bounce-in">
-            <div class="logo large">
-                <i class="fas fa-graduation-cap"></i>
-                <span>ACADEMIA</span>
-            </div>
+            <div class="logo large"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div>
             <h3>Gestión de Pagos</h3>
             <div class="form-group">
                 <div class="pass-container">
-                    <input type="password" id="login-password" placeholder="Contraseña: admin123" autocomplete="off">
+                    <input type="password" id="login-password" placeholder="admin123" autocomplete="off">
                     <i class="fas fa-eye toggle-pass" id="toggle-p"></i>
                 </div>
                 <p id="login-error" class="login-error hidden">Contraseña incorrecta</p>
             </div>
-            <button id="btn-do-login" class="btn-primary full-width">ENTRAR</button>
+            <button id="btn-do-login" class="btn-primary full-width" style="margin-top:15px">ENTRAR</button>
         </div>
     </div>
 
+    <!-- Main Container -->
     <div class="app-container hidden" id="app-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="logo">
-                    <i class="fas fa-graduation-cap"></i>
-                    <span>ACADEMIA</span>
-                </div>
-            </div>
+            <div class="sidebar-header"><div class="logo"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div></div>
             <nav class="sidebar-nav">
                 <ul id="main-nav">
                     <li class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> <span>Dashboard</span></li>
                     <li data-page="students"><i class="fas fa-users"></i> <span>Estudiantes</span></li>
-                    <li data-page="payments"><i class="fas fa-money-bill-wave"></i> <span>Registrar Pago</span></li>
+                    <li data-page="payments"><i class="fas fa-money-bill-wave"></i> <span>Pagos</span></li>
                     <li data-page="inventory"><i class="fas fa-box-open"></i> <span>Material POP</span></li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <div class="cloud-status" id="cloud-status">
-                    <i class="fas fa-cloud"></i>
-                    <span>Desconectado</span>
-                    <button class="btn-icon" id="open-sync-settings" title="Configurar Nube"><i class="fas fa-cog"></i></button>
-                </div>
-                <div class="currency-status">
-                    <label>Tasa USD/BS:</label>
-                    <input type="number" id="global-rate" value="40.00" step="0.1">
-                </div>
+                <div class="cloud-status" id="cloud-status"><i class="fas fa-cloud"></i> <span>Nube</span> <button class="btn-icon" id="open-sync-settings"><i class="fas fa-cog"></i></button></div>
+                <div class="currency-status"><label>Tasa:</label> <input type="number" id="global-rate" value="40.0" step="0.1"></div>
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <header class="top-header">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="main-search" placeholder="Buscar estudiante o pago...">
-                </div>
-                <div class="user-profile">
-                    <div class="notifications"><i class="fas fa-bell"></i></div>
-                    <div class="avatar"><img src="https://ui-avatars.com/api/?name=Admin&background=0284c7&color=fff" alt="User"></div>
-                </div>
+                <div class="search-bar"><i class="fas fa-search"></i> <input type="text" id="main-search" placeholder="Buscar..."></div>
+                <div class="user-profile"><div class="avatar"><img src="https://ui-avatars.com/api/?name=Admin&background=0284c7&color=fff" alt="User"></div></div>
             </header>
-
             <div id="content-area">
-                <!-- Dashboard (Default View) -->
                 <section id="dashboard" class="page-section active">
-                    <div class="welcome-banner">
-                        <h1>Bienvenido al Panel de Control</h1>
-                        <p>Gestión de pagos para Lunes y Martes</p>
-                    </div>
-
+                    <div class="welcome-banner"><h1>Dashboard</h1><p>Resumen de actividad</p></div>
                     <div class="stats-grid">
-                        <div class="stat-card glass-panel bounce-in">
-                            <div class="stat-icon income"><i class="fas fa-dollar-sign"></i></div>
-                            <div class="stat-info">
-                                <h3>Total Recaudado</h3>
-                                <p id="stat-total-income">$ 0.00</p>
-                                <span class="income-bs" id="stat-total-income-bs">0.00 BS</span>
-                            </div>
-                        </div>
-                        <div class="stat-card glass-panel bounce-in" style="animation-delay: 0.1s">
-                            <div class="stat-icon students"><i class="fas fa-user-graduate"></i></div>
-                            <div class="stat-info">
-                                <h3>Estudiantes Activos</h3>
-                                <p id="stat-active-students">0</p>
-                            </div>
-                        </div>
-                        <div class="stat-card glass-panel bounce-in" style="animation-delay: 0.2s">
-                            <div class="stat-icon pending"><i class="fas fa-clock"></i></div>
-                            <div class="stat-info">
-                                <h3>Mensualidades Pendientes</h3>
-                                <p id="stat-pending-payments">0</p>
-                            </div>
-                        </div>
-                        <div class="stat-card glass-panel bounce-in" style="animation-delay: 0.3s">
-                            <div class="stat-icon pop"><i class="fas fa-shopping-bag"></i></div>
-                            <div class="stat-info">
-                                <h3>Ventas POP</h3>
-                                <p id="stat-pop-sales">$ 0.00</p>
-                            </div>
-                        </div>
+                        <div class="stat-card glass-panel"><h3>Ingresos USD</h3><p id="stat-total-income">$ 0.00</p></div>
+                        <div class="stat-card glass-panel"><h3>Ingresos BS</h3><p id="stat-total-income-bs">0 BS</p></div>
+                        <div class="stat-card glass-panel"><h3>Estudiantes</h3><p id="stat-active-students">0</p></div>
+                        <div class="stat-card glass-panel"><h3>Ventas POP</h3><p id="stat-pop-sales">$ 0.00</p></div>
                     </div>
-
-                    <div class="dashboard-details">
-                        <div class="recent-payments-card glass-panel">
-                            <div class="card-header">
-                                <h2>Actividad Reciente</h2>
-                                <button class="btn-small">Ver Todo</button>
-                            </div>
-                            <div class="table-container">
-                                <table id="recent-payments-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Estudiante</th>
-                                            <th>Servicio</th>
-                                            <th>Monto</th>
-                                            <th>Fecha</th>
-                                            <th>Estado</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recent-payments-body">
-                                        <!-- Dynamic content -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="schedule-card glass-panel">
-                            <div class="card-header">
-                                <h2>Horario Academia</h2>
-                            </div>
-                            <div class="schedule-list">
-                                <div class="day-item active">
-                                    <span class="day-dot blue"></span>
-                                    <div class="day-info">
-                                        <h4>Lunes</h4>
-                                        <p>Clases Generales & Entrenamientos</p>
-                                    </div>
-                                </div>
-                                <div class="day-item active">
-                                    <span class="day-dot gold"></span>
-                                    <div class="day-info">
-                                        <h4>Martes</h4>
-                                        <p>Juegos Amistosos & Práctica Especial</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="glass-panel" style="margin-top:20px; padding:20px">
+                        <h2>Actividad Reciente</h2>
+                        <table style="width:100%; margin-top:15px"><tbody id="recent-payments-body"></tbody></table>
                     </div>
                 </section>
-
-                <!-- Students Page -->
                 <section id="students" class="page-section">
-                    <div class="page-header">
-                        <h2>Gestión de Estudiantes</h2>
-                        <button class="btn-primary" id="add-student-btn-top"><i class="fas fa-plus"></i> Nuevo Estudiante</button>
-                    </div>
-                    <div class="glass-panel">
-                        <div class="table-container">
-                            <table id="students-table">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre</th>
-                                        <th>Categoría</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="students-table-body">
-                                    <!-- Dynamic content -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <div class="page-header"><h2>Estudiantes</h2> <button class="btn-primary" id="add-student-btn-top">Nuevo</button></div>
+                    <div class="glass-panel"><table><thead><tr><th>Nombre</th><th>Categoría</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
                 </section>
-
-                <!-- Payments Page -->
                 <section id="payments" class="page-section">
-                    <div class="page-header">
-                        <h2>Registrar Pago</h2>
-                    </div>
-                    <div class="payment-layout">
-                        <div class="payment-form-container glass-panel">
-                            <form id="payment-form">
-                                <div class="form-grid">
-                                    <div class="form-group">
-                                        <label>Seleccionar Estudiante</label>
-                                        <select id="pay-student-id" required>
-                                            <option value="">Seleccione...</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Tipo de Servicio</label>
-                                        <select id="pay-service-type" required>
-                                            <option value="Clase General">Clase General</option>
-                                            <option value="Juego Amistoso">Juego Amistoso</option>
-                                            <option value="Mensualidad">Mensualidad</option>
-                                            <option value="Membresía">Membresía</option>
-                                            <option value="Material POP">Material POP</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Monto</label>
-                                        <div class="input-with-currency">
-                                            <input type="number" id="pay-amount" step="0.01" required placeholder="0.00">
-                                            <select id="pay-currency">
-                                                <option value="USD">USD</option>
-                                                <option value="BS">BS</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Método</label>
-                                        <select id="pay-method">
-                                            <option value="Efectivo">Efectivo</option>
-                                            <option value="Transferencia">Transferencia</option>
-                                            <option value="Pago Móvil">Pago Móvil</option>
-                                            <option value="Zelle">Zelle</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-actions">
-                                    <button type="submit" class="btn-primary">Confirmar Pago</button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="payment-summary glass-panel">
-                            <h3>Resumen de Transacción</h3>
-                            <div class="summary-details">
-                                <div class="summary-row"><span>Total USD:</span> <span id="summary-usd">$ 0.00</span></div>
-                                <div class="summary-row"><span>Total BS:</span> <span id="summary-bs">0.00 BS</span></div>
-                                <div class="summary-row divider"></div>
-                                <p class="summary-note">* Basado en la tasa del día.</p>
-                            </div>
+                    <div class="page-header"><h2>Registrar Pago</h2></div>
+                    <div class="payment-layout glass-panel" style="padding:20px">
+                        <form id="payment-form">
+                            <div class="form-group"><label>Estudiante</label><select id="pay-student-id" required></select></div>
+                            <div class="form-group"><label>Servicio</label><select id="pay-service-type"><option value="Clase General">Clase General</option><option value="Juego Amistoso">Juego Amistoso</option><option value="Mensualidad">Mensualidad</option><option value="Material POP">Material POP</option></select></div>
+                            <div class="form-group"><label>Monto</label><input type="number" id="pay-amount" step="0.01" required> <select id="pay-currency"><option value="USD">USD</option><option value="BS">BS</option></select></div>
+                            <button type="submit" class="btn-primary">Guardar Pago</button>
+                        </form>
+                        <div style="margin-top:20px; padding-top:20px; border-top:1px solid #334155">
+                            <p>USD: <span id="summary-usd">$ 0.00</span></p>
+                            <p>BS: <span id="summary-bs">0.00 BS</span></p>
                         </div>
                     </div>
                 </section>
-                
-                <!-- POP Inventory (Simplified for now) -->
                 <section id="inventory" class="page-section">
-                    <div class="page-header">
-                        <h2>Material POP</h2>
-                    </div>
+                    <div class="page-header"><h2>Material POP</h2></div>
                     <div class="pop-grid">
-                        <div class="pop-item glass-panel">
-                            <div class="pop-img"><i class="fas fa-tshirt"></i></div>
-                            <div class="pop-info">
-                                <h4>Camisa Academia</h4>
-                                <p>$25.00</p>
-                                <button class="btn-small buy-pop" data-item="Camisa" data-price="25">Vender</button>
-                            </div>
-                        </div>
-                        <div class="pop-item glass-panel">
-                            <div class="pop-img"><i class="fas fa-hat-cowboy"></i></div>
-                            <div class="pop-info">
-                                <h4>Gorra</h4>
-                                <p>$15.00</p>
-                                <button class="btn-small buy-pop" data-item="Gorra" data-price="15">Vender</button>
-                            </div>
-                        </div>
+                        <div class="pop-item glass-panel"><h4>Camisa</h4><p>$25</p><button class="buy-pop" data-item="Camisa" data-price="25">Vender</button></div>
+                        <div class="pop-item glass-panel"><h4>Gorra</h4><p>$15</p><button class="buy-pop" data-item="Gorra" data-price="15">Vender</button></div>
                     </div>
                 </section>
             </div>
@@ -291,293 +103,162 @@
     </div>
 
     <!-- Modals -->
-    <div id="sync-modal" class="modal">
-        <div class="modal-content glass-panel bounce-in">
-            <span class="close-modal" id="close-sync-modal">&times;</span>
-            <div class="modal-header">
-                <h2>Configuración de Nube (Supabase)</h2>
-            </div>
-            <form id="sync-form">
-                <div class="form-group">
-                    <label>Supabase URL</label>
-                    <input type="text" id="supabase-url" placeholder="https://xxxx.supabase.co">
-                </div>
-                <div class="form-group">
-                    <label>Supabase Anon Key</label>
-                    <input type="password" id="supabase-key" placeholder="Su clave anónima...">
-                </div>
-                <p class="summary-note">Verifique que sus tablas esten configuradas segun el plan.</p>
-                <div class="form-actions-modal">
-                    <button type="submit" class="btn-primary">Conectar y Sincronizar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div id="student-modal" class="modal">
-        <div class="modal-content glass-panel bounce-in">
-            <span class="close-modal">&times;</span>
-            <div class="modal-header">
-                <h2>Nuevo Estudiante</h2>
-            </div>
-            <form id="student-form">
-                <input type="hidden" id="student-id">
-                <div class="form-group">
-                    <label>Nombre Completo</label>
-                    <input type="text" id="student-name" required placeholder="Ej: Juan Pérez">
-                </div>
-                <div class="form-group">
-                    <label>Categoría</label>
-                    <select id="student-category">
-                        <option value="Infantil">Infantil</option>
-                        <option value="Juvenil">Juvenil</option>
-                        <option value="Adulto">Adulto</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Clases (Días)</label>
-                    <div class="checkbox-group">
-                        <label><input type="checkbox" name="days" value="Lunes" checked> Lunes</label>
-                        <label><input type="checkbox" name="days" value="Martes" checked> Martes</label>
-                    </div>
-                </div>
-                <div class="form-actions-modal">
-                    <button type="submit" class="btn-primary">Guardar</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <div id="sync-modal" class="modal"><div class="modal-content glass-panel"><h2>Supabase Sync</h2><form id="sync-form"><input type="text" id="supabase-url" placeholder="URL"><input type="password" id="supabase-key" placeholder="Key"><button type="submit">Conectar</button><button type="button" class="close-modal">Cerrar</button></form></div></div>
+    <div id="student-modal" class="modal"><div class="modal-content glass-panel"><h2>Estudiante</h2><form id="student-form"><input type="hidden" id="student-id"><input type="text" id="student-name" placeholder="Nombre" required><select id="student-category"><option value="Infantil">Infantil</option><option value="Juvenil">Juvenil</option><option value="Adulto">Adulto</option></select><button type="submit">Guardar</button><button type="button" class="close-modal">Cerrar</button></form></div></div>
 
     <script>
-        /**
-         * ACADEMIA DE PAGOS - Secure & Cloud Integrated
-         * v3 - Ultra resilient
-         */
+        // --- SECURE INITIALIZATION ---
+        const state = { students: [], payments: [], rate: 40.0, session: false, isConnected: false };
+        let supabase = null;
 
-        let students = [], payments = [], currentRate = 40.0, session = false;
-        let supabase = null, isConnected = false;
+        // Emergency Alert
+        console.log("Script Starting...");
 
-        // --- SAFE STORAGE ---
         try {
-            students = JSON.parse(localStorage.getItem('academy_students')) || [];
-            payments = JSON.parse(localStorage.getItem('academy_payments')) || [];
-            currentRate = parseFloat(localStorage.getItem('academy_rate')) || 40.0;
-            session = sessionStorage.getItem('academy_session') === 'true';
-        } catch(e) { console.warn("Storage blocked:", e); }
+            state.students = JSON.parse(localStorage.getItem('academy_students')) || [];
+            state.payments = JSON.parse(localStorage.getItem('academy_payments')) || [];
+            state.rate = parseFloat(localStorage.getItem('academy_rate')) || 40.0;
+            state.session = sessionStorage.getItem('academy_session') === 'true';
+        } catch(e) { console.error("Storage Error", e); }
 
-        const cloudConfig = (() => {
-            try { return JSON.parse(localStorage.getItem('academy_cloud_config')) || { url: '', key: '' }; }
-            catch(e) { return { url: '', key: '' }; }
-        })();
-
-        // --- ERROR HANDLING ---
-        window.onerror = (msg, url, line) => {
-            console.error(`JS ERROR: ${msg} @ ${line}`);
-        };
-
-        // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
-            // First things first: Basic UI interaction
-            setupLoginUI();
-            updateAuthUI();
-            if (session) startApp();
+            console.log("DOM Ready");
+            initLogin();
+            if (state.session) startApp();
         });
 
-        function setupLoginUI() {
-            const toggler = document.getElementById('toggle-p');
-            const pin = document.getElementById('login-password');
-            if (toggler && pin) {
-                toggler.onclick = () => {
-                    const isPass = pin.type === 'password';
-                    pin.type = isPass ? 'text' : 'password';
-                    toggler.className = isPass ? 'fas fa-eye-slash toggle-pass' : 'fas fa-eye toggle-pass';
+        function initLogin() {
+            const eye = document.getElementById('toggle-p');
+            const pass = document.getElementById('login-password');
+            const btn = document.getElementById('btn-do-login');
+
+            if (eye && pass) {
+                eye.onclick = () => {
+                    const isPass = pass.type === 'password';
+                    pass.type = isPass ? 'text' : 'password';
+                    eye.className = isPass ? 'fas fa-eye-slash toggle-pass' : 'fas fa-eye toggle-pass';
                 };
             }
 
-            const loginBtn = document.getElementById('btn-do-login');
-            if (loginBtn) loginBtn.onclick = handleLogin;
-            if (pin) pin.onkeypress = (e) => e.key === 'Enter' && handleLogin();
-        }
-
-        function handleLogin() {
-            const pwInput = document.getElementById('login-password');
-            if (!pwInput) return;
-            const val = pwInput.value.trim().toLowerCase();
-            const err = document.getElementById('login-error');
-            
-            // MASTER OVERRIDE: admin123 or godmode
-            if (val === 'admin123' || val === 'godmode' || val === 'entrar') {
-                session = true;
-                sessionStorage.setItem('academy_session', 'true');
-                updateAuthUI();
-                startApp();
-            } else {
-                if (err) err.classList.remove('hidden');
-                pwInput.value = '';
-                setTimeout(() => { if (err) err.classList.add('hidden'); }, 3000);
+            if (btn) {
+                btn.onclick = () => {
+                    const val = pass.value.trim().toLowerCase();
+                    if (val === 'admin123' || val === 'entrar' || val === 'godmode') {
+                        state.session = true;
+                        try { sessionStorage.setItem('academy_session', 'true'); } catch(e){}
+                        updateAuthUI();
+                        startApp();
+                    } else {
+                        document.getElementById('login-error').classList.remove('hidden');
+                    }
+                };
             }
+            updateAuthUI();
         }
 
         function updateAuthUI() {
-            const loginView = document.getElementById('view-login');
-            const appContainer = document.getElementById('app-container');
-            if (session) {
-                if (loginView) loginView.classList.add('hidden');
-                if (appContainer) appContainer.classList.remove('hidden');
-            } else {
-                if (loginView) loginView.classList.remove('hidden');
-                if (appContainer) appContainer.classList.add('hidden');
-            }
+            document.getElementById('view-login').style.display = state.session ? 'none' : 'flex';
+            document.getElementById('app-container').classList.toggle('hidden', !state.session);
         }
 
-        async function startApp() {
-            const rateInput = document.getElementById('global-rate');
-            if (rateInput) rateInput.value = currentRate;
-            initRouting();
-            initPopSales();
-            if (cloudConfig.url && cloudConfig.key) await connectToCloud(cloudConfig.url, cloudConfig.key);
-            await refreshAllData();
+        function startApp() {
+            console.log("Starting App Components");
+            renderDashboard();
+            initNav();
+            initPop();
+            const config = JSON.parse(localStorage.getItem('academy_cloud_config') || '{}');
+            if (config.url && config.key) connectCloud(config.url, config.key);
         }
 
-        async function connectToCloud(url, key) {
-            try {
-                if (!window.supabase) return false;
-                supabase = window.supabase.createClient(url, key);
-                const { error } = await supabase.from('app_settings').select('value').eq('key', 'usd_rate').single();
-                if (error && error.code !== 'PGRST116') throw error;
-                isConnected = true;
-                const statusEl = document.getElementById('cloud-status');
-                if (statusEl) {
-                    statusEl.classList.add('connected');
-                    statusEl.querySelector('span').innerText = 'Conectado';
-                }
-                localStorage.setItem('academy_cloud_config', JSON.stringify({ url, key }));
-                return true;
-            } catch (err) { return false; }
-        }
-
-        async function refreshAllData() {
-            if (isConnected) {
-                const { data: sData } = await supabase.from('students').select('*').order('name');
-                if (sData) students = sData;
-                const { data: pData } = await supabase.from('payments').select('*').order('created_at', { ascending: false });
-                if (pData) {
-                    payments = pData.map(p => ({
-                        id: p.id, studentName: p.student_name, service: p.service, amount: p.amount,
-                        currency: p.currency, eqUSD: p.eq_usd, method: p.method,
-                        date: new Date(p.date).toLocaleDateString('es-VE'), timestamp: new Date(p.created_at).getTime()
-                    }));
-                }
-            }
-            saveToLocal();
-            updateDashboardStats();
-            renderStudentsTable();
-            populateStudentDropdown();
-        }
-
-        function initRouting() {
-            document.querySelectorAll('#main-nav li').forEach(item => {
-                item.onclick = () => {
-                    showPage(item.getAttribute('data-page'));
+        function initNav() {
+            document.querySelectorAll('#main-nav li').forEach(li => {
+                li.onclick = () => {
+                    const pg = li.dataset.page;
+                    document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+                    document.getElementById(pg).classList.add('active');
                     document.querySelectorAll('#main-nav li').forEach(i => i.classList.remove('active'));
-                    item.classList.add('active');
+                    li.classList.add('active');
+                    if (pg === 'dashboard') renderDashboard();
+                    if (pg === 'students') renderStudents();
+                    if (pg === 'payments') populateDropdown();
                 };
             });
         }
 
-        function showPage(pageId) {
-            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
-            const target = document.getElementById(pageId);
-            if (target) {
-                target.classList.add('active');
-                if (pageId === 'dashboard') updateDashboardStats();
-                if (pageId === 'students') renderStudentsTable();
-                if (pageId === 'payments') populateStudentDropdown();
-            }
-        }
-
-        function saveToLocal() { sessionStorage.setItem('academy_students', JSON.stringify(students)); localStorage.setItem('academy_payments', JSON.stringify(payments)); localStorage.setItem('academy_rate', currentRate); }
-
-        function updateDashboardStats() {
-            const totalUSD = payments.reduce((acc, p) => acc + (p.eqUSD || 0), 0);
-            const popS = payments.filter(p => p.service.includes('POP')).reduce((acc, p) => acc + (p.eqUSD || 0), 0);
-            if (document.getElementById('stat-total-income')) document.getElementById('stat-total-income').innerText = `$ ${totalUSD.toFixed(2)}`;
-            if (document.getElementById('stat-total-income-bs')) document.getElementById('stat-total-income-bs').innerText = `${(totalUSD * currentRate).toFixed(2)} BS`;
-            if (document.getElementById('stat-active-students')) document.getElementById('stat-active-students').innerText = students.length;
-            if (document.getElementById('stat-pop-sales')) document.getElementById('stat-pop-sales').innerText = `$ ${popS.toFixed(2)}`;
-            renderRecentPayments();
-        }
-
-        function renderRecentPayments() {
+        function renderDashboard() {
+            const income = state.payments.reduce((a, b) => a + (b.eqUSD || 0), 0);
+            const pop = state.payments.filter(p => p.service.includes('POP')).reduce((a, b) => a + (b.eqUSD || 0), 0);
+            document.getElementById('stat-total-income').innerText = `$ ${income.toFixed(2)}`;
+            document.getElementById('stat-total-income-bs').innerText = `${(income * state.rate).toFixed(2)} BS`;
+            document.getElementById('stat-active-students').innerText = state.students.length;
+            document.getElementById('stat-pop-sales').innerText = `$ ${pop.toFixed(2)}`;
+            
             const tbody = document.getElementById('recent-payments-body');
-            if (tbody) {
-                const recent = payments.slice(0, 8);
-                tbody.innerHTML = recent.map(p => `<tr><td>${p.studentName}</td><td>${p.service}</td><td><strong>${p.amount} ${p.currency}</strong></td><td>${p.date}</td><td><span class="status-badge status-paid">Listo</span></td></tr>`).join('');
-            }
+            tbody.innerHTML = state.payments.slice(0, 5).map(p => `<tr><td>${p.studentName}</td><td>${p.service}</td><td>$ ${p.eqUSD.toFixed(2)}</td></tr>`).join('');
         }
 
-        function renderStudentsTable() {
-            const tbody = document.getElementById('students-table-body');
-            if (tbody) tbody.innerHTML = students.map(s => `<tr><td><strong>${s.name}</strong></td><td>${s.category}</td><td><span class="status-badge ${s.active ? 'status-paid' : 'status-pending'}">${s.active ? 'Activo' : 'Inactivo'}</span></td><td><button class="btn-small" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i></button></td></tr>`).join('');
+        function renderStudents() {
+            document.getElementById('students-table-body').innerHTML = state.students.map(s => `<tr><td>${s.name}</td><td>${s.category}</td><td>Activo</td><td><button onclick="editSt('${s.id}')">E</button></td></tr>`).join('');
         }
 
-        function populateStudentDropdown() { 
-            const select = document.getElementById('pay-student-id'); 
-            if (select) select.innerHTML = '<option value="">Seleccione...</option>' + students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        function populateDropdown() {
+            document.getElementById('pay-student-id').innerHTML = '<option value="">Sel...</option>' + state.students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
         }
 
-        function initPopSales() {
-            document.querySelectorAll('.buy-pop').forEach(btn => {
-                btn.onclick = async () => {
-                    const item = btn.dataset.item; const price = parseFloat(btn.dataset.price);
-                    const pData = { student_name: 'Venta Directa', service: `POP: ${item}`, amount: price, currency: 'USD', eq_usd: price, method: 'Efectivo' };
-                    if (isConnected) await supabase.from('payments').insert([pData]);
-                    payments.unshift({ id: Date.now().toString(), studentName: 'Venta Directa', service: pData.service, amount: price, currency: 'USD', eqUSD: price, method: 'Efectivo', date: new Date().toLocaleDateString('es-VE'), timestamp: Date.now() });
-                    saveToLocal(); updateDashboardStats(); alert(`Venta de ${item} registrada.`);
+        const payF = document.getElementById('payment-form');
+        if (payF) payF.onsubmit = (e) => {
+            e.preventDefault();
+            const sid = document.getElementById('pay-student-id').value;
+            const stu = state.students.find(s => s.id === sid);
+            const amt = parseFloat(document.getElementById('pay-amount').value);
+            const cur = document.getElementById('pay-currency').value;
+            const usd = cur === 'USD' ? amt : amt / state.rate;
+            const p = { id: Date.now(), studentName: stu ? stu.name : 'Anon', service: document.getElementById('pay-service-type').value, eqUSD: usd, date: new Date().toLocaleDateString() };
+            state.payments.unshift(p);
+            localStorage.setItem('academy_payments', JSON.stringify(state.payments));
+            payF.reset();
+            renderDashboard();
+            alert("Pago Guardado");
+        };
+
+        const stF = document.getElementById('student-form');
+        if (stF) stF.onsubmit = (e) => {
+            e.preventDefault();
+            const id = document.getElementById('student-id').value || Date.now();
+            const s = { id, name: document.getElementById('student-name').value, category: document.getElementById('student-category').value };
+            const idx = state.students.findIndex(x => x.id == id);
+            if (idx > -1) state.students[idx] = s; else state.students.push(s);
+            localStorage.setItem('academy_students', JSON.stringify(state.students));
+            stF.reset();
+            document.getElementById('student-modal').classList.remove('active');
+            renderStudents();
+        };
+
+        function initPop() {
+            document.querySelectorAll('.buy-pop').forEach(b => {
+                b.onclick = () => {
+                    const p = { id: Date.now(), studentName: 'Venta POP', service: 'POP: ' + b.dataset.item, eqUSD: parseFloat(b.dataset.price), date: new Date().toLocaleDateString() };
+                    state.payments.unshift(p);
+                    localStorage.setItem('academy_payments', JSON.stringify(state.payments));
+                    renderDashboard();
+                    alert("Venta Registrada");
                 };
             });
         }
 
-        // Event delegator for modals and global actions
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('#open-sync-settings')) {
-                document.getElementById('supabase-url').value = cloudConfig.url || '';
-                document.getElementById('supabase-key').value = cloudConfig.key || '';
-                document.getElementById('sync-modal').classList.add('active');
-            }
-            if (e.target.classList.contains('close-modal')) e.target.closest('.modal').classList.remove('active');
-            if (e.target.id === 'add-student-btn-top') {
-                document.getElementById('student-form').reset();
-                document.getElementById('student-id').value = '';
-                document.getElementById('student-modal').classList.add('active');
-            }
-        });
+        document.getElementById('add-student-btn-top').onclick = () => { document.getElementById('student-form').reset(); document.getElementById('student-id').value = ''; document.getElementById('student-modal').classList.add('active'); };
+        document.getElementById('open-sync-settings').onclick = () => document.getElementById('sync-modal').classList.add('active');
+        document.querySelectorAll('.close-modal').forEach(b => b.onclick = () => b.closest('.modal').classList.remove('active'));
 
-        // Forms
-        const sf = document.getElementById('student-form');
-        if (sf) sf.onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('student-id').value || crypto.randomUUID();
-            const sData = { id, name: document.getElementById('student-name').value, category: document.getElementById('student-category').value, days: Array.from(document.querySelectorAll('input[name="days"]:checked')).map(cb => cb.value), active: true };
-            if (isConnected) await supabase.from('students').upsert(sData);
-            const idx = students.findIndex(s => s.id === id);
-            if (idx > -1) students[idx] = sData; else students.push(sData);
-            saveToLocal(); renderStudentsTable(); document.getElementById('student-modal').classList.remove('active');
-        };
-
-        const pf = document.getElementById('payment-form');
-        if (pf) pf.onsubmit = async (e) => {
-            e.preventDefault();
-            const sId = document.getElementById('pay-student-id').value;
-            const student = students.find(s => s.id === sId);
-            const amount = parseFloat(document.getElementById('pay-amount').value);
-            const currency = document.getElementById('pay-currency').value;
-            const eqUSD = (currency === 'USD') ? amount : amount / currentRate;
-            const pData = { student_id: sId, student_name: student ? student.name : 'Desconocido', service: document.getElementById('pay-service-type').value, amount, currency, eq_usd: eqUSD, method: document.getElementById('pay-method').value };
-            if (isConnected) await supabase.from('payments').insert([pData]);
-            payments.unshift({ ...pData, studentName: pData.student_name, eqUSD, date: new Date().toLocaleDateString('es-VE'), timestamp: Date.now() });
-            saveToLocal(); pf.reset(); showPage('dashboard'); alert('Pago registrado');
-        };
+        function connectCloud(u, k) {
+            try {
+                if (window.supabase) {
+                    supabase = window.supabase.createClient(u, k);
+                    state.isConnected = true;
+                    document.getElementById('cloud-status').querySelector('span').innerText = 'Conectado';
+                }
+            } catch(e){}
+        }
     </script>
 </body>
 </html>
