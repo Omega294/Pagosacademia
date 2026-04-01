@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .search-results { background:#1e293b; border-radius:10px; margin-top:5px; max-height:200px; overflow-y:auto; border:1px solid #334155; }
+        .search-item { padding:10px; cursor:pointer; color:white; font-size:0.9rem; border-bottom:1px solid #334155; }
+        .search-item:hover { background:#334155; }
+        .search-item.new { color:#0ea5e9; font-weight:bold; }
+    </style>
 </head>
 <body class="dark-theme">
     <!-- UI Layer: Login -->
@@ -15,12 +21,7 @@
         <div class="login-card glass-panel bounce-in">
             <div class="logo large"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div>
             <h2>Gestión de Pagos</h2>
-            <div class="form-group">
-                <div style="position: relative;">
-                    <input type="password" id="login-password" placeholder="admin123">
-                    <i class="fas fa-eye" id="toggle-p" style="position: absolute; right: 10px; top: 12px; cursor: pointer;"></i>
-                </div>
-            </div>
+            <div class="form-group"><div style="position: relative;"><input type="password" id="login-password" placeholder="admin123"><i class="fas fa-eye" id="toggle-p" style="position: absolute; right: 10px; top: 12px; cursor: pointer;"></i></div></div>
             <button id="btn-do-login" class="btn-primary full-width">ENTRAR</button>
             <div id="debug-bypass" style="margin-top:20px; font-size:0.7rem; color: #64748b; cursor:pointer;" onclick="bypass()">ACCESO DE EMERGENCIA</div>
         </div>
@@ -34,86 +35,81 @@
                 <ul id="main-nav">
                     <li class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> <span>Dashboard</span></li>
                     <li data-page="students"><i class="fas fa-users"></i> <span>Alumnos</span></li>
-                    <li data-page="payments"><i class="fas fa-money-bill-wave"></i> <span>Pagos</span></li>
+                    <li data-page="payments"><i class="fas fa-money-bill-wave"></i> <span>Cobrar</span></li>
                     <li data-page="inventory"><i class="fas fa-box-open"></i> <span>Material POP</span></li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <div class="cloud-status" id="cloud-status"><i class="fas fa-cloud"></i> <span>Cloud Sync</span> <button id="open-sync-settings"><i class="fas fa-cog"></i></button></div>
+                <div class="cloud-status" id="cloud-status"><i class="fas fa-cloud"></i> <span>Nube</span> <button id="open-sync-settings"><i class="fas fa-cog"></i></button></div>
                 <div class="currency-status"><label>Tasa:</label> <input type="number" id="global-rate" value="40.0" step="0.1"></div>
             </div>
         </aside>
 
         <main class="main-content">
             <header class="top-header">
-                <div class="search-bar"><i class="fas fa-search"></i> <input type="text" placeholder="Buscar alumno..."></div>
+                <div class="search-bar"><i class="fas fa-search"></i> <input type="text" id="top-search" placeholder="Búsqueda rápida alumnos..."></div>
                 <div class="user-profile"><div class="avatar"><img src="https://ui-avatars.com/api/?name=Admin&background=0284c7&color=fff" alt="User"></div></div>
             </header>
 
             <div id="content-area">
                 <section id="dashboard" class="page-section active">
-                    <div class="welcome-banner"><h1>Dashboard Administrativo</h1><p>Control de ingresos y participación</p></div>
+                    <div class="welcome-banner"><h1>Dashboard</h1><p>Panel de ingresos diarios</p></div>
                     <div class="stats-grid">
-                        <div class="stat-card glass-panel"><h3>Recaudado (USD)</h3><p id="stat-total-income">$ 0.00</p></div>
-                        <div class="stat-card glass-panel"><h3>Recaudado (BS)</h3><p id="stat-total-income-bs">0 BS</p></div>
-                        <div class="stat-card glass-panel"><h3>Alumnos Activos</h3><p id="stat-active-students">0</p></div>
+                        <div class="stat-card glass-panel"><h3>Totales (USD)</h3><p id="stat-total-income">$ 0.00</p></div>
+                        <div class="stat-card glass-panel"><h3>Totales (BS)</h3><p id="stat-total-income-bs">0 BS</p></div>
+                        <div class="stat-card glass-panel"><h3>Alumnos</h3><p id="stat-active-students">0</p></div>
                     </div>
-                    <div class="glass-panel" style="margin-top:20px; padding:20px;">
-                        <h2>Actividad Reciente</h2>
-                        <table style="width:100%; margin-top:20px; border-collapse:collapse;" id="recent-payments-table"><tbody id="recent-payments-body"></tbody></table>
-                    </div>
+                    <div class="glass-panel" style="margin-top:20px; padding:20px;"><table style="width:100%; border-collapse:collapse;" id="recent-payments-table"><tbody id="recent-payments-body"></tbody></table></div>
                 </section>
 
                 <section id="students" class="page-section">
-                    <div class="page-header"><h2>Alumnos</h2> <button class="btn-primary" id="btn-new-student">Registrar Nuevo</button></div>
-                    <div class="glass-panel"><table style="width:100%;"><thead><tr align="left"><th>Nombre</th><th>Categoría</th><th>Estado</th><th>Acciones</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
+                    <div class="page-header"><h2>Alumnos Registrados</h2> <button class="btn-primary" id="btn-new-student">Registrar Nuevo</button></div>
+                    <div class="glass-panel"><table style="width:100%;"><thead><tr align="left"><th>Nombre</th><th>Cédula</th><th>Cat.</th><th>Acciones</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
                 </section>
 
                 <section id="payments" class="page-section">
-                    <div class="page-header"><h2>Nuevo Registro de Pago</h2></div>
+                    <div class="page-header"><h2>Registrar Cobro</h2></div>
                     <div class="glass-panel" style="padding:30px; max-width:600px; margin:0 auto;">
+                        <div class="form-group">
+                            <label>Buscar Alumno (Nombre o Cédula)</label>
+                            <input type="text" id="pay-student-search" placeholder="Escriba para buscar..." class="full-width">
+                            <div id="search-results-list" class="search-results hidden"></div>
+                        </div>
+
                         <form id="payment-form">
-                            <div class="form-group"><label>Alumno</label><select id="pay-student" required class="full-width"><option value="">Seleccione Alumno...</option></select></div>
-                            <div class="form-group"><label>Servicio o Producto</label><select id="pay-service" class="full-width">
-                                <optgroup label="Servicios Académicos">
+                            <input type="hidden" id="pay-student-id">
+                            <div id="selected-student-box" class="glass-panel" style="padding:15px; margin-bottom:20px; display:none; border-color:#0ea5e9;">
+                                <p style="margin:0; font-weight:bold; color:#0ea5e9;"><i class="fas fa-user-check"></i> Alumno Seleccionado:</p>
+                                <p id="selected-student-name" style="margin:5px 0 0 0; font-size:1.1rem;"></p>
+                            </div>
+
+                            <div class="form-group"><label>Servicio Académico / Producto</label>
+                            <select id="pay-service" class="full-width">
+                                <optgroup label="Servicios">
                                     <option value="Práctica General">Práctica General</option>
                                     <option value="Mensualidad">Mensualidad (1 Mes)</option>
-                                    <option value="Membresía 3 Meses">Membresía Trimestral (3 Meses)</option>
-                                    <option value="Membresía 6 Meses">Membresía Semestral (6 Meses)</option>
+                                    <option value="Membresía 3 Meses">Membresía 3 Meses</option>
+                                    <option value="Membresía 6 Meses">Membresía 6 Meses</option>
                                 </optgroup>
-                                <optgroup label="Otros">
+                                <optgroup label="Uniforme">
                                     <option value="Inscripción">Inscripción</option>
-                                    <option value="Uniforme">Uniforme Completo</option>
-                                    <option value="Pantalón">Pantalón</option>
+                                    <option value="Camisa">Camisa Oficial</option>
+                                    <option value="Shorts">Shorts Academia</option>
+                                    <option value="Gorra">Gorra Academia</option>
                                 </optgroup>
                             </select></div>
-                            <div class="form-group"><label>Monto a Cobrar</label><div style="display:flex; gap:10px;"><input type="number" id="pay-amount" placeholder="0.00" step="0.01" required style="flex:1;"><select id="pay-currency"><option value="USD">USD</option><option value="BS">BS</option></select></div></div>
-                            <button type="submit" class="btn-primary full-width" style="margin-top:20px; padding:15px;">GUARDAR TRANSACCIÓN</button>
+                            <div class="form-group"><label>Monto</label><div style="display:flex; gap:10px;"><input type="number" id="pay-amount" placeholder="0.00" step="0.01" required style="flex:1;"><select id="pay-currency"><option value="USD">USD</option><option value="BS">BS</option></select></div></div>
+                            <button type="submit" id="btn-save-payment" class="btn-primary full-width" style="margin-top:20px; padding:15px;" disabled>PROCESAR COBRO</button>
                         </form>
                     </div>
                 </section>
 
                 <section id="inventory" class="page-section">
-                    <div class="page-header"><h2>Catálogo Material POP</h2></div>
-                    <div class="pop-catalog-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:20px;">
-                        <div class="pop-card glass-panel" style="padding:25px; text-align:center;">
-                            <i class="fas fa-tshirt" style="font-size:2rem; color:#0ea5e9; margin-bottom:15px;"></i>
-                            <h4>Camisa Oficial</h4>
-                            <p style="font-size:1.2rem; font-weight:bold; margin:10px 0;">$ 25.00</p>
-                            <button onclick="buyPop('Camisa', 25)" class="btn-primary full-width">VENDER</button>
-                        </div>
-                        <div class="pop-card glass-panel" style="padding:25px; text-align:center;">
-                            <i class="fas fa-hat-cowboy" style="font-size:2rem; color:#0ea5e9; margin-bottom:15px;"></i>
-                            <h4>Gorra Academia</h4>
-                            <p style="font-size:1.2rem; font-weight:bold; margin:10px 0;">$ 15.00</p>
-                            <button onclick="buyPop('Gorra', 15)" class="btn-primary full-width">VENDER</button>
-                        </div>
-                        <div class="pop-card glass-panel" style="padding:25px; text-align:center;">
-                            <i class="fas fa-running" style="font-size:2rem; color:#38bdf8; margin-bottom:15px;"></i>
-                            <h4>Shorts Deportivos</h4>
-                            <p style="font-size:1.2rem; font-weight:bold; margin:10px 0;">$ 20.00</p>
-                            <button onclick="buyPop('Shorts', 20)" class="btn-primary full-width">VENDER</button>
-                        </div>
+                    <div class="page-header"><h2>Material POP</h2></div>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap:20px;">
+                        <div class="pop-card glass-panel" style="padding:25px; text-align:center;"><h4>Camisa</h4><p>$25</p><button onclick="buyPop('Camisa', 25)" class="btn-primary full-width">VENDER</button></div>
+                        <div class="pop-card glass-panel" style="padding:25px; text-align:center;"><h4>Gorra</h4><p>$15</p><button onclick="buyPop('Gorra', 15)" class="btn-primary full-width">VENDER</button></div>
+                        <div class="pop-card glass-panel" style="padding:25px; text-align:center;"><h4>Shorts</h4><p>$20</p><button onclick="buyPop('Shorts', 20)" class="btn-primary full-width">VENDER</button></div>
                     </div>
                 </section>
             </div>
@@ -125,9 +121,10 @@
         <div class="modal-content glass-panel" style="width:340px; padding:25px;">
             <h2 style="margin-bottom:20px;">Registrar Alumno</h2>
             <form id="student-form">
+                <input type="hidden" id="st-auto-select" value="false">
+                <div class="form-group"><label>Cédula</label><input type="text" id="st-cedula" placeholder="Ej: 30123456" class="full-width"></div>
                 <div class="form-group"><label>Nombre Completo</label><input type="text" id="st-name" placeholder="Ej: Juan Perez" required class="full-width"></div>
                 <div class="form-group"><label>Categoría</label><select id="st-cat" class="full-width"><option value="Infantil">Infantil</option><option value="Juvenil">Juvenil</option><option value="Adulto">Adulto</option></select></div>
-                <div style="margin:15px 0;"><label>Asistencia:</label><br><label><input type="checkbox" value="Lunes" checked> Lunes</label> &nbsp; <label><input type="checkbox" value="Martes" checked> Martes</label></div>
                 <button type="submit" class="btn-primary full-width" style="padding:12px;">GUARDAR</button>
                 <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:10px; background:none; border:1px solid #334155;">CANCELAR</button>
             </form>
@@ -173,17 +170,49 @@
                 if(p==='admin123' || p==='entrar' || p==='godmode') {
                     try { sessionStorage.setItem('acad_session', 'true'); } catch(e){}
                     bypass();
-                } else { alert("Error de acceso"); }
+                } else { alert("Acceso denegado"); }
             };
             document.getElementById('toggle-p').onclick = function() {
                 var p = document.getElementById('login-password');
                 p.type = p.type === 'password' ? 'text' : 'password';
             };
-            document.getElementById('global-rate').onchange = function() {
-                state.rate = parseFloat(this.value) || 40.0;
-                saveLocal();
+            // Search LOGIC
+            document.getElementById('pay-student-search').oninput = function() {
+                var q = this.value.toLowerCase().trim();
+                var results = document.getElementById('search-results-list');
+                if(!q) { results.classList.add('hidden'); return; }
+                
+                var filtered = state.students.filter(function(s){
+                    return s.name.toLowerCase().includes(q) || (s.cedula || "").includes(q);
+                });
+
+                var html = filtered.map(function(s){
+                    return `<div class="search-item" onclick="selectStudent('${s.id}', '${s.name}')">${s.name} <small>(${s.cedula||'No CI'})</small></div>`;
+                }).join('');
+
+                html += `<div class="search-item new" onclick="quickNewStudent('${q}')"><i class="fas fa-plus"></i> Registrar nuevo: "${q}"</div>`;
+                
+                results.innerHTML = html;
+                results.classList.remove('hidden');
             };
         };
+
+        function selectStudent(id, name) {
+            document.getElementById('pay-student-id').value = id;
+            document.getElementById('selected-student-name').innerText = name;
+            document.getElementById('selected-student-box').style.display = 'block';
+            document.getElementById('search-results-list').classList.add('hidden');
+            document.getElementById('pay-student-search').value = name;
+            document.getElementById('btn-save-payment').disabled = false;
+        }
+
+        function quickNewStudent(name) {
+            document.getElementById('st-auto-select').value = "true";
+            document.getElementById('st-name').value = isNaN(name) ? name.toUpperCase() : "";
+            document.getElementById('st-cedula').value = !isNaN(name) ? name : "";
+            document.getElementById('modal-student').style.display='flex';
+            document.getElementById('search-results-list').classList.add('hidden');
+        }
 
         function initNav() {
             document.querySelectorAll('#main-nav li').forEach(function(li){
@@ -195,17 +224,20 @@
                     li.classList.add('active');
                     if(pg==='dashboard') renderDashboard();
                     if(pg==='students') renderStudents();
-                    if(pg==='payments') renderPaymentList();
+                    if(pg==='payments') {
+                        document.getElementById('payment-form').reset();
+                        document.getElementById('selected-student-box').style.display = 'none';
+                        document.getElementById('btn-save-payment').disabled = true;
+                    }
                 };
             });
         }
 
         function renderDashboard() {
             var total = state.payments.reduce(function(a,b){ return a + (b.usd||0); }, 0);
-            var activeS = state.students.length;
             document.getElementById('stat-total-income').innerText = '$ ' + total.toFixed(2);
             document.getElementById('stat-total-income-bs').innerText = (total * state.rate).toFixed(2) + ' BS';
-            document.getElementById('stat-active-students').innerText = activeS;
+            document.getElementById('stat-active-students').innerText = state.students.length;
             document.getElementById('recent-payments-body').innerHTML = state.payments.slice(0,8).map(function(p){
                 return `<tr style="border-bottom:1px solid #334155"><td style="padding:12px">${p.name}</td><td>${p.srv}</td><td align="right" style="color:#0ea5e9;">$ ${p.usd.toFixed(2)}</td></tr>`;
             }).join('');
@@ -213,30 +245,26 @@
 
         function renderStudents() {
             document.getElementById('students-table-body').innerHTML = state.students.map(function(s){
-                return `<tr style="border-bottom:1px solid #334155"><td style="padding:12px">${s.name}</td><td>${s.cat}</td><td align="center">Lun/Mar</td><td align="center"><button class="btn-small" onclick="delSt('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
-            }).join('');
-        }
-
-        function renderPaymentList() {
-            var sel = document.getElementById('pay-student');
-            sel.innerHTML = '<option value="">Seleccione Alumno...</option>' + state.students.map(function(s){
-                return `<option value="${s.id}">${s.name}</option>`;
+                return `<tr style="border-bottom:1px solid #334155"><td style="padding:12px">${s.name}</td><td>${s.cedula||'---'}</td><td>${s.cat}</td><td align="center"><button class="btn-small" onclick="delSt('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
             }).join('');
         }
 
         document.getElementById('student-form').onsubmit = function(e) {
             e.preventDefault();
-            var n = document.getElementById('st-name').value;
-            state.students.push({ id: Date.now(), name: n, cat: document.getElementById('st-cat').value });
+            var id = Date.now();
+            var name = document.getElementById('st-name').value.toUpperCase();
+            var s = { id: id, name: name, cedula: document.getElementById('st-cedula').value, cat: document.getElementById('st-cat').value };
+            state.students.push(s);
             saveLocal();
             closeModals();
             renderStudents();
-            alert("Alumno Registrado");
+            if(document.getElementById('st-auto-select').value === "true") selectStudent(id, name);
+            alert("Alumno Guardado");
         };
 
         document.getElementById('payment-form').onsubmit = function(e) {
             e.preventDefault();
-            var sid = document.getElementById('pay-student').value;
+            var sid = document.getElementById('pay-student-id').value;
             var stu = state.students.find(function(s){ return s.id == sid; });
             var amt = parseFloat(document.getElementById('pay-amount').value);
             var cur = document.getElementById('pay-currency').value;
@@ -244,20 +272,22 @@
             state.payments.unshift({ id: Date.now(), name: stu?stu.name:'Anónimo', srv: document.getElementById('pay-service').value, usd: usd, date: new Date().toLocaleDateString() });
             saveLocal();
             renderDashboard();
-            alert("Pago Procesado Correctamente");
+            this.reset();
+            document.getElementById('selected-student-box').style.display = 'none';
+            document.getElementById('btn-save-payment').disabled = true;
+            alert("Pago Procesado con éxito");
         };
 
         function buyPop(item, price) {
             state.payments.unshift({ id: Date.now(), name: 'Venta Directa', srv: 'POP: '+item, usd: price, date: new Date().toLocaleDateString() });
             saveLocal();
             renderDashboard();
-            alert("Venta de " + item + " exitosa");
+            alert("Venta registrada");
         }
 
-        function delSt(id) { if(confirm("¿Borrar alumno?")) { state.students = state.students.filter(function(s){ return s.id != id; }); saveLocal(); renderStudents(); } }
+        function delSt(id) { if(confirm("¿Borrar?")) { state.students = state.students.filter(function(s){ return s.id != id; }); saveLocal(); renderStudents(); } }
         function closeModals() { document.querySelectorAll('.modal').forEach(function(m){ m.style.display='none'; }); }
-        document.getElementById('btn-new-student').onclick = function() { document.getElementById('student-form').reset(); document.getElementById('modal-student').style.display='flex'; };
-        document.getElementById('open-sync-settings').onclick = function() { alert("Configuracion de sincronizacion pendiente de credenciales Supabase."); };
+        document.getElementById('btn-new-student').onclick = function() { document.getElementById('student-form').reset(); document.getElementById('st-auto-select').value='false'; document.getElementById('modal-student').style.display='flex'; };
     </script>
 </body>
 </html>
