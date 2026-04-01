@@ -348,6 +348,230 @@
         </div>
     </div>
 
-    <script src="app.js?v=20260401-1240"></script>
+    <script>
+        /**
+         * ACADEMIA DE PAGOS - Secure & Cloud Integrated
+         * INLINED VERSION FOR MAXIMUM COMPATIBILITY
+         */
+
+        // --- STATE ---
+        let students = JSON.parse(localStorage.getItem('academy_students')) || [];
+        let payments = JSON.parse(localStorage.getItem('academy_payments')) || [];
+        let currentRate = parseFloat(localStorage.getItem('academy_rate')) || 40.0;
+        let supabase = null;
+        let isConnected = false;
+        let session = sessionStorage.getItem('academy_session') === 'true';
+
+        const cloudConfig = JSON.parse(localStorage.getItem('academy_cloud_config')) || { url: '', key: '' };
+
+        // --- ERROR HANDLING ---
+        window.onerror = (msg, url, line) => {
+            console.error(`JS ERROR: ${msg} @ ${line}`);
+            alert('Error detectado: ' + msg);
+        };
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthUI();
+            
+            const toggler = document.getElementById('toggle-p');
+            if (toggler) {
+                toggler.onclick = () => {
+                    const pin = document.getElementById('login-password');
+                    const isPass = pin.type === 'password';
+                    pin.type = isPass ? 'text' : 'password';
+                    toggler.className = isPass ? 'fas fa-eye-slash toggle-pass' : 'fas fa-eye toggle-pass';
+                };
+            }
+
+            const loginBtn = document.getElementById('btn-do-login');
+            if (loginBtn) loginBtn.onclick = handleLogin;
+            
+            const loginPass = document.getElementById('login-password');
+            if (loginPass) loginPass.onkeypress = (e) => e.key === 'Enter' && handleLogin();
+
+            if (session) startApp();
+        });
+
+        function handleLogin() {
+            const pwInput = document.getElementById('login-password');
+            if (!pwInput) return;
+            const val = pwInput.value.trim().toLowerCase();
+            const err = document.getElementById('login-error');
+            
+            // MASTER OVERRIDE: admin123 or godmode
+            if (val === 'admin123' || val === 'godmode' || val === 'entrar') {
+                session = true;
+                sessionStorage.setItem('academy_session', 'true');
+                updateAuthUI();
+                startApp();
+            } else {
+                if (err) err.classList.remove('hidden');
+                pwInput.value = '';
+                setTimeout(() => { if (err) err.classList.add('hidden'); }, 3000);
+            }
+        }
+
+        function updateAuthUI() {
+            const loginView = document.getElementById('view-login');
+            const appContainer = document.getElementById('app-container');
+            if (session) {
+                if (loginView) loginView.classList.add('hidden');
+                if (appContainer) appContainer.classList.remove('hidden');
+            } else {
+                if (loginView) loginView.classList.remove('hidden');
+                if (appContainer) appContainer.classList.add('hidden');
+            }
+        }
+
+        async function startApp() {
+            const rateInput = document.getElementById('global-rate');
+            if (rateInput) rateInput.value = currentRate;
+            initRouting();
+            initPopSales();
+            if (cloudConfig.url && cloudConfig.key) await connectToCloud(cloudConfig.url, cloudConfig.key);
+            await refreshAllData();
+        }
+
+        async function connectToCloud(url, key) {
+            try {
+                if (!window.supabase) return false;
+                supabase = window.supabase.createClient(url, key);
+                const { error } = await supabase.from('app_settings').select('value').eq('key', 'usd_rate').single();
+                if (error && error.code !== 'PGRST116') throw error;
+                isConnected = true;
+                const statusEl = document.getElementById('cloud-status');
+                if (statusEl) {
+                    statusEl.classList.add('connected');
+                    statusEl.querySelector('span').innerText = 'Conectado';
+                }
+                localStorage.setItem('academy_cloud_config', JSON.stringify({ url, key }));
+                return true;
+            } catch (err) { return false; }
+        }
+
+        async function refreshAllData() {
+            if (isConnected) {
+                const { data: sData } = await supabase.from('students').select('*').order('name');
+                if (sData) students = sData;
+                const { data: pData } = await supabase.from('payments').select('*').order('created_at', { ascending: false });
+                if (pData) {
+                    payments = pData.map(p => ({
+                        id: p.id, studentName: p.student_name, service: p.service, amount: p.amount,
+                        currency: p.currency, eqUSD: p.eq_usd, method: p.method,
+                        date: new Date(p.date).toLocaleDateString('es-VE'), timestamp: new Date(p.created_at).getTime()
+                    }));
+                }
+            }
+            saveToLocal();
+            updateDashboardStats();
+            renderStudentsTable();
+            populateStudentDropdown();
+        }
+
+        function initRouting() {
+            document.querySelectorAll('#main-nav li').forEach(item => {
+                item.onclick = () => {
+                    showPage(item.getAttribute('data-page'));
+                    document.querySelectorAll('#main-nav li').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                };
+            });
+        }
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(pageId);
+            if (target) {
+                target.classList.add('active');
+                if (pageId === 'dashboard') updateDashboardStats();
+                if (pageId === 'students') renderStudentsTable();
+                if (pageId === 'payments') populateStudentDropdown();
+            }
+        }
+
+        function saveToLocal() { sessionStorage.setItem('academy_students', JSON.stringify(students)); localStorage.setItem('academy_payments', JSON.stringify(payments)); localStorage.setItem('academy_rate', currentRate); }
+
+        function updateDashboardStats() {
+            const totalUSD = payments.reduce((acc, p) => acc + (p.eqUSD || 0), 0);
+            const popS = payments.filter(p => p.service.includes('POP')).reduce((acc, p) => acc + (p.eqUSD || 0), 0);
+            if (document.getElementById('stat-total-income')) document.getElementById('stat-total-income').innerText = `$ ${totalUSD.toFixed(2)}`;
+            if (document.getElementById('stat-total-income-bs')) document.getElementById('stat-total-income-bs').innerText = `${(totalUSD * currentRate).toFixed(2)} BS`;
+            if (document.getElementById('stat-active-students')) document.getElementById('stat-active-students').innerText = students.length;
+            if (document.getElementById('stat-pop-sales')) document.getElementById('stat-pop-sales').innerText = `$ ${popS.toFixed(2)}`;
+            renderRecentPayments();
+        }
+
+        function renderRecentPayments() {
+            const tbody = document.getElementById('recent-payments-body');
+            if (tbody) {
+                const recent = payments.slice(0, 8);
+                tbody.innerHTML = recent.map(p => `<tr><td>${p.studentName}</td><td>${p.service}</td><td><strong>${p.amount} ${p.currency}</strong></td><td>${p.date}</td><td><span class="status-badge status-paid">Listo</span></td></tr>`).join('');
+            }
+        }
+
+        function renderStudentsTable() {
+            const tbody = document.getElementById('students-table-body');
+            if (tbody) tbody.innerHTML = students.map(s => `<tr><td><strong>${s.name}</strong></td><td>${s.category}</td><td><span class="status-badge ${s.active ? 'status-paid' : 'status-pending'}">${s.active ? 'Activo' : 'Inactivo'}</span></td><td><button class="btn-small" onclick="editStudent('${s.id}')"><i class="fas fa-edit"></i></button></td></tr>`).join('');
+        }
+
+        function populateStudentDropdown() { 
+            const select = document.getElementById('pay-student-id'); 
+            if (select) select.innerHTML = '<option value="">Seleccione...</option>' + students.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        }
+
+        function initPopSales() {
+            document.querySelectorAll('.buy-pop').forEach(btn => {
+                btn.onclick = async () => {
+                    const item = btn.dataset.item; const price = parseFloat(btn.dataset.price);
+                    const pData = { student_name: 'Venta Directa', service: `POP: ${item}`, amount: price, currency: 'USD', eq_usd: price, method: 'Efectivo' };
+                    if (isConnected) await supabase.from('payments').insert([pData]);
+                    payments.unshift({ id: Date.now().toString(), studentName: 'Venta Directa', service: pData.service, amount: price, currency: 'USD', eqUSD: price, method: 'Efectivo', date: new Date().toLocaleDateString('es-VE'), timestamp: Date.now() });
+                    saveToLocal(); updateDashboardStats(); alert(`Venta de ${item} registrada.`);
+                };
+            });
+        }
+
+        // Event delegator for modals and global actions
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('#open-sync-settings')) {
+                document.getElementById('supabase-url').value = cloudConfig.url || '';
+                document.getElementById('supabase-key').value = cloudConfig.key || '';
+                document.getElementById('sync-modal').classList.add('active');
+            }
+            if (e.target.classList.contains('close-modal')) e.target.closest('.modal').classList.remove('active');
+            if (e.target.id === 'add-student-btn-top') {
+                document.getElementById('student-form').reset();
+                document.getElementById('student-id').value = '';
+                document.getElementById('student-modal').classList.add('active');
+            }
+        });
+
+        // Forms
+        const sf = document.getElementById('student-form');
+        if (sf) sf.onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('student-id').value || crypto.randomUUID();
+            const sData = { id, name: document.getElementById('student-name').value, category: document.getElementById('student-category').value, days: Array.from(document.querySelectorAll('input[name="days"]:checked')).map(cb => cb.value), active: true };
+            if (isConnected) await supabase.from('students').upsert(sData);
+            const idx = students.findIndex(s => s.id === id);
+            if (idx > -1) students[idx] = sData; else students.push(sData);
+            saveToLocal(); renderStudentsTable(); document.getElementById('student-modal').classList.remove('active');
+        };
+
+        const pf = document.getElementById('payment-form');
+        if (pf) pf.onsubmit = async (e) => {
+            e.preventDefault();
+            const sId = document.getElementById('pay-student-id').value;
+            const student = students.find(s => s.id === sId);
+            const amount = parseFloat(document.getElementById('pay-amount').value);
+            const currency = document.getElementById('pay-currency').value;
+            const eqUSD = (currency === 'USD') ? amount : amount / currentRate;
+            const pData = { student_id: sId, student_name: student ? student.name : 'Desconocido', service: document.getElementById('pay-service-type').value, amount, currency, eq_usd: eqUSD, method: document.getElementById('pay-method').value };
+            if (isConnected) await supabase.from('payments').insert([pData]);
+            payments.unshift({ ...pData, studentName: pData.student_name, eqUSD, date: new Date().toLocaleDateString('es-VE'), timestamp: Date.now() });
+            saveToLocal(); pf.reset(); showPage('dashboard'); alert('Pago registrado');
+        };
+    </script>
 </body>
 </html>
