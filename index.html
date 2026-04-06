@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia - Sistema de Facturación PRO</title>
+    <title>Academia - Gestión de Pagos</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -16,16 +16,29 @@
         .service-btn:hover { border-color:#0ea5e9; }
         .service-btn.active { background:#0ea5e9; border-color:#0ea5e9; font-weight:600; box-shadow: 0 0 10px rgba(14,165,233,0.3); }
         
-        /* Catalog Enhancement */
-        .price-list-item { background:rgba(255,255,255,0.03); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid #334155; }
-        .price-item-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-        .price-item-header label { font-weight:700; color:#0ea5e9; font-size:1rem; }
+        /* Catalog UI */
+        .price-list-item { background:rgba(255,255,255,0.03); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid #334155; position: relative; }
+        .price-item-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+        .price-item-header label { font-weight:700; color:#0ea5e9; font-size:1.1rem; }
         .price-controls { display:grid; grid-template-columns: 1fr 1fr; gap:15px; }
         .p-box { display:flex; flex-direction:column; gap:5px; }
         .p-box label { font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:bold; }
-        .p-box input { background:#0f172a; border:1px solid #334155; color:white; padding:8px; border-radius:8px; width:100%; font-weight:bold; }
+        .p-box input { background:#0f172a; border:1px solid #334155; color:white; padding:10px; border-radius:8px; width:100%; font-weight:bold; }
         .ref-price { font-size:0.75rem; color:#f59e0b; margin-top:4px; font-weight:600; }
-        .delete-btn-sm { color:#ef4444; background:transparent; border:none; cursor:pointer; font-size:0.9rem; }
+        
+        .delete-btn-touch { 
+            color: #ef4444; 
+            background: rgba(239, 68, 68, 0.1); 
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            cursor: pointer; 
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 100;
+        }
+        .delete-btn-touch:hover { background: #ef4444; color: white; }
     </style>
 </head>
 <body class="dark-theme">
@@ -53,7 +66,7 @@
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <div class="currency-status"><label>Tasa USD ($):</label> <input type="number" id="global-rate" value="40.0" step="0.1" onchange="renderCatalogManagement()"></div>
+                <div class="currency-status"><label>Tasa USD ($):</label> <input type="number" id="global-rate" value="40.0" step="0.1" onchange="window.state.rate = parseFloat(this.value); window.saveAll(); window.renderCatalogManagement(); window.renderDashboard();"></div>
             </div>
         </aside>
 
@@ -76,7 +89,7 @@
 
                 <section id="students" class="page-section">
                     <div class="page-header"><h2>Gestión Académica</h2> <button class="btn-primary" onclick="openNewStudent()">NUEVO PARTICIPANTE</button></div>
-                    <div class="glass-panel"><table><thead><tr align="left"><th>Nombre</th><th>Cédula</th><th>Historial</th><th>-</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
+                    <div class="glass-panel"><table><thead><tr align="left"><th>Nombre</th><th>Cédula</th><th>Historial</th><th>Borrar</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
                 </section>
 
                 <section id="payments" class="page-section">
@@ -101,9 +114,8 @@
 
                 <section id="catalogo" class="page-section">
                     <header class="page-header"><h2>Configuración de Tarifas</h2> <button class="btn-primary" onclick="addNewProductModal()">CREAR SERVICIO/ITEM</button></header>
-                    <p style="color:var(--text-muted); margin-bottom:20px;"><i class="fas fa-info-circle"></i> Aquí puedes fijar los precios manuales para pagos en bolívares e impuestos.</p>
                     <div id="catalog-full-list" style="max-width:700px; margin: 0 auto;"></div>
-                    <div class="glass-panel" style="max-width:700px; margin: 20px auto; text-align:center;"><button onclick="saveCatalog()" class="btn-primary" style="margin:0 auto; width:100%; justify-content:center;">ACTUALIZAR PRECIOS GLOBALES</button></div>
+                    <div class="glass-panel" style="max-width:700px; margin: 20px auto; text-align:center;"><button onclick="saveCatalog()" class="btn-primary" style="margin:0 auto; width:100%; justify-content:center;">GUARDAR CAMBIOS EN EL CATÁLOGO</button></div>
                 </section>
             </div>
         </main>
@@ -130,7 +142,7 @@
             <form id="add-item-form">
                 <div class="form-group"><label>Nombre del Item</label><input type="text" id="new-item-name" required class="full-width"></div>
                 <div class="form-group"><label>Precio Base USD ($)</label><input type="number" id="new-item-price" step="0.01" required class="full-width"></div>
-                <button type="submit" class="btn-primary full-width" style="margin-top:15px;">AGREGAR</button>
+                <button type="submit" class="btn-primary full-width" style="margin-top:15px;">AGREGAR AL CATÁLOGO</button>
                 <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:5px;">CERRAR</button>
             </form>
         </div>
@@ -153,38 +165,27 @@
                     state.students = JSON.parse(localStorage.getItem('acad_st')) || [];
                     state.payments = JSON.parse(localStorage.getItem('acad_pay')) || [];
                     state.rate = parseFloat(localStorage.getItem('acad_rate')) || 40.0;
-                    
                     var saved = JSON.parse(localStorage.getItem('acad_prices'));
                     if(saved) {
-                        // Migración de formato antiguo a nuevo
-                        Object.keys(saved).forEach(function(k){
-                            if(typeof saved[k] === 'number') { saved[k] = { usd: saved[k], bs: saved[k] * state.rate }; }
-                        });
+                        Object.keys(saved).forEach(function(k){ if(typeof saved[k] === 'number') { saved[k] = { usd: saved[k], bs: saved[k] * state.rate }; } });
                         state.prices = saved;
                     } else {
-                        state.prices = { 
-                            'Mensualidad': { usd: 40, bs: 1600 }, 
-                            'Práctica': { usd: 10, bs: 400 }, 
-                            'Inscripción': { usd: 15, bs: 600 } 
-                        };
+                        state.prices = { 'Mensualidad': { usd: 40, bs: 1600 }, 'Inscripción': { usd: 15, bs: 600 } };
                     }
                     if(sessionStorage.getItem('acad_session')==='true') bypass();
                 }
             } catch(e){}
         }
 
-        function saveAll() {
-            try {
-                localStorage.setItem('acad_st', JSON.stringify(state.students));
-                localStorage.setItem('acad_pay', JSON.stringify(state.payments));
-                localStorage.setItem('acad_rate', state.rate);
-                localStorage.setItem('acad_prices', JSON.stringify(state.prices));
-            } catch(e){}
+        window.saveAll = function() {
+            localStorage.setItem('acad_st', JSON.stringify(state.students));
+            localStorage.setItem('acad_pay', JSON.stringify(state.payments));
+            localStorage.setItem('acad_rate', state.rate);
+            localStorage.setItem('acad_prices', JSON.stringify(state.prices));
         }
 
         function bypass() {
             document.getElementById('view-login').style.display='none';
-            document.getElementById('view-login').classList.add('hidden');
             document.getElementById('app-container').style.display='flex';
             document.getElementById('app-container').classList.remove('hidden');
             if(document.getElementById('global-rate')) document.getElementById('global-rate').value = state.rate;
@@ -198,10 +199,9 @@
             document.getElementById('btn-do-login').onclick = function() {
                 var p = document.getElementById('login-password').value.trim().toLowerCase();
                 if(p==='admin123' || p==='entrar' || p==='godmode') { try { sessionStorage.setItem('acad_session', 'true'); } catch(e){} bypass(); }
-                else { alert("Contraseña incorrecta"); }
+                else { alert("Acceso denegado"); }
             };
             document.getElementById('toggle-p').onclick = function() { var p = document.getElementById('login-password'); p.type = p.type === 'password' ? 'text' : 'password'; };
-            document.getElementById('global-rate').onchange = function() { state.rate = parseFloat(this.value) || 40.0; saveAll(); renderCatalogManagement(); renderDashboard(); };
             
             document.getElementById('pay-student-search').oninput = function() {
                 var q = this.value.toLowerCase().trim();
@@ -209,7 +209,7 @@
                 if(!q) { res.classList.add('hidden'); return; }
                 var filt = state.students.filter(function(s){ return s.name.toLowerCase().includes(q) || (s.cedula||"").includes(q); });
                 var html = filt.map(function(s){ return `<div class="search-item" onclick="selectStudent('${s.id}', '${s.name}')">${s.name} <small>(${s.cedula||'---'})</small></div>`; }).join('');
-                html += `<div class="search-item" onclick="quickNewStudent('${q}')" style="color:#0ea5e9; font-weight:bold;">+ Registrar "${q}" como Nuevo</div>`;
+                html += `<div class="search-item" onclick="quickNewStudent('${q}')" style="color:#0ea5e9; font-weight:bold;">+ Registrar "${q}"</div>`;
                 res.innerHTML = html; res.classList.remove('hidden');
             };
 
@@ -219,7 +219,7 @@
                 state.students.push({ id: id, name: name, cedula: document.getElementById('st-cedula').value, cat: document.getElementById('st-cat').value });
                 saveAll(); closeModals(); renderStudents();
                 if(document.getElementById('st-auto-select').value==='true') selectStudent(id, name);
-                alert("Alumno Registrado");
+                alert("Guardado");
             };
 
             document.getElementById('add-item-form').onsubmit = function(e){
@@ -227,7 +227,7 @@
                 var n = document.getElementById('new-item-name').value, p = parseFloat(document.getElementById('new-item-price').value);
                 state.prices[n] = { usd: p, bs: p * state.rate };
                 saveAll(); closeModals(); renderCatalogManagement();
-                alert("Añadido al catálogo");
+                alert("Añadido");
             };
 
             document.getElementById('payment-form').onsubmit = function(e){
@@ -235,23 +235,28 @@
                 var sid = document.getElementById('pay-student-id').value, srv = document.getElementById('pay-service-selected').value;
                 var amt = parseFloat(document.getElementById('pay-amount').value), cur = document.getElementById('pay-currency').value;
                 var usd = cur === 'USD' ? amt : amt / state.rate;
-                if(!srv) { alert("Debe elegir un ítem del menú."); return; }
+                if(!srv) { alert("Elegir item"); return; }
                 var stu = state.students.find(function(s){ return s.id==sid; });
-                state.payments.unshift({ id:Date.now(), sid: sid, name:stu?stu.name:'Anónimo', srv: srv, usd: usd, date: new Date().toLocaleDateString() });
+                state.payments.unshift({ id:Date.now(), sid: sid, name:stu?stu.name:'Anon', srv: srv, usd: usd, date: new Date().toLocaleDateString() });
                 saveAll(); renderDashboard(); this.reset();
                 document.getElementById('selected-student-box').style.display='none';
                 document.getElementById('payment-flow-fields').classList.add('hidden');
-                alert("Factura procesada con éxito");
+                alert("Facturado");
             };
             document.getElementById('pay-amount').oninput = updateLiveSummary;
         };
 
-        function renderCatalogManagement() {
+        window.renderCatalogManagement = function() {
             var list = document.getElementById('catalog-full-list'), r = state.rate;
             list.innerHTML = Object.keys(state.prices).map(function(key){
                 var p = state.prices[key];
                 return `<div class="price-list-item">
-                    <div class="price-item-header"><label>${key}</label> <button class="delete-btn-sm" onclick="deleteItem('${key}')"><i class="fas fa-trash"></i></button></div>
+                    <div class="price-item-header">
+                        <label>${key}</label> 
+                        <button type="button" class="delete-btn-touch" title="Eliminar" onclick="window.deleteItem('${key}')">
+                            <i class="fas fa-trash-alt"></i> Borrar
+                        </button>
+                    </div>
                     <div class="price-controls">
                         <div class="p-box"><label>Precio USD ($)</label><input type="number" step="0.1" value="${p.usd}" id="usd-${key.replace(/\s/g, '')}" oninput="updateRef('${key}')"></div>
                         <div class="p-box">
@@ -263,22 +268,32 @@
             }).join('');
         }
 
+        window.deleteItem = function(k) {
+            if(confirm("¿Seguro que deseas eliminar '"+k+"' del catálogo?")) {
+                delete state.prices[k];
+                saveAll();
+                renderCatalogManagement();
+                alert("Item eliminado.");
+            }
+        }
+
         function updateRef(key) {
             var usd = parseFloat(document.getElementById('usd-'+key.replace(/\s/g, '')).value) || 0;
             document.getElementById('ref-'+key.replace(/\s/g, '')).innerText = "Ref: " + (usd * state.rate).toFixed(2) + " BS";
         }
 
-        function saveCatalog() {
+        window.saveCatalog = function() {
             Object.keys(state.prices).forEach(function(key){
                 var id = key.replace(/\s/g, '');
                 var u = parseFloat(document.getElementById('usd-'+id).value) || 0;
                 var b = parseFloat(document.getElementById('bs-'+id).value) || (u * state.rate);
                 state.prices[key] = { usd: u, bs: b };
             });
-            saveAll(); alert("Precios base y manuales actualizados.");
+            saveAll(); 
+            alert("Catálogo actualizado.");
+            renderCatalogManagement();
         }
 
-        function deleteItem(k) { if(confirm("¿Quitar "+k+"?")) { delete state.prices[k]; saveAll(); renderCatalogManagement(); } }
         function addNewProductModal() { var m = document.getElementById('modal-add-item'); m.classList.remove('hidden'); m.classList.add('active'); }
 
         function selectStudent(id, name) {
@@ -304,10 +319,10 @@
             syncPaymentAmount();
         }
 
-        function syncPaymentAmount() {
+        window.syncPaymentAmount = function() {
             var key = document.getElementById('pay-service-selected').value;
             var cur = document.getElementById('pay-currency').value;
-            if(!key) return;
+            if(!key || !state.prices[key]) return;
             var val = cur === 'USD' ? state.prices[key].usd : state.prices[key].bs;
             document.getElementById('pay-amount').value = val.toFixed(2);
             updateLiveSummary();
@@ -318,8 +333,8 @@
             var s = document.getElementById('payment-summary-text'), d = document.getElementById('summary-display');
             if(amt <= 0) { s.style.display = 'none'; return; }
             s.style.display = 'block';
-            if(cur === 'USD') d.innerHTML = `Total a Facturar: <b>$${amt.toFixed(2)}</b><br><small>Tasa Ref: ${state.rate}</small>`;
-            else d.innerHTML = `Total a Facturar: <b>${amt.toFixed(2)} BS</b><br><small>Equivale a: $${(amt / state.rate).toFixed(2)}</small>`;
+            if(cur === 'USD') d.innerHTML = `Factura: <b>$${amt.toFixed(2)}</b><br><small>Tasa: ${state.rate}</small>`;
+            else d.innerHTML = `Factura: <b>${amt.toFixed(2)} BS</b><br><small>Ref: $${(amt / state.rate).toFixed(2)}</small>`;
         }
 
         function openNewStudent() { document.getElementById('student-form').reset(); document.getElementById('st-auto-select').value='false'; var m = document.getElementById('modal-student'); m.classList.remove('hidden'); m.classList.add('active'); }
@@ -337,7 +352,7 @@
             });
         }
 
-        function renderDashboard() {
+        window.renderDashboard = function() {
             var total = state.payments.reduce(function(a,b){ return a + (b.usd||0); }, 0);
             document.getElementById('stat-total-income').innerText = '$ ' + total.toFixed(2);
             document.getElementById('stat-total-income-bs').innerText = (total * state.rate).toFixed(2) + ' BS';
@@ -347,7 +362,7 @@
         function renderStudents() { 
             var body = document.getElementById('students-table-body'); 
             body.innerHTML = state.students.map(function(s){ 
-                return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${s.name}</td><td>${s.cedula||'---'}</td><td align="center"><button class="btn-small" onclick="showHistory('${s.id}', '${s.name}')">Ver Pagos</button></td><td align="center"><button class="delete-btn-sm" onclick="delSt('${s.id}')">X</button></td></tr>`; 
+                return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${s.name}</td><td>${s.cedula||'---'}</td><td align="center"><button class="btn-small" onclick="showHistory('${s.id}', '${s.name}')">Ver Pagos</button></td><td align="center"><button class="delete-btn-touch" onclick="delSt('${s.id}')">X</button></td></tr>`; 
             }).join(''); 
         }
         function showHistory(sid, name) {
@@ -356,7 +371,7 @@
             document.getElementById('history-list').innerHTML = f.length === 0 ? "Sin pagos." : f.map(function(p){ return `<div style="padding:10px; background:rgba(0,0,0,0.2); margin-bottom:5px; border-radius:5px;"><b>${p.srv}</b> - ${p.date}<br>$${p.usd.toFixed(2)}</div>`; }).join('');
             var m = document.getElementById('modal-history'); m.classList.remove('hidden'); m.classList.add('active');
         }
-        function delSt(i) { if(confirm("¿Borrar?")) { state.students = state.students.filter(function(s){ return s.id!=i; }); saveAll(); renderStudents(); } }
+        window.delSt = function(i) { if(confirm("Borrar alumno?")) { state.students = state.students.filter(function(s){ return s.id!=i; }); saveAll(); renderStudents(); } }
     </script>
 </body>
 </html>
