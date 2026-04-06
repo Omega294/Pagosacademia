@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia - Sistema de Facturación</title>
+    <title>Academia - Sistema de Facturación PRO</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -15,10 +15,17 @@
         .service-btn { background:#1e293b; border:1px solid #334155; color:white; padding:15px 10px; border-radius:10px; cursor:pointer; text-align:center; font-size:0.85rem; transition:all 0.2s; }
         .service-btn:hover { border-color:#0ea5e9; }
         .service-btn.active { background:#0ea5e9; border-color:#0ea5e9; font-weight:600; box-shadow: 0 0 10px rgba(14,165,233,0.3); }
-        .price-list-item { display:flex; align-items:center; gap:10px; padding:12px; background:rgba(255,255,255,0.03); border-radius:10px; margin-bottom:8px; }
-        .price-list-item input { background:transparent; border:1px solid #334155; color:white; padding:5px; border-radius:5px; width:70px; text-align:right; }
-        .price-list-item label { flex:1; font-weight:500; font-size:0.9rem; }
-        .delete-item { color:#ef4444; border:none; background:transparent; cursor:pointer; padding:5px; }
+        
+        /* Catalog Enhancement */
+        .price-list-item { background:rgba(255,255,255,0.03); border-radius:12px; padding:15px; margin-bottom:12px; border:1px solid #334155; }
+        .price-item-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+        .price-item-header label { font-weight:700; color:#0ea5e9; font-size:1rem; }
+        .price-controls { display:grid; grid-template-columns: 1fr 1fr; gap:15px; }
+        .p-box { display:flex; flex-direction:column; gap:5px; }
+        .p-box label { font-size:0.7rem; color:var(--text-muted); text-transform:uppercase; font-weight:bold; }
+        .p-box input { background:#0f172a; border:1px solid #334155; color:white; padding:8px; border-radius:8px; width:100%; font-weight:bold; }
+        .ref-price { font-size:0.75rem; color:#f59e0b; margin-top:4px; font-weight:600; }
+        .delete-btn-sm { color:#ef4444; background:transparent; border:none; cursor:pointer; font-size:0.9rem; }
     </style>
 </head>
 <body class="dark-theme">
@@ -26,7 +33,7 @@
     <div id="view-login" class="login-view">
         <div class="login-card glass-panel bounce-in">
             <div class="logo large"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div>
-            <h2>Gestión Administrativa</h2>
+            <h2>Gestión Administradora</h2>
             <div class="form-group"><div style="position: relative;"><input type="password" id="login-password" placeholder="admin123"><i class="fas fa-eye" id="toggle-p" style="position: absolute; right: 10px; top: 12px; cursor: pointer;"></i></div></div>
             <button id="btn-do-login" class="btn-primary full-width">INGRESAR</button>
             <div id="debug-bypass" style="margin-top:20px; font-size:0.7rem; color: #64748b; cursor:pointer;" onclick="bypass()">OVERRIDE SEGURIDAD</div>
@@ -46,57 +53,57 @@
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <div class="currency-status"><label>Tasa del día:</label> <input type="number" id="global-rate" value="40.0" step="0.1"></div>
+                <div class="currency-status"><label>Tasa USD ($):</label> <input type="number" id="global-rate" value="40.0" step="0.1" onchange="renderCatalogManagement()"></div>
             </div>
         </aside>
 
         <main class="main-content">
             <header class="top-header">
-                <div class="search-bar"><i class="fas fa-search"></i> <input type="text" id="top-search" placeholder="Buscar alumnos..."></div>
+                <div class="search-bar"><i class="fas fa-search"></i> <input type="text" id="top-search" placeholder="Buscador rápido..."></div>
                 <div class="user-profile"><div class="avatar"><img src="https://ui-avatars.com/api/?name=Admin&background=0284c7&color=fff" alt="User"></div></div>
             </header>
 
             <div id="content-area">
                 <section id="dashboard" class="page-section active">
-                    <div class="welcome-banner"><h1>Vista General</h1><p>Ingresos y actividad del sistema</p></div>
+                    <div class="welcome-banner"><h1>Resumen de Hoy</h1><p>Control de Ingresos</p></div>
                     <div class="stats-grid">
                         <div class="stat-card glass-panel"><div class="stat-icon income"><i class="fas fa-dollar-sign"></i></div><div class="stat-info"><h3>Total USD</h3><p id="stat-total-income">$ 0.00</p></div></div>
                         <div class="stat-card glass-panel"><div class="stat-icon pending"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>Total BS</h3><p id="stat-total-income-bs">0 BS</p></div></div>
                         <div class="stat-card glass-panel"><div class="stat-icon students"><i class="fas fa-user-graduate"></i></div><div class="stat-info"><h3>Alumnos</h3><p id="stat-active-students">0</p></div></div>
                     </div>
-                    <div class="glass-panel" style="margin-top:20px; padding:20px;"><h2>Ventas Recientes</h2><table style="width:100%; border-collapse:collapse;" id="recent-payments-table"><tbody id="recent-payments-body"></tbody></table></div>
+                    <div class="glass-panel" style="margin-top:20px; padding:20px;"><h2>Últimos Pagos</h2><table style="width:100%; border-collapse:collapse;" id="recent-payments-table"><tbody id="recent-payments-body"></tbody></table></div>
                 </section>
 
                 <section id="students" class="page-section">
-                    <div class="page-header"><h2>Alumnos Registrados</h2> <button class="btn-primary" onclick="openNewStudent()">NUEVO REGISTRO</button></div>
-                    <div class="glass-panel"><table><thead><tr align="left"><th>Nombre</th><th>CI</th><th>Historial</th><th>Borrar</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
+                    <div class="page-header"><h2>Gestión Académica</h2> <button class="btn-primary" onclick="openNewStudent()">NUEVO PARTICIPANTE</button></div>
+                    <div class="glass-panel"><table><thead><tr align="left"><th>Nombre</th><th>Cédula</th><th>Historial</th><th>-</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
                 </section>
 
                 <section id="payments" class="page-section">
-                    <div class="page-header"><h2>Registrar Nueva Venta</h2></div>
+                    <div class="page-header"><h2>Cobro y Facturación</h2></div>
                     <div class="glass-panel" style="padding:25px; max-width:800px; margin:0 auto;">
-                        <div class="form-group"><label>1. Buscar Participante</label><input type="text" id="pay-student-search" placeholder="Nombre o Cédula..." class="full-width"><div id="search-results-list" class="search-results hidden"></div></div>
-                        <div id="selected-student-box" class="glass-panel" style="padding:15px; margin-bottom:20px; display:none; border-color:#0ea5e9;"><p style="margin:0; font-weight:bold; color:#0ea5e9;"><i class="fas fa-check-circle"></i> Seleccionado:</p><p id="selected-student-name" style="margin:5px 0 0 0; font-size:1.1rem;"></p></div>
+                        <div class="form-group"><label>1. Seleccionar Participante</label><input type="text" id="pay-student-search" placeholder="Buscar por Nombre/CI..." class="full-width"><div id="search-results-list" class="search-results hidden"></div></div>
+                        <div id="selected-student-box" class="glass-panel" style="padding:15px; margin-bottom:20px; display:none; border-color:#0ea5e9;"><p style="margin:0; font-weight:bold; color:#0ea5e9;"><i class="fas fa-id-card"></i> Alumno:</p><p id="selected-student-name" style="margin:5px 0 0 0; font-size:1.1rem;"></p></div>
                         <div id="payment-flow-fields" class="hidden">
-                            <label>2. Productos y Servicios Disponibles</label><div class="service-grid" id="service-chips-container"></div>
+                            <label>2. ¿Qué servicio/producto desea pagar?</label><div class="service-grid" id="service-chips-container"></div>
                             <form id="payment-form" style="margin-top:25px; padding-top:20px; border-top:1px solid #334155;">
                                 <input type="hidden" id="pay-student-id"><input type="hidden" id="pay-service-selected">
-                                <div style="display:flex; gap:20px;"><div class="form-group" style="flex:1;"><label>Costo Aplicado (Manual/Fijado)</label><input type="number" id="pay-amount" step="0.01" required class="full-width"></div><div class="form-group" style="flex:1;"><label>¿Cómo cancela?</label><select id="pay-currency" class="full-width"><option value="USD">USD ($)</option><option value="BS">BOLIVARES (BS.D)</option></select></div></div>
-                                <div id="payment-summary-text" style="background:#0f172a; padding:15px; border-radius:10px; margin-top:10px; display:none;"><p id="summary-display" style="margin:0; font-weight:600; color:#0ea5e9; text-align:center; font-size:1.2rem;"></p></div>
-                                <button type="submit" class="btn-primary full-width" style="margin-top:20px; padding:18px; font-size:1rem;">CONFIRMAR Y FINALIZAR</button>
+                                <div style="display:flex; gap:20px;">
+                                    <div class="form-group" style="flex:1;"><label>Monto a Cobrar (Fijado)</label><input type="number" id="pay-amount" step="0.01" required class="full-width"></div>
+                                    <div class="form-group" style="flex:1;"><label>Recibir Pago en:</label><select id="pay-currency" class="full-width" onchange="syncPaymentAmount()"><option value="USD">DÓLARES ($)</option><option value="BS">BOLÍVARES (BS)</option></select></div>
+                                </div>
+                                <div id="payment-summary-text" style="background:#0f172a; padding:15px; border-radius:10px; margin-top:20px; display:none;"><p id="summary-display" style="margin:0; font-weight:700; color:#0ea5e9; text-align:center; font-size:1.3rem;"></p></div>
+                                <button type="submit" class="btn-primary full-width" style="margin-top:25px; padding:20px; font-weight:bold;">REGISTRAR PAGO EXITOSO</button>
                             </form>
                         </div>
                     </div>
                 </section>
 
                 <section id="catalogo" class="page-section">
-                    <header class="page-header"><h2>Gestión de Costos y Catálogo</h2> <button class="btn-primary" onclick="addNewProductModal()">AÑADIR NUEVO</button></header>
-                    <div class="glass-panel" style="max-width:600px; margin: 0 auto;">
-                        <h3 style="margin-bottom:15px;">Costos de Servicios y Productos ($)</h3>
-                        <div id="catalog-full-list"></div>
-                        <hr style="margin:20px 0; border:0; border-top:1px solid #334155;">
-                        <button onclick="saveCatalog()" class="btn-primary full-width">GUARDAR CAMBIOS EN EL SISTEMA</button>
-                    </div>
+                    <header class="page-header"><h2>Configuración de Tarifas</h2> <button class="btn-primary" onclick="addNewProductModal()">CREAR SERVICIO/ITEM</button></header>
+                    <p style="color:var(--text-muted); margin-bottom:20px;"><i class="fas fa-info-circle"></i> Aquí puedes fijar los precios manuales para pagos en bolívares e impuestos.</p>
+                    <div id="catalog-full-list" style="max-width:700px; margin: 0 auto;"></div>
+                    <div class="glass-panel" style="max-width:700px; margin: 20px auto; text-align:center;"><button onclick="saveCatalog()" class="btn-primary" style="margin:0 auto; width:100%; justify-content:center;">ACTUALIZAR PRECIOS GLOBALES</button></div>
                 </section>
             </div>
         </main>
@@ -110,7 +117,7 @@
                 <input type="hidden" id="st-auto-select" value="false">
                 <div class="form-group"><label>Cédula</label><input type="text" id="st-cedula" class="full-width"></div>
                 <div class="form-group"><label>Nombre Completo</label><input type="text" id="st-name" required class="full-width"></div>
-                <div class="form-group"><label>Categoría</label><select id="st-cat" class="full-width"><option value="Pre-escolar">Pre-escolar</option><option value="Escolar">Escolar</option><option value="Juvenil">Juvenil</option></select></div>
+                <div class="form-group"><label>Categoría</label><select id="st-cat" class="full-width"><option value="Infantil">Infantil</option><option value="Juvenil">Juvenil</option><option value="Adulto">Adulto</option></select></div>
                 <button type="submit" class="btn-primary full-width" style="margin-top:10px;">GUARDAR</button>
                 <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:5px;">CANCELAR</button>
             </form>
@@ -121,9 +128,9 @@
         <div class="modal-content glass-panel" style="width:340px; padding:25px;">
             <h2>Añadir al Catálogo</h2>
             <form id="add-item-form">
-                <div class="form-group"><label>Nombre del Servicio/Producto</label><input type="text" id="new-item-name" required class="full-width" placeholder="Ej: Camisa Especial"></div>
-                <div class="form-group"><label>Precio Sugerido ($)</label><input type="number" id="new-item-price" step="0.01" required class="full-width" placeholder="15.00"></div>
-                <button type="submit" class="btn-primary full-width" style="margin-top:15px;">AÑADIR AL MENÚ</button>
+                <div class="form-group"><label>Nombre del Item</label><input type="text" id="new-item-name" required class="full-width"></div>
+                <div class="form-group"><label>Precio Base USD ($)</label><input type="number" id="new-item-price" step="0.01" required class="full-width"></div>
+                <button type="submit" class="btn-primary full-width" style="margin-top:15px;">AGREGAR</button>
                 <button type="button" class="btn-small full-width" onclick="closeModals()" style="margin-top:5px;">CERRAR</button>
             </form>
         </div>
@@ -131,14 +138,14 @@
 
     <div id="modal-history" class="modal">
         <div class="modal-content glass-panel" style="width:90%; max-width:450px; padding:25px;">
-            <h2 id="history-student-name">Historial</h2>
+            <h2 id="history-student-name" style="color:#0ea5e9;">Historial</h2>
             <div id="history-list" style="max-height:400px; overflow-y:auto; margin-top:15px;"></div>
-            <button class="btn-small full-width" onclick="closeModals()" style="margin-top:20px;">CERRAR VENTANA</button>
+            <button class="btn-small full-width" onclick="closeModals()" style="margin-top:20px;">CERRAR</button>
         </div>
     </div>
 
     <script>
-        var state = { students: [], payments: [], rate: 40.0, prices: { 'Inscripción': 15, 'Mensualidad': 40, 'Membresía 3 Meses': 110, 'Práctica': 10, 'Camisa': 25, 'Gorra': 15 } };
+        var state = { students: [], payments: [], rate: 40.0, prices: {} };
 
         function initApp() {
             try {
@@ -146,7 +153,21 @@
                     state.students = JSON.parse(localStorage.getItem('acad_st')) || [];
                     state.payments = JSON.parse(localStorage.getItem('acad_pay')) || [];
                     state.rate = parseFloat(localStorage.getItem('acad_rate')) || 40.0;
-                    var sp = JSON.parse(localStorage.getItem('acad_prices')); if(sp) state.prices = sp;
+                    
+                    var saved = JSON.parse(localStorage.getItem('acad_prices'));
+                    if(saved) {
+                        // Migración de formato antiguo a nuevo
+                        Object.keys(saved).forEach(function(k){
+                            if(typeof saved[k] === 'number') { saved[k] = { usd: saved[k], bs: saved[k] * state.rate }; }
+                        });
+                        state.prices = saved;
+                    } else {
+                        state.prices = { 
+                            'Mensualidad': { usd: 40, bs: 1600 }, 
+                            'Práctica': { usd: 10, bs: 400 }, 
+                            'Inscripción': { usd: 15, bs: 600 } 
+                        };
+                    }
                     if(sessionStorage.getItem('acad_session')==='true') bypass();
                 }
             } catch(e){}
@@ -176,81 +197,88 @@
             initApp();
             document.getElementById('btn-do-login').onclick = function() {
                 var p = document.getElementById('login-password').value.trim().toLowerCase();
-                if(p==='admin123' || p==='entrar' || p==='godmode') { try { sessionStorage.setItem('acad_session','true'); } catch(e){} bypass(); }
-                else { alert("Acceso Incorrecto"); }
+                if(p==='admin123' || p==='entrar' || p==='godmode') { try { sessionStorage.setItem('acad_session', 'true'); } catch(e){} bypass(); }
+                else { alert("Contraseña incorrecta"); }
             };
             document.getElementById('toggle-p').onclick = function() { var p = document.getElementById('login-password'); p.type = p.type === 'password' ? 'text' : 'password'; };
-            document.getElementById('global-rate').onchange = function() { state.rate = parseFloat(this.value) || 40.0; saveAll(); renderDashboard(); };
+            document.getElementById('global-rate').onchange = function() { state.rate = parseFloat(this.value) || 40.0; saveAll(); renderCatalogManagement(); renderDashboard(); };
             
             document.getElementById('pay-student-search').oninput = function() {
                 var q = this.value.toLowerCase().trim();
                 var res = document.getElementById('search-results-list');
                 if(!q) { res.classList.add('hidden'); return; }
                 var filt = state.students.filter(function(s){ return s.name.toLowerCase().includes(q) || (s.cedula||"").includes(q); });
-                var html = filt.map(function(s){ return `<div class="search-item" onclick="selectStudent('${s.id}', '${s.name}')">${s.name} <small>(${s.cedula||'No CI'})</small></div>`; }).join('');
-                html += `<div class="search-item" onclick="quickNewStudent('${q}')" style="color:#0ea5e9; font-weight:bold;">+ Registrar Nuevo: "${q}"</div>`;
+                var html = filt.map(function(s){ return `<div class="search-item" onclick="selectStudent('${s.id}', '${s.name}')">${s.name} <small>(${s.cedula||'---'})</small></div>`; }).join('');
+                html += `<div class="search-item" onclick="quickNewStudent('${q}')" style="color:#0ea5e9; font-weight:bold;">+ Registrar "${q}" como Nuevo</div>`;
                 res.innerHTML = html; res.classList.remove('hidden');
             };
 
-            document.getElementById('student-form').onsubmit = function(e) {
+            document.getElementById('student-form').onsubmit = function(e){
                 e.preventDefault();
-                var id = Date.now();
-                var name = document.getElementById('st-name').value.toUpperCase();
+                var id = Date.now(), name = document.getElementById('st-name').value.toUpperCase();
                 state.students.push({ id: id, name: name, cedula: document.getElementById('st-cedula').value, cat: document.getElementById('st-cat').value });
                 saveAll(); closeModals(); renderStudents();
                 if(document.getElementById('st-auto-select').value==='true') selectStudent(id, name);
-                alert("Guardado");
+                alert("Alumno Registrado");
             };
 
             document.getElementById('add-item-form').onsubmit = function(e){
                 e.preventDefault();
-                var name = document.getElementById('new-item-name').value;
-                var pr = parseFloat(document.getElementById('new-item-price').value);
-                state.prices[name] = pr;
+                var n = document.getElementById('new-item-name').value, p = parseFloat(document.getElementById('new-item-price').value);
+                state.prices[n] = { usd: p, bs: p * state.rate };
                 saveAll(); closeModals(); renderCatalogManagement();
                 alert("Añadido al catálogo");
             };
 
             document.getElementById('payment-form').onsubmit = function(e){
                 e.preventDefault();
-                var sid = document.getElementById('pay-student-id').value;
-                var stu = state.students.find(function(s){ return s.id==sid; });
-                var srv = document.getElementById('pay-service-selected').value;
-                var amt = parseFloat(document.getElementById('pay-amount').value);
-                var cur = document.getElementById('pay-currency').value;
+                var sid = document.getElementById('pay-student-id').value, srv = document.getElementById('pay-service-selected').value;
+                var amt = parseFloat(document.getElementById('pay-amount').value), cur = document.getElementById('pay-currency').value;
                 var usd = cur === 'USD' ? amt : amt / state.rate;
-                if(!srv) { alert("Error: Debe seleccionar un producto o servicio antes."); return; }
+                if(!srv) { alert("Debe elegir un ítem del menú."); return; }
+                var stu = state.students.find(function(s){ return s.id==sid; });
                 state.payments.unshift({ id:Date.now(), sid: sid, name:stu?stu.name:'Anónimo', srv: srv, usd: usd, date: new Date().toLocaleDateString() });
                 saveAll(); renderDashboard(); this.reset();
                 document.getElementById('selected-student-box').style.display='none';
                 document.getElementById('payment-flow-fields').classList.add('hidden');
-                alert("Venta registrada exitosamente");
+                alert("Factura procesada con éxito");
             };
             document.getElementById('pay-amount').oninput = updateLiveSummary;
-            document.getElementById('pay-currency').onchange = updateLiveSummary;
         };
 
         function renderCatalogManagement() {
-            var list = document.getElementById('catalog-full-list');
+            var list = document.getElementById('catalog-full-list'), r = state.rate;
             list.innerHTML = Object.keys(state.prices).map(function(key){
+                var p = state.prices[key];
                 return `<div class="price-list-item">
-                    <label>${key}</label>
-                    <input type="number" step="0.1" value="${state.prices[key]}" id="cat-price-${key.replace(/\s/g, '')}"> $
-                    <button class="delete-item" onclick="deleteCatalogItem('${key}')"><i class="fas fa-trash-alt"></i></button>
+                    <div class="price-item-header"><label>${key}</label> <button class="delete-btn-sm" onclick="deleteItem('${key}')"><i class="fas fa-trash"></i></button></div>
+                    <div class="price-controls">
+                        <div class="p-box"><label>Precio USD ($)</label><input type="number" step="0.1" value="${p.usd}" id="usd-${key.replace(/\s/g, '')}" oninput="updateRef('${key}')"></div>
+                        <div class="p-box">
+                            <label>Precio Fijado BS</label><input type="number" step="0.1" value="${p.bs.toFixed(2)}" id="bs-${key.replace(/\s/g, '')}">
+                            <div class="ref-price" id="ref-${key.replace(/\s/g, '')}">Ref: ${(p.usd * r).toFixed(2)} BS</div>
+                        </div>
+                    </div>
                 </div>`;
             }).join('');
         }
 
-        function saveCatalog() {
-            Object.keys(state.prices).forEach(function(key){
-                var input = document.getElementById('cat-price-'+key.replace(/\s/g, ''));
-                if(input) state.prices[key] = parseFloat(input.value) || 0;
-            });
-            saveAll(); alert("Precios actualizados en todo el sistema.");
+        function updateRef(key) {
+            var usd = parseFloat(document.getElementById('usd-'+key.replace(/\s/g, '')).value) || 0;
+            document.getElementById('ref-'+key.replace(/\s/g, '')).innerText = "Ref: " + (usd * state.rate).toFixed(2) + " BS";
         }
 
-        function deleteCatalogItem(key) { if(confirm("¿Eliminar "+key+" del catálogo?")) { delete state.prices[key]; saveAll(); renderCatalogManagement(); } }
+        function saveCatalog() {
+            Object.keys(state.prices).forEach(function(key){
+                var id = key.replace(/\s/g, '');
+                var u = parseFloat(document.getElementById('usd-'+id).value) || 0;
+                var b = parseFloat(document.getElementById('bs-'+id).value) || (u * state.rate);
+                state.prices[key] = { usd: u, bs: b };
+            });
+            saveAll(); alert("Precios base y manuales actualizados.");
+        }
 
+        function deleteItem(k) { if(confirm("¿Quitar "+k+"?")) { delete state.prices[k]; saveAll(); renderCatalogManagement(); } }
         function addNewProductModal() { var m = document.getElementById('modal-add-item'); m.classList.remove('hidden'); m.classList.add('active'); }
 
         function selectStudent(id, name) {
@@ -263,9 +291,9 @@
         }
 
         function renderChips() {
-            var container = document.getElementById('service-chips-container');
-            container.innerHTML = Object.keys(state.prices).map(function(key){
-                return `<div class="service-btn" id="chip-${key.replace(/\s/g, '')}" onclick="selectServiceItem('${key}')">${key}<br><b>$${state.prices[key]}</b></div>`;
+            var c = document.getElementById('service-chips-container');
+            c.innerHTML = Object.keys(state.prices).map(function(k){
+                return `<div class="service-btn" id="chip-${k.replace(/\s/g, '')}" onclick="selectServiceItem('${k}')">${k}<br><b>$${state.prices[k].usd}</b></div>`;
             }).join('');
         }
 
@@ -273,25 +301,29 @@
             document.querySelectorAll('.service-btn').forEach(function(b){ b.classList.remove('active'); });
             var cid = 'chip-'+key.replace(/\s/g, ''); if(document.getElementById(cid)) document.getElementById(cid).classList.add('active');
             document.getElementById('pay-service-selected').value = key;
-            document.getElementById('pay-amount').value = state.prices[key];
+            syncPaymentAmount();
+        }
+
+        function syncPaymentAmount() {
+            var key = document.getElementById('pay-service-selected').value;
+            var cur = document.getElementById('pay-currency').value;
+            if(!key) return;
+            var val = cur === 'USD' ? state.prices[key].usd : state.prices[key].bs;
+            document.getElementById('pay-amount').value = val.toFixed(2);
             updateLiveSummary();
         }
 
         function updateLiveSummary() {
-            var amt = parseFloat(document.getElementById('pay-amount').value) || 0;
-            var cur = document.getElementById('pay-currency').value;
-            var summary = document.getElementById('payment-summary-text');
-            var disp = document.getElementById('summary-display');
-            if(!summary || !disp) return;
-            if(amt <= 0) { summary.style.display = 'none'; return; }
-            summary.style.display = 'block';
-            if(cur === 'USD') disp.innerHTML = `Paga USD: <b>$${amt.toFixed(2)}</b><br><small>Equivalente en Bs: ${(amt * state.rate).toFixed(2)} Bs</small>`;
-            else disp.innerHTML = `Paga BOLIVARES: <b>${amt.toFixed(2)} Bs</b><br><small>Equivalente en $: $${(amt / state.rate).toFixed(2)}</small>`;
+            var amt = parseFloat(document.getElementById('pay-amount').value) || 0, cur = document.getElementById('pay-currency').value;
+            var s = document.getElementById('payment-summary-text'), d = document.getElementById('summary-display');
+            if(amt <= 0) { s.style.display = 'none'; return; }
+            s.style.display = 'block';
+            if(cur === 'USD') d.innerHTML = `Total a Facturar: <b>$${amt.toFixed(2)}</b><br><small>Tasa Ref: ${state.rate}</small>`;
+            else d.innerHTML = `Total a Facturar: <b>${amt.toFixed(2)} BS</b><br><small>Equivale a: $${(amt / state.rate).toFixed(2)}</small>`;
         }
 
         function openNewStudent() { document.getElementById('student-form').reset(); document.getElementById('st-auto-select').value='false'; var m = document.getElementById('modal-student'); m.classList.remove('hidden'); m.classList.add('active'); }
         function quickNewStudent(n) { document.getElementById('st-auto-select').value='true'; document.getElementById('st-name').value = isNaN(n) ? n.toUpperCase() : ""; document.getElementById('st-cedula').value = !isNaN(n) ? n : ""; var m = document.getElementById('modal-student'); m.classList.remove('hidden'); m.classList.add('active'); }
-
         function initNav() {
             document.querySelectorAll('#main-nav li').forEach(function(li){
                 li.onclick = function() {
@@ -300,10 +332,7 @@
                     document.getElementById(pg).classList.add('active');
                     document.querySelectorAll('#main-nav li').forEach(function(i){ i.classList.remove('active'); });
                     li.classList.add('active');
-                    if(pg==='dashboard') renderDashboard(); 
-                    else if(pg==='students') renderStudents(); 
-                    else if(pg==='catalogo') renderCatalogManagement();
-                    else if(pg==='payments') { document.getElementById('selected-student-box').style.display='none'; document.getElementById('payment-flow-fields').classList.add('hidden'); document.getElementById('pay-student-search').value=""; }
+                    if(pg==='dashboard') renderDashboard(); else if(pg==='students') renderStudents(); else if(pg==='catalogo') renderCatalogManagement();
                 };
             });
         }
@@ -313,27 +342,21 @@
             document.getElementById('stat-total-income').innerText = '$ ' + total.toFixed(2);
             document.getElementById('stat-total-income-bs').innerText = (total * state.rate).toFixed(2) + ' BS';
             document.getElementById('stat-active-students').innerText = state.students.length;
-            var body = document.getElementById('recent-payments-body');
-            body.innerHTML = state.payments.slice(0,5).map(function(p){ return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${p.name}</td><td>${p.srv}</td><td align="right">$ ${p.usd.toFixed(2)}</td></tr>`; }).join('');
+            document.getElementById('recent-payments-body').innerHTML = state.payments.slice(0,5).map(function(p){ return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${p.name}</td><td>${p.srv}</td><td align="right">$ ${p.usd.toFixed(2)}</td></tr>`; }).join('');
         }
-
         function renderStudents() { 
             var body = document.getElementById('students-table-body'); 
             body.innerHTML = state.students.map(function(s){ 
-                return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${s.name}</td><td>${s.cedula||'---'}</td><td align="center"><button class="btn-small" onclick="showHistory('${s.id}', '${s.name}')">Historial</button></td><td align="center"><button class="btn-small" onclick="delSt('${s.id}')" style="color:#ef4444">X</button></td></tr>`; 
+                return `<tr style="border-bottom:1px solid #334155"><td style="padding:10px">${s.name}</td><td>${s.cedula||'---'}</td><td align="center"><button class="btn-small" onclick="showHistory('${s.id}', '${s.name}')">Ver Pagos</button></td><td align="center"><button class="delete-btn-sm" onclick="delSt('${s.id}')">X</button></td></tr>`; 
             }).join(''); 
         }
-
         function showHistory(sid, name) {
             document.getElementById('history-student-name').innerText = name;
-            var list = document.getElementById('history-list');
-            var filtered = state.payments.filter(function(p){ return p.sid == sid; });
-            if(filtered.length === 0) list.innerHTML = "Sin registros.";
-            else list.innerHTML = filtered.map(function(p){ return `<div style="padding:10px; background:rgba(0,0,0,0.2); margin-bottom:5px; border-radius:5px;"><b>${p.srv}</b> - ${p.date}<br>$${p.usd.toFixed(2)}</div>`; }).join('');
-            var m = document.getElementById('modal-history'); m.classList.remove('active'); m.classList.remove('hidden'); m.classList.add('active');
+            var f = state.payments.filter(function(p){ return p.sid == sid; });
+            document.getElementById('history-list').innerHTML = f.length === 0 ? "Sin pagos." : f.map(function(p){ return `<div style="padding:10px; background:rgba(0,0,0,0.2); margin-bottom:5px; border-radius:5px;"><b>${p.srv}</b> - ${p.date}<br>$${p.usd.toFixed(2)}</div>`; }).join('');
+            var m = document.getElementById('modal-history'); m.classList.remove('hidden'); m.classList.add('active');
         }
-
-        function delSt(i) { if(confirm("Borrar?")) { state.students = state.students.filter(function(s){ return s.id!=i; }); saveAll(); renderStudents(); } }
+        function delSt(i) { if(confirm("¿Borrar?")) { state.students = state.students.filter(function(s){ return s.id!=i; }); saveAll(); renderStudents(); } }
     </script>
 </body>
 </html>
