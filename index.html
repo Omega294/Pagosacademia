@@ -23,7 +23,7 @@
 </head>
 <body class="dark-theme">
     <!-- UI Layer: Login -->
-    <div id="view-login" style="display: flex;">
+    <div id="view-login" class="login-view">
         <div class="login-card glass-panel bounce-in">
             <div class="logo large"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div>
             <h2>Gestión Administrativa</h2>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- UI Layer: Main App -->
-    <div id="app-container" class="hidden">
+    <div id="app-container" class="app-container hidden">
         <aside class="sidebar">
             <div class="sidebar-header"><div class="logo"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div></div>
             <nav class="sidebar-nav">
@@ -61,9 +61,9 @@
                 <section id="dashboard" class="page-section active">
                     <div class="welcome-banner"><h1>Resumen Diario</h1><p>Operaciones del sistema</p></div>
                     <div class="stats-grid">
-                        <div class="stat-card glass-panel"><h3>USD Hoy</h3><p id="stat-total-income">$ 0.00</p></div>
-                        <div class="stat-card glass-panel"><h3>BS Hoy</h3><p id="stat-total-income-bs">0 BS</p></div>
-                        <div class="stat-card glass-panel"><h3>Alumnos</h3><p id="stat-active-students">0</p></div>
+                        <div class="stat-card glass-panel"><div class="stat-icon income"><i class="fas fa-dollar-sign"></i></div><div class="stat-info"><h3>USD Hoy</h3><p id="stat-total-income">$ 0.00</p></div></div>
+                        <div class="stat-card glass-panel"><div class="stat-icon pending"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>BS Hoy</h3><p id="stat-total-income-bs">0 BS</p></div></div>
+                        <div class="stat-card glass-panel"><div class="stat-icon students"><i class="fas fa-user-graduate"></i></div><div class="stat-info"><h3>Alumnos</h3><p id="stat-active-students">0</p></div></div>
                     </div>
                     <div class="glass-panel" style="margin-top:20px; padding:20px;"><h2>Ventas Recientes</h2><table style="width:100%;" id="recent-payments-table"><tbody id="recent-payments-body"></tbody></table></div>
                 </section>
@@ -99,7 +99,7 @@
     </div>
 
     <!-- Modals -->
-    <div id="modal-prices" class="modal hidden">
+    <div id="modal-prices" class="modal">
         <div class="modal-content glass-panel" style="width:400px; padding:25px;">
             <h2 style="margin-bottom:20px;">Configurar Precios</h2>
             <div id="price-settings-list" style="max-height:400px; overflow-y:auto;"></div>
@@ -108,7 +108,7 @@
         </div>
     </div>
 
-    <div id="modal-student" class="modal hidden">
+    <div id="modal-student" class="modal">
         <div class="modal-content glass-panel" style="width:340px; padding:25px;">
             <h2>Nuevo Registro</h2>
             <form id="student-form">
@@ -158,7 +158,16 @@
         function openNewStudent() {
             document.getElementById('student-form').reset();
             document.getElementById('st-auto-select').value='false';
-            document.getElementById('modal-student').style.display='flex';
+            var modal = document.getElementById('modal-student');
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal').forEach(function(m){
+                m.classList.remove('active');
+                m.classList.add('hidden');
+            });
         }
 
         window.onload = function() {
@@ -222,8 +231,7 @@
         };
 
         function renderChips() {
-            var container = document.getElementById('service-chips-container');
-            if(!container) return;
+            var container = document.getElementById('service-chips-container'); if(!container) return;
             container.innerHTML = Object.keys(state.prices).map(function(key){
                 return `<div class="service-btn" id="chip-${key.replace(/\s/g, '')}" onclick="selectService('${key}')">${key}<br><b>$${state.prices[key]}</b></div>`;
             }).join('');
@@ -250,12 +258,13 @@
         }
 
         function renderPriceSettings() {
-            var list = document.getElementById('price-settings-list');
-            if(!list) return;
+            var list = document.getElementById('price-settings-list'); if(!list) return;
             list.innerHTML = Object.keys(state.prices).map(function(key){
                 return `<div class="price-input-group"><label>${key}</label><input type="number" step="0.1" value="${state.prices[key]}" id="price-set-${key.replace(/\s/g, '')}"></div>`;
             }).join('');
-            document.getElementById('modal-prices').style.display = 'flex';
+            var modal = document.getElementById('modal-prices');
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
         }
 
         function saveAllPrices() {
@@ -275,7 +284,14 @@
             renderChips();
         }
 
-        function quickNewStudent(n) { document.getElementById('st-auto-select').value='true'; document.getElementById('st-name').value = isNaN(n) ? n.toUpperCase() : ""; document.getElementById('st-cedula').value = !isNaN(n) ? n : ""; document.getElementById('modal-student').style.display='flex'; }
+        function quickNewStudent(n) { 
+            document.getElementById('st-auto-select').value='true'; 
+            document.getElementById('st-name').value = isNaN(n) ? n.toUpperCase() : ""; 
+            document.getElementById('st-cedula').value = !isNaN(n) ? n : ""; 
+            var modal = document.getElementById('modal-student');
+            modal.classList.remove('hidden');
+            modal.classList.add('active');
+        }
 
         function initNav() {
             document.querySelectorAll('#main-nav li').forEach(function(li){
@@ -302,7 +318,6 @@
         function renderCatalog() { var pk = ['Camisa','Gorra','Shorts']; var view = document.getElementById('pop-catalog-view'); if(view) view.innerHTML = pk.map(function(k){ return `<div class="pop-card glass-panel" style="padding:20px; text-align:center;"><h4>${k}</h4><b>$ ${state.prices[k]}</b><p>${(state.prices[k] * state.rate).toFixed(2)} BS</p><button class="btn-primary full-width" onclick="buyPop('${k}', ${state.prices[k]})">Vender</button></div>`; }).join(''); }
         function buyPop(k, p) { state.payments.unshift({ id:Date.now(), name: 'Venta POP', srv: k, usd: p }); saveAll(); renderDashboard(); alert("Registrado"); }
         function delSt(i) { if(confirm("Borrar?")) { state.students = state.students.filter(function(s){ return s.id!=i; }); saveAll(); renderStudents(); } }
-        function closeModals() { document.querySelectorAll('.modal').forEach(function(m){ m.style.display='none'; }); }
     </script>
 </body>
 </html>
