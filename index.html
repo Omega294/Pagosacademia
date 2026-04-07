@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia - Consola Administrativa v12</title>
+    <title>Academia - Sistema Multi-Factura</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -12,46 +12,28 @@
         .search-item { padding:10px; cursor:pointer; color:white; font-size:0.9rem; border-bottom:1px solid #334155; }
         .search-item:hover { background:#334155; }
         .service-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap:10px; margin-top:15px; }
-        .service-btn { background:#1e293b; border:1px solid #334155; color:white; padding:15px 10px; border-radius:10px; cursor:pointer; text-align:center; font-size:0.85rem; transition:all 0.2s; }
+        .service-btn { background:#1e293b; border:1px solid #334155; color:white; padding:15px 10px; border-radius:10px; cursor:pointer; text-align:center; font-size:0.85rem; transition:all 0.2s; position: relative; }
         .service-btn:hover { border-color:#0ea5e9; }
         .service-btn.active { background:#0ea5e9; border-color:#0ea5e9; font-weight:600; box-shadow: 0 0 10px rgba(14,165,233,0.3); }
+        .service-btn.active::after { content: '\f058'; font-family: 'Font Awesome 6 Free'; font-weight: 900; position: absolute; top: -5px; right: -5px; color: #fff; background: #10b981; border-radius: 50%; font-size: 0.8rem; padding: 2px; }
         
-        /* Catalog Premium UI */
-        .price-list-item { 
-            background: rgba(30, 41, 59, 0.4); 
-            border: 1px solid #334155; 
-            border-radius: 12px; 
-            padding: 15px; 
-            margin-bottom: 12px; 
-            transition: all 0.3s;
-        }
-        .price-list-item:hover { border-color: #0ea5e9; background: rgba(30, 41, 59, 0.6); }
+        /* Catalog UI */
+        .price-list-item { background: rgba(30, 41, 59, 0.4); border: 1px solid #334155; border-radius: 12px; padding: 15px; margin-bottom: 12px; }
         .item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
         .item-header h3 { font-size: 1rem; color: #0ea5e9; margin: 0; }
-        
         .p-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
         .input-group { display: flex; flex-direction: column; gap: 5px; }
         .input-group label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; display: flex; align-items: center; gap: 5px; }
-        .input-group input { 
-            background: #0f172a; 
-            border: 1px solid #334155; 
-            color: #f8fafc; 
-            padding: 10px; 
-            border-radius: 8px; 
-            font-size: 0.9rem; 
-            width: 100%;
-        }
-        .input-group input:focus { border-color: #0ea5e9; outline: none; }
+        .input-group input { background: #0f172a; border: 1px solid #334155; color: #f8fafc; padding: 10px; border-radius: 8px; font-size: 0.9rem; width: 100%; }
         .ref-tag { font-size: 0.7rem; color: #f59e0b; margin-top: 4px; font-weight: 600; }
         
-        .btn-del-item { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 5px 10px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
-        .btn-del-item:hover { background: #ef4444; color: white; }
-
+        /* Dashboard & Balance */
         .status-chip { background:rgba(0,0,0,0.2); padding:10px; border-radius:10px; text-align:center; border:1px solid rgba(255,255,255,0.05); }
         .status-chip label { display:block; font-size:0.65rem; color:var(--text-muted); margin-bottom:5px; text-transform:uppercase; }
         .status-chip b { color:white; font-size:0.9rem; }
         .balance-neg { color:#ef4444 !important; }
         .balance-pos { color:#10b981 !important; }
+        .btn-del-item { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 5px 10px; border-radius: 6px; cursor: pointer; }
     </style>
 </head>
 <body class="dark-theme">
@@ -92,10 +74,10 @@
 
             <div id="content-area">
                 <section id="dashboard" class="page-section active">
-                    <div class="welcome-banner"><h1>Vista Resumen</h1><p>Movimientos del día</p></div>
+                    <div class="welcome-banner"><h1>Vista Resumen</h1><p>Control de Ingresos</p></div>
                     <div class="stats-grid">
                         <div class="stat-card glass-panel"><div class="stat-icon income"><i class="fas fa-dollar-sign"></i></div><div class="stat-info"><h3>Total USD</h3><p id="stat-total-income">$ 0.00</p></div></div>
-                        <div class="stat-card glass-panel"><div class="stat-icon pending"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>Caja BS</h3><p id="stat-total-income-bs">0 BS</p></div></div>
+                        <div class="stat-card glass-panel"><div class="stat-icon pending"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>Total BS</h3><p id="stat-total-income-bs">0 BS</p></div></div>
                         <div class="stat-card glass-panel"><div class="stat-icon students"><i class="fas fa-user-graduate"></i></div><div class="stat-info"><h3>Matrícula</h3><p id="stat-active-students">0</p></div></div>
                     </div>
                 </section>
@@ -106,10 +88,10 @@
                         <input type="text" id="att-student-search" placeholder="Buscar Alumno..." class="full-width"><div id="att-results" class="search-results hidden"></div>
                         <div id="att-student-card" class="glass-panel" style="padding:20px; margin-top:20px; display:none;">
                             <h2 id="att-name" style="text-align:center;"></h2>
-                            <div class="student-status-card" style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:10px;">
+                            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:10px;">
                                 <div class="status-chip"><label>Clases</label><b id="att-classes">0</b></div>
                                 <div class="status-chip"><label>Balance</label><b id="att-balance">$0.00</b></div>
-                                <div class="status-chip"><label>Vence</label><b id="att-expiry">---</b></div>
+                                <div class="status-chip"><label>Vencimiento</label><b id="att-expiry">---</b></div>
                             </div>
                             <button id="btn-confirm-attendance" style="background:#10b981; border:none; color:white; padding:15px; border-radius:10px; width:100%; margin-top:20px; cursor:pointer;"><i class="fas fa-sign-in-alt"></i> REGISTRAR ENTRADA</button>
                             <p id="att-error-msg" style="color:#ef4444; font-weight:bold; text-align:center; margin-top:10px;" class="hidden">Membresía Vencida o Sin Clases</p>
@@ -118,45 +100,46 @@
                 </section>
 
                 <section id="students" class="page-section">
-                    <div class="page-header"><h2>Alumnos</h2> <button class="btn-primary" onclick="openNewStudent()">NUEVO</button></div>
-                    <div class="glass-panel"><table><thead><tr align="left"><th>Nombre</th><th>Clases</th><th>Vencimiento</th><th>Balance</th><th>Acción</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
+                    <div class="page-header"><h2>Alumnos Registrados</h2> <button class="btn-primary" onclick="openNewStudent()">NUEVO</button></div>
+                    <div class="glass-panel"><table><thead><tr align="left"><th>Nombre</th><th>Clases</th><th>Balance</th><th>Acción</th></tr></thead><tbody id="students-table-body"></tbody></table></div>
                 </section>
 
                 <section id="payments" class="page-section">
-                    <div class="page-header"><h2>Facturar</h2></div>
+                    <div class="page-header"><h2>Nueva Factura</h2></div>
                     <div class="glass-panel" style="padding:25px; max-width:850px; margin:0 auto;">
-                        <input type="text" id="pay-student-search" placeholder="Alumnos..." class="full-width"><div id="pay-results" class="search-results hidden"></div>
+                        <input type="text" id="pay-student-search" placeholder="Seleccione Alumno..." class="full-width"><div id="pay-results" class="search-results hidden"></div>
                         <div id="pay-student-box" class="glass-panel" style="padding:20px; margin:20px 0; display:none;">
                             <h2 id="pay-st-name"></h2>
                             <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:10px;">
                                 <div class="status-chip"><label>Balance</label><b id="p-status-balance">$0.00</b></div>
                                 <div class="status-chip"><label>Clases</label><b id="p-status-classes">0</b></div>
-                                <div class="status-chip"><label>Vencimiento</label><b id="p-status-expiry">---</b></div>
+                                <div class="status-chip"><label>Vence</label><b id="p-status-expiry">---</b></div>
                             </div>
                         </div>
                         <div id="pay-flow" class="hidden">
+                            <label style="font-weight:700; color:#0ea5e9;">Seleccione uno o varios ítems:</label>
                             <div class="service-grid" id="pay-chips"></div>
                             <form id="pay-form" style="margin-top:20px; padding-top:20px; border-top:1px solid #334155;">
-                                <input type="hidden" id="p-sid"><input type="hidden" id="p-srv">
+                                <input type="hidden" id="p-sid">
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
-                                    <div class="form-group"><label>Precio Fijo</label><input type="number" id="p-cost" readonly class="full-width"></div>
-                                    <div class="form-group"><label>Moneda</label><select id="p-cur" class="full-width" onchange="syncPayPrice()"><option value="USD">USD</option><option value="BS">BS</option></select></div>
+                                    <div class="form-group"><label>Total Servicios</label><input type="number" id="p-cost" readonly class="full-width"></div>
+                                    <div class="form-group"><label>Moneda</label><select id="p-cur" class="full-width" onchange="syncPayPrice()"><option value="USD">USD ($)</option><option value="BS">BOLÍVARES (BS)</option></select></div>
                                 </div>
                                 <div class="form-group" style="margin-top:15px; background:rgba(14,165,233,0.1); padding:15px; border-radius:10px;">
-                                    <label>Monto Recibido</label>
-                                    <input type="number" id="p-received" step="0.01" required class="full-width" style="font-size:1.5rem;">
+                                    <label style="color:#0ea5e9; font-weight:bold;">DINERO ENTREGADO POR CLIENTE</label>
+                                    <input type="number" id="p-received" step="0.01" required class="full-width" style="font-size:1.5rem; height:50px;">
                                 </div>
                                 <div id="p-summary" style="display:none; text-align:center; padding:10px;"><p id="p-summary-text" style="color:#0ea5e9; font-weight:bold;"></p></div>
-                                <button type="submit" class="btn-primary full-width" style="margin-top:15px; padding:15px;">FINALIZAR</button>
+                                <button type="submit" class="btn-primary full-width" style="margin-top:15px; padding:18px;">FINALIZAR TRANSACCIÓN</button>
                             </form>
                         </div>
                     </div>
                 </section>
 
                 <section id="catalogo" class="page-section">
-                    <header class="page-header"><h2>Catálogo de Servicios</h2> <button class="btn-primary" onclick="window.catOpenAdd()">AÑADIR</button></header>
-                    <div id="cat-list" style="width:100%; max-width:850px; margin:0 auto;"></div>
-                    <div class="glass-panel" style="max-width:850px; margin:20px auto;"><button onclick="window.catSave()" class="btn-primary full-width">GUARDAR CAMBIOS EN EL CATÁLOGO</button></div>
+                    <header class="page-header"><h2>Catálogo Maestro</h2> <button class="btn-primary" onclick="window.catOpenAdd()">AÑADIR ITEM</button></header>
+                    <div id="cat-list" style="max-width:850px; margin:0 auto;"></div>
+                    <div class="glass-panel" style="max-width:850px; margin:20px auto;"><button onclick="window.catSave()" class="btn-primary full-width">ACTUALIZAR CATÁLOGO</button></div>
                 </section>
             </div>
         </main>
@@ -165,30 +148,22 @@
     <!-- Modals -->
     <div id="modal-student" class="modal">
         <div class="modal-content glass-panel" style="width:340px; padding:25px;">
-            <h2>Nuevo Alumno</h2>
-            <form id="st-form"><div class="form-group"><label>CI</label><input type="text" id="st-ci" class="full-width"></div><div class="form-group"><label>Nombre</label><input type="text" id="st-name" required class="full-width"></div><button type="submit" class="btn-primary full-width">GUARDAR</button></form>
-            <button onclick="closeModals()" class="btn-small full-width">CERRAR</button>
+            <h2>Nuevo Registro</h2>
+            <form id="st-form"><div class="form-group"><label>Cédula</label><input type="text" id="st-ci" class="full-width"></div><div class="form-group"><label>Nombre</label><input type="text" id="st-name" required class="full-width"></div><button type="submit" class="btn-primary full-width">GUARDAR</button></form>
+            <button onclick="closeModals()" class="btn-small full-width" style="margin-top:5px;">CERRAR</button>
         </div>
     </div>
 
     <div id="modal-add-cat" class="modal">
         <div class="modal-content glass-panel" style="width:340px; padding:25px;">
-            <h2>Nuevo Item</h2>
-            <form id="cat-form"><div class="form-group"><label>Nombre</label><input type="text" id="cat-name" required class="full-width"></div><div class="form-group"><label>USD</label><input type="number" id="cat-usd" step="0.1" required class="full-width"></div><div class="form-group"><label>Clases</label><input type="number" id="cat-cls" value="0" class="full-width"></div><button type="submit" class="btn-primary full-width">AÑADIR</button></form>
-            <button onclick="closeModals()" class="btn-small full-width">CERRAR</button>
-        </div>
-    </div>
-
-    <div id="modal-history" class="modal">
-        <div class="modal-content glass-panel" style="width:90%; max-width:500px; padding:25px;">
-            <h2 id="hist-name"></h2>
-            <div id="hist-list" style="max-height:400px; overflow-y:auto;"></div>
-            <button onclick="closeModals()" class="btn-small full-width">CERRAR</button>
+            <h2>Nuevo Producto</h2>
+            <form id="cat-form"><div class="form-group"><label>Nombre</label><input type="text" id="cat-name" required class="full-width"></div><div class="form-group"><label>USD ($)</label><input type="number" id="cat-usd" step="0.1" required class="full-width"></div><div class="form-group"><label>Clases Gratis</label><input type="number" id="cat-cls" value="0" class="full-width"></div><button type="submit" class="btn-primary full-width">AÑADIR</button></form>
+            <button onclick="closeModals()" class="btn-small full-width" style="margin-top:5px;">CERRAR</button>
         </div>
     </div>
 
     <script>
-        var state = { students: [], logs: [], rate: 40.0, prices: {}, currentStudentId: null };
+        var state = { students: [], logs: [], rate: 40.0, prices: {}, currentStudentId: null, selectedItems: [] };
 
         function init() {
             try {
@@ -217,7 +192,7 @@
 
         window.onload = function() {
             init();
-            document.getElementById('btn-do-login').onclick = function() { var p = document.getElementById('login-password').value.trim().toLowerCase(); if(p==='admin123' || p==='entrar') { sessionStorage.setItem('acad_session', 'true'); bypass(); } else alert("No"); };
+            document.getElementById('btn-do-login').onclick = function() { var p = document.getElementById('login-password').value.trim().toLowerCase(); if(p==='admin123' || p==='entrar') { sessionStorage.setItem('acad_session', 'true'); bypass(); } else alert("Error"); };
             document.getElementById('toggle-p').onclick = function() { var p = document.getElementById('login-password'); p.type = p.type==='password'?'text':'password'; };
 
             document.getElementById('att-student-search').oninput = function() { searchCommon(this.value, 'att-results', selectStAtt); };
@@ -242,18 +217,36 @@
                 if(!s || s.classes <= 0) return;
                 s.classes -= 1;
                 state.logs.unshift({ type: 'ATT', sid: s.id, name: s.name, date: new Date().toLocaleString() });
-                save(); selectStAtt(s.id, s.name); alert("Asistió");
+                save(); selectStAtt(s.id, s.name); alert("Asistencia Registrada");
             };
 
             document.getElementById('pay-form').onsubmit = function(e){
                 e.preventDefault();
-                var sid = document.getElementById('p-sid').value, srv = document.getElementById('p-srv').value;
-                var rec = parseFloat(document.getElementById('p-received').value), cur = document.getElementById('p-cur').value, stu = state.students.find(x => x.id == sid);
-                var p = state.prices[srv], rUSD = cur === 'USD' ? rec : rec / state.rate;
-                stu.balance += (rUSD - p.usd); stu.classes += (p.classes || 0);
-                if(srv.toLowerCase().includes('men') || srv.toLowerCase().includes('mem')) { var d = new Date(); d.setMonth(d.getMonth() + 1); stu.expiry = d.toISOString().split('T')[0]; }
-                state.logs.unshift({ type: 'PAY', sid, name: stu.name, srv, usd: rUSD, date: new Date().toLocaleDateString() });
-                save(); renderDashboard(); this.reset(); alert("Éxito");
+                var sid = document.getElementById('p-sid').value, stu = state.students.find(x => x.id == sid);
+                if(state.selectedItems.length === 0) { alert("Seleccione al menos un ítem"); return; }
+                
+                var totalCostUSD = 0, totalClasses = 0, itemNames = [];
+                state.selectedItems.forEach(k => {
+                    var p = state.prices[k];
+                    totalCostUSD += p.usd;
+                    totalClasses += (p.classes || 0);
+                    itemNames.push(k);
+                    // Si es membresia, renovar fecha
+                    if(k.toLowerCase().includes('men') || k.toLowerCase().includes('mem')) { 
+                        var d = new Date(); d.setMonth(d.getMonth() + 1); stu.expiry = d.toISOString().split('T')[0]; 
+                    }
+                });
+
+                var rec = parseFloat(document.getElementById('p-received').value), cur = document.getElementById('p-cur').value;
+                var recUSD = cur === 'USD' ? rec : rec / state.rate;
+                
+                stu.balance += (recUSD - totalCostUSD);
+                stu.classes += totalClasses;
+                
+                state.logs.unshift({ type: 'PAY', sid, name: stu.name, srv: itemNames.join(' + '), usd: recUSD, date: new Date().toLocaleDateString() });
+                save(); renderDashboard(); this.reset(); state.selectedItems = [];
+                document.getElementById('pay-student-box').style.display='none'; document.getElementById('pay-flow').classList.add('hidden');
+                alert("Factura Procesada");
             };
             document.getElementById('p-received').oninput = updatePaySummary;
         };
@@ -281,23 +274,44 @@
 
         function selectStPay(id, name) {
             var s = state.students.find(x => x.id == id);
-            document.getElementById('p-sid').value = id;
+            document.getElementById('p-sid').value = id; state.selectedItems = [];
             document.getElementById('pay-st-name').innerText = s.name;
             document.getElementById('p-status-balance').innerText = "$" + s.balance.toFixed(2);
             document.getElementById('p-status-classes').innerText = s.classes;
-            document.getElementById('p-status-expiry').innerText = s.expiry || "Exp";
+            document.getElementById('p-status-expiry').innerText = s.expiry || "Vencido";
             document.getElementById('pay-student-box').style.display='block'; document.getElementById('pay-flow').classList.remove('hidden');
             document.getElementById('pay-results').classList.add('hidden');
             renderPayChips();
         }
 
-        function renderPayChips() { document.getElementById('pay-chips').innerHTML = Object.keys(state.prices).map(k => `<div class="service-btn" id="chip-${k.replace(/\s/g, '')}" onclick="selectSrv('${k}')">${k}<br><b>$${state.prices[k].usd}</b></div>`).join(''); }
-        function selectSrv(k) { document.querySelectorAll('.service-btn').forEach(b => b.classList.remove('active')); document.getElementById('chip-'+k.replace(/\s/g, '')).classList.add('active'); document.getElementById('p-srv').value = k; syncPayPrice(); }
-        function syncPayPrice() { var k = document.getElementById('p-srv').value, cur = document.getElementById('p-cur').value; if(!k) return; var val = (cur==='USD'?state.prices[k].usd:state.prices[k].bs).toFixed(2); document.getElementById('p-cost').value = val; document.getElementById('p-received').value = val; updatePaySummary(); }
-        function updatePaySummary() { var req = parseFloat(document.getElementById('p-cost').value)||0, rec = parseFloat(document.getElementById('p-received').value)||0; var sum = document.getElementById('p-summary'), txt = document.getElementById('p-summary-text'); sum.style.display='block'; var diff = rec - req; txt.innerHTML = `NETO: $${(rec/ (document.getElementById('p-cur').value==='USD'?1:state.rate)).toFixed(2)}`; }
+        function renderPayChips() { document.getElementById('pay-chips').innerHTML = Object.keys(state.prices).map(k => `<div class="service-btn" id="chip-${k.replace(/\s/g, '')}" onclick="toggleSrv('${k}')">${k}<br><b>$${state.prices[k].usd}</b></div>`).join(''); }
+        
+        function toggleSrv(k) {
+            var idx = state.selectedItems.indexOf(k);
+            if(idx > -1) state.selectedItems.splice(idx, 1); else state.selectedItems.push(k);
+            
+            document.getElementById('chip-'+k.replace(/\s/g, '')).classList.toggle('active');
+            syncPayPrice();
+        }
+
+        function syncPayPrice() {
+            var cur = document.getElementById('p-cur').value, total = 0;
+            state.selectedItems.forEach(k => { total += (cur === 'USD' ? state.prices[k].usd : state.prices[k].bs); });
+            document.getElementById('p-cost').value = total.toFixed(2);
+            document.getElementById('p-received').value = total.toFixed(2);
+            updatePaySummary();
+        }
+
+        function updatePaySummary() {
+            var req = parseFloat(document.getElementById('p-cost').value)||0, rec = parseFloat(document.getElementById('p-received').value)||0;
+            var sum = document.getElementById('p-summary'), txt = document.getElementById('p-summary-text'), cur = document.getElementById('p-cur').value;
+            sum.style.display='block'; var diff = rec - req;
+            txt.innerHTML = `NETO RECIBIDO: ${rec} ${cur}<br><small>${diff > 0 ? '+'+diff.toFixed(2)+' a favor' : (diff < 0 ? diff.toFixed(2)+' deuda' : 'Monto Exacto')}</small>`;
+        }
+
         function renderDashboard() { var total = state.logs.filter(l => l.type === 'PAY').reduce((a,b) => a+b.usd, 0); document.getElementById('stat-total-income').innerText = '$ ' + total.toFixed(2); document.getElementById('stat-total-income-bs').innerText = (total * state.rate).toFixed(2) + ' BS'; document.getElementById('stat-active-students').innerText = state.students.length; }
-        function renderStudents() { document.getElementById('students-table-body').innerHTML = state.students.map(s => `<tr><td>${s.name}</td><td align="center">${s.classes}</td><td align="center">${s.expiry||'X'}</td><td align="center"><b class="${s.balance<0?'':'balance-pos'}">$${s.balance.toFixed(2)}</b></td><td align="center"><button class="btn-small" onclick="showHist('${s.id}', '${s.name}')">Ficha</button></td></tr>`).join(''); }
-        function showHist(sid, name) { document.getElementById('hist-name').innerText = name; var f = state.logs.filter(l => l.sid == sid); document.getElementById('hist-list').innerHTML = f.map(l => `<div style="border-bottom:1px solid #334155; padding:10px;">${l.type==='PAY'?'💰':'📌'} ${l.srv||'Asist.'} - ${l.date}</div>`).join(''); document.getElementById('modal-history').classList.remove('hidden'); document.getElementById('modal-history').classList.add('active'); }
+        function renderStudents() { document.getElementById('students-table-body').innerHTML = state.students.map(s => `<tr><td>${s.name}</td><td align="center">${s.classes}</td><td align="center"><b class="${s.balance<0?'balance-neg':'balance-pos'}">$${s.balance.toFixed(2)}</b></td><td align="center"><button class="btn-small" onclick="showHist('${s.id}', '${s.name}')">Ficha</button></td></tr>`).join(''); }
+        function showHist(sid, name) { document.getElementById('hist-name').innerText = name; var f = state.logs.filter(l => l.sid == sid); document.getElementById('hist-list').innerHTML = f.map(l => `<div style="border-bottom:1px solid #334155; padding:10px;">${l.type==='PAY'?'💰':'📌'} ${l.srv||'Entrada'} - ${l.date} ${l.usd?'($'+l.usd.toFixed(2)+')':''}</div>`).join(''); document.getElementById('modal-history').classList.remove('hidden'); document.getElementById('modal-history').classList.add('active'); }
         
         window.renderCatalogManagement = function() {
             var list = document.getElementById('cat-list'), r = state.rate;
@@ -306,15 +320,15 @@
                 return `<div class="price-list-item">
                     <div class="item-header"><h3><i class="fas fa-bookmark"></i> ${k}</h3> <button class="btn-del-item" onclick="delCat('${k}')"><i class="fas fa-trash-alt"></i></button></div>
                     <div class="p-grid">
-                        <div class="input-group"><label><i class="fas fa-dollar-sign"></i> USD ($)</label><input type="number" step="0.1" value="${p.usd}" id="usd-${k.replace(/\s/g, '')}" oninput="document.getElementById('ref-${k.replace(/\s/g, '')}').innerText = 'Ref: '+(this.value*state.rate).toFixed(2)+' BS'"></div>
-                        <div class="input-group"><label><i class="fas fa-money-bill-wave"></i> BOLIVARES</label><input type="number" step="0.1" value="${p.bs.toFixed(2)}" id="bs-${k.replace(/\s/g, '')}"><div class="ref-tag" id="ref-${k.replace(/\s/g, '')}">Ref: ${(p.usd * r).toFixed(2)} BS</div></div>
+                        <div class="input-group"><label><i class="fas fa-dollar-sign"></i> USD</label><input type="number" step="0.1" value="${p.usd}" id="usd-${k.replace(/\s/g, '')}" oninput="document.getElementById('ref-${k.replace(/\s/g, '')}').innerText = 'Ref: '+(this.value*state.rate).toFixed(2)+' BS'"></div>
+                        <div class="input-group"><label><i class="fas fa-money-bill-wave"></i> BS</label><input type="number" step="0.1" value="${p.bs.toFixed(2)}" id="bs-${k.replace(/\s/g, '')}"><div class="ref-tag" id="ref-${k.replace(/\s/g, '')}">Ref: ${(p.usd * r).toFixed(2)} BS</div></div>
                         <div class="input-group"><label><i class="fas fa-graduation-cap"></i> CLASES</label><input type="number" value="${p.classes||0}" id="cls-${k.replace(/\s/g, '')}"></div>
                     </div>
                 </div>`;
             }).join('');
         }
 
-        window.catSave = function() { Object.keys(state.prices).forEach(k => { var id = k.replace(/\s/g, ''); state.prices[k] = { usd: parseFloat(document.getElementById('usd-'+id).value)||0, bs: parseFloat(document.getElementById('bs-'+id).value)||0, classes: parseInt(document.getElementById('cls-'+id).value)||0 }; }); save(); alert("Catálogo guardado"); }
+        window.catSave = function() { Object.keys(state.prices).forEach(k => { var id = k.replace(/\s/g, ''); state.prices[k] = { usd: parseFloat(document.getElementById('usd-'+id).value)||0, bs: parseFloat(document.getElementById('bs-'+id).value)||0, classes: parseInt(document.getElementById('cls-'+id).value)||0 }; }); save(); alert("Catálogo actualizado"); }
         function delCat(k) { if(confirm("¿Borrar?")) { delete state.prices[k]; save(); renderCatalogManagement(); } }
         function initNav() { document.querySelectorAll('#main-nav li').forEach(li => li.onclick = function() { var pg = li.dataset.page; document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active')); document.getElementById(pg).classList.add('active'); document.querySelectorAll('#main-nav li').forEach(i => i.classList.remove('active')); li.classList.add('active'); if(pg==='dashboard') renderDashboard(); else if(pg==='students') renderStudents(); else if(pg==='catalogo') renderCatalogManagement(); }); }
         function openNewStudent() { document.getElementById('st-form').reset(); var m = document.getElementById('modal-student'); m.classList.remove('hidden'); m.classList.add('active'); }
