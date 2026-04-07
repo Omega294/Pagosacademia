@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia Pro - Auditoría Física</title>
+    <title>Academia Pro - Catálogo Dorado</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
@@ -14,35 +14,38 @@
         .service-btn { background:#1e293b; border:1px solid #334155; color:white; padding:15px; border-radius:10px; cursor:pointer; text-align:center; position: relative; }
         .service-btn.active { background:#0ea5e9; border-color:#0ea5e9; font-weight:600; }
         
-        /* NEW SUM BOX FOR REAL TOTALS */
+        /* FINANZAS REPORTS */
         .sum-box { text-align:center; background:rgba(14,165,233,0.05); padding:20px; border-radius:15px; margin-bottom:20px; border:1px solid rgba(14,165,233,0.1); }
         .sum-box span.ref-title { color:#94a3b8; font-size:0.75rem; text-transform:uppercase; font-weight:700; }
         .sum-box h2.ref-val { color:#0ea5e9; font-size:1.5rem; margin:5px 0 15px 0; font-weight:400; }
-        
         .cash-grid { display:grid; grid-template-columns: 1fr 1fr; gap:15px; }
         .cash-card { background:rgba(30,41,59,0.8); padding:20px; border-radius:12px; border:1px solid #334155; border-bottom: 4px solid #10b981; }
-        .cash-card.bs { border-bottom-color: #f59e0b; }
-        .cash-card label { display:block; font-size:0.65rem; color:#94a3b8; text-transform:uppercase; margin-bottom:8px; font-weight:900; }
+        .cash-card.bs { border-bottom-color: #facc15; }
         .cash-card h1 { margin:0; font-size:1.8rem; color:#f8fafc; letter-spacing:-0.5px; }
-
         .report-stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; margin-top:15px; }
-        .kpi-card { background: rgba(30, 41, 59, 0.4); padding: 12px; border-radius: 12px; text-align: center; border: 1px solid #334155; }
-        .kpi-card label { display: block; font-size: 0.6rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; margin-bottom: 5px; }
-        .kpi-card b { font-size: 1.1rem; color: #f8fafc; }
 
-        .hist-card { background:rgba(30, 41, 59, 0.5); border:1px solid #334155; border-radius:12px; padding:15px; margin-bottom:10px; border-left: 5px solid #10b981; }
-        .hist-card.att { border-left-color: #f59e0b; }
-        .report-header { display:flex; justify-content:space-between; margin-bottom:8px; align-items:center; }
-
-        /* CATALOGO */
-        .cat-item-row { background: rgba(30, 41, 59, 0.4); border: 1px solid #334155; border-radius: 12px; padding: 18px; margin-bottom: 12px; }
+        /* CATALOGO - AMARILLO VIVO */
+        .cat-item-row { background: rgba(30, 41, 59, 0.4); border: 1px solid #475569; border-radius: 12px; padding: 18px; margin-bottom: 12px; }
         .cat-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #334155; padding-bottom: 8px; }
+        .cat-item-header h3 { margin: 0; color: #0ea5e9; font-size: 1.1rem; }
         .cat-item-body { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .cat-group label { font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 800; display:block; margin-bottom:4px; }
+        .cat-group input { background: #0f172a; border: 1px solid #334155; color: #f8fafc; padding: 10px; border-radius: 8px; width: 100%; box-sizing: border-box; }
+        .ref-tag { font-size: 0.72rem; color: #facc15 !important; margin-top: 5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2px; }
+        
+        .hist-card { background:rgba(30, 41, 59, 0.5); border:1px solid #334155; border-radius:12px; padding:15px; margin-bottom:10px; border-left: 5px solid #10b981; }
+        .hist-card.att { border-left-color: #facc15; }
+        .report-header { display:flex; justify-content:space-between; margin-bottom:8px; align-items:center; }
+        .report-amount { font-weight:700; color:#10b981; font-size:1.15rem; }
+
+        .balance-neg { color:#ef4444 !important; }
+        .balance-pos { color:#10b981 !important; }
+        .btn-del-mini { background: #ef4444; color: white; border: none; width: 26px; height: 26px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
     </style>
 </head>
 <body class="dark-theme">
     <!-- UI Layer: Login -->
-    <div id="view-login" class="login-view"><div class="login-card glass-panel bounce-in"><div class="logo large"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div><h2>Acceso</h2><div class="form-group"><div style="position: relative;"><input type="password" id="login-password" placeholder="Pass"><i class="fas fa-eye" id="toggle-p" style="position: absolute; right: 10px; top: 12px; cursor: pointer;"></i></div></div><button id="btn-do-login" class="btn-primary full-width">INGRESAR</button></div></div>
+    <div id="view-login" class="login-view"><div class="login-card glass-panel bounce-in"><div class="logo large"><i class="fas fa-graduation-cap"></i> <span>ACADEMIA</span></div><h2>Gestión Pro</h2><div class="form-group"><div style="position: relative;"><input type="password" id="login-password" placeholder="Pass"><i class="fas fa-eye" id="toggle-p" style="position: absolute; right: 10px; top: 12px; cursor: pointer;"></i></div></div><button id="btn-do-login" class="btn-primary full-width">INGRESAR</button></div></div>
 
     <!-- UI Layer: Main App -->
     <div id="app-container" class="app-container hidden">
@@ -56,21 +59,21 @@
             <header class="top-header"><div class="search-bar" style="position:relative;"><i class="fas fa-search"></i><input type="text" id="top-search" placeholder="Búsqueda rápida..." oninput="searchCommon(this.value, 'global-search-res', showHist)"><div id="global-search-res" class="search-results hidden"></div></div><div class="avatar"><img src="https://ui-avatars.com/api/?name=Admin&background=0284c7&color=fff"></div></header>
 
             <div id="content-area">
-                <section id="dashboard" class="page-section active"><div class="welcome-banner"><h1>Vista Resumen</h1><p>Ingresos del día</p></div><div class="stats-grid"><div class="stat-card glass-panel"><div class="stat-icon income"><i class="fas fa-dollar-sign"></i></div><div class="stat-info"><h3>Total USD</h3><p id="stat-total-income">$ 0.00</p></div></div><div class="stat-card glass-panel"><div class="stat-icon pending"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>Total BS</h3><p id="stat-total-income-bs">0 BS</p></div></div><div class="stat-card glass-panel"><div class="stat-icon students"><i class="fas fa-user-graduate"></i></div><div class="stat-info"><h3>Alumnos</h3><p id="stat-active-students">0</p></div></div></div></section>
+                <section id="dashboard" class="page-section active"><div class="welcome-banner"><h1>Vista Resumen</h1><p>Ingresos del día</p></div><div class="stats-grid"><div class="stat-card glass-panel"><div class="stat-icon income"><i class="fas fa-dollar-sign"></i></div><div class="stat-info"><h3>Total USD</h3><p id="stat-total-income">$ 0.00</p></div></div><div class="stat-card glass-panel"><div class="stat-icon pending"><i class="fas fa-coins"></i></div><div class="stat-info"><h3>Total BS</h3><p id="stat-total-income-bs">0 BS</p></div></div><div class="stat-card glass-panel"><div class="stat-icon students"><i class="fas fa-user-graduate"></i></div><div class="stat-info"><h3>Matrícula</h3><p id="stat-active-students">0</p></div></div></div></section>
 
                 <section id="reports-view" class="page-section">
-                    <div class="page-header"><h2>Cierre de Caja</h2></div>
+                    <div class="page-header"><h2>Cierre Auditable</h2></div>
                     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:20px;">
-                        <div class="glass-panel" style="padding:20px;"><h3>Día</h3><input type="date" id="report-date-input" class="full-width" style="margin-bottom:10px;"><button onclick="runDailyReport()" class="btn-primary full-width">OPERAR DÍA</button></div>
-                        <div class="glass-panel" style="padding:20px;"><h3>Mes</h3><input type="month" id="report-month-input" class="full-width" style="margin-bottom:10px;"><button onclick="runMonthlyReport()" class="btn-primary full-width">OPERAR MES</button></div>
+                        <div class="glass-panel" style="padding:20px;"><h3>Día</h3><input type="date" id="report-date-input" class="full-width" style="margin-bottom:10px;"><button onclick="runDailyReport()" class="btn-primary full-width">CIERRE DIARIO</button></div>
+                        <div class="glass-panel" style="padding:20px;"><h3>Mes</h3><input type="month" id="report-month-input" class="full-width" style="margin-bottom:10px;"><button onclick="runMonthlyReport()" class="btn-primary full-width">CIERRE MENSUAL</button></div>
                     </div>
                     <div id="report-result-area" class="hidden">
                         <div class="sum-box">
                             <span class="ref-title">Equivalente Total (Referencial)</span>
                             <h2 class="ref-val" id="report-total-ref">$ 0,00</h2>
                             <div class="cash-grid">
-                                <div class="cash-card bs"><label><i class="fas fa-coins"></i> Total Físico BS</label><h1 id="report-phys-bs">0,00 BS</h1></div>
-                                <div class="cash-card usd"><label><i class="fas fa-dollar-sign"></i> Total Físico USD</label><h1 id="report-phys-usd">$ 0,00</h1></div>
+                                <div class="cash-card bs"><label>Caja Físico BS</label><h1 id="report-phys-bs">0,00 BS</h1></div>
+                                <div class="cash-card usd"><label>Caja Físico USD</label><h1 id="report-phys-usd">$ 0,00</h1></div>
                             </div>
                         </div>
                         <div class="report-stats-row" id="report-kpis"></div>
@@ -81,14 +84,14 @@
                     </div>
                 </section>
 
-                <section id="attendance-view" class="page-section"><div class="page-header"><h2>Puerta</h2></div><div class="glass-panel" style="max-width:600px; margin: 0 auto; padding:25px;"><input type="text" id="att-student-search" placeholder="Buscar..." class="full-width"><div id="att-results" class="search-results hidden" style="position:relative;"></div><div id="att-student-card" class="glass-panel" style="padding:20px; margin-top:20px; display:none; border-color:#f59e0b;"><h2 id="att-name" style="text-align:center;"></h2><div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:10px;"><div class="status-chip"><label>Clases</label><b id="att-classes">0</b></div><div class="status-chip"><label>Balance</label><b id="att-balance">$0.00</b></div><div class="status-chip"><label>Vence</label><b id="att-expiry">---</b></div></div><button id="btn-confirm-attendance" style="background:#f59e0b; border:none; color:white; padding:15px; border-radius:10px; width:100%; margin-top:20px; cursor:pointer;">MARCAR ENTRADA</button></div></div></section>
+                <section id="attendance-view" class="page-section"><div class="page-header"><h2>Puerta</h2></div><div class="glass-panel" style="max-width:600px; margin: 0 auto; padding:25px;"><input type="text" id="att-student-search" placeholder="Alumnos..." class="full-width"><div id="att-results" class="search-results hidden" style="position:relative;"></div><div id="att-student-card" class="glass-panel" style="padding:20px; margin-top:20px; display:none; border-color:#f59e0b;"><h2 id="att-name" style="text-align:center;"></h2><div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:10px;"><div class="status-chip"><label>Clases</label><b id="att-classes">0</b></div><div class="status-chip"><label>Balance</label><b id="att-balance">$0.00</b></div><div class="status-chip"><label>Vence</label><b id="att-expiry">---</b></div></div><button id="btn-confirm-attendance" style="background:#f59e0b; border:none; color:white; padding:15px; border-radius:10px; width:100%; margin-top:20px; cursor:pointer; font-weight:bold;"><i class="fas fa-check"></i> MARCAR ENTRADA</button></div></div></section>
 
                 <section id="students" class="page-section"><div class="page-header"><h2>Gestión de Alumnos</h2> <button class="btn-primary" onclick="openNewStudent()">+ NUEVO</button></div><div class="glass-panel"><table><thead><tr align="left"><th>Nombre</th><th>Clases</th><th>Balance</th><th align="center">Acción</th></tr></thead><tbody id="students-table-body"></tbody></table></div></section>
 
                 <section id="payments" class="page-section">
                     <div class="page-header"><h2>Módulo Cobro</h2></div>
                     <div class="glass-panel" style="padding:25px; max-width:850px; margin:0 auto;">
-                        <input type="text" id="pay-student-search" placeholder="Escribir nombre..." class="full-width"><div id="pay-results" class="search-results hidden" style="position:relative;"></div>
+                        <input type="text" id="pay-student-search" placeholder="Buscar alumno..." class="full-width"><div id="pay-results" class="search-results hidden" style="position:relative;"></div>
                         <div id="pay-student-box" class="glass-panel" style="padding:20px; margin:20px 0; display:none; border-color:#0ea5e9;"><h2 id="pay-st-name"></h2><div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px; margin-top:10px;"><div class="status-chip"><label>Balance</label><b id="p-status-balance">$0.00</b></div><div class="status-chip"><label>Clases</label><b id="p-status-classes">0</b></div><div class="status-chip"><label>Vence</label><b id="p-status-expiry">---</b></div></div></div>
                         <div id="pay-flow" class="hidden">
                             <label style="color:#0ea5e9; font-weight:700;">Seleccione los servicios:</label><div class="service-grid" id="pay-chips"></div>
@@ -99,23 +102,23 @@
                                 <div id="bs-extra-controls" class="bs-controls hidden" style="margin-top:10px;"><div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;"><div class="form-group"><label>Vía</label><select id="bs-method" class="full-width" onchange="handlePagoMovil()"><option value="Efectivo">Efectivo</option><option value="Pago Móvil">Pago Móvil</option></select></div><div id="bs-ref-container" class="form-group hidden"><label>4 Dígitos</label><input type="text" id="bs-ref" maxlength="4" placeholder="0000" class="full-width"></div></div></div>
                                 <div class="form-group" style="margin-top:15px; background:rgba(14,165,233,0.1); padding:15px; border-radius:10px;"><label>DINERO RECIBIDO</label><input type="number" id="p-received" step="0.01" required class="full-width" style="font-size:1.5rem; text-align:center;"></div>
                                 <div id="p-summary" style="display:none; text-align:center;"><p id="p-summary-text" style="color:#0ea5e9; font-weight:bold;"></p></div>
-                                <button type="submit" class="btn-primary full-width" style="margin-top:15px; padding:20px;">PROCESAR</button>
+                                <button type="submit" class="btn-primary full-width" style="margin-top:15px; padding:20px;">METER COBRO</button>
                             </form>
                         </div>
                     </div>
                 </section>
 
                 <section id="catalogo" class="page-section">
-                    <header class="page-header"><h2>Catálogo Maestro</h2> <button class="btn-primary" onclick="window.catOpenAdd()">+ NUEVO</button></header>
+                    <header class="page-header"><h2>Catálogo Maestro</h2> <button class="btn-primary" onclick="window.catOpenAdd()">+ NUEVO ITEM</button></header>
                     <div id="cat-list" style="max-width:850px; margin:0 auto;"></div>
-                    <div class="glass-panel" style="max-width:850px; margin:20px auto;"><button onclick="window.catSave()" class="btn-primary full-width">GUARDAR TODO</button></div>
+                    <div class="glass-panel" style="max-width:850px; margin:20px auto;"><button onclick="window.catSave()" class="btn-primary full-width">RE-GUARDAR CATÁLOGO</button></div>
                 </section>
             </div>
         </main>
     </div>
 
     <!-- Modals -->
-    <div id="modal-student" class="modal"><div class="modal-content glass-panel" style="width:340px; padding:25px;"><h2 id="modal-st-title">Gestión Alumno</h2><form id="st-form"><input type="hidden" id="st-auto-select" value="false"><div class="form-group"><label>Cédula</label><input type="text" id="st-ci" class="full-width"></div><div class="form-group"><label>Nombre</label><input type="text" id="st-name" required class="full-width"></div><button type="submit" class="btn-primary full-width">GUARDAR</button></form><button onclick="closeModals()" class="btn-small full-width" style="margin-top:5px;">CANCELAR</button></div></div>
+    <div id="modal-student" class="modal"><div class="modal-content glass-panel" style="width:340px; padding:25px;"><h2 id="modal-st-title">Datos Alumno</h2><form id="st-form"><input type="hidden" id="st-auto-select" value="false"><div class="form-group"><label>Cédula</label><input type="text" id="st-ci" class="full-width"></div><div class="form-group"><label>Nombre</label><input type="text" id="st-name" required class="full-width"></div><button type="submit" class="btn-primary full-width">GUARDAR</button></form><button onclick="closeModals()" class="btn-small full-width" style="margin-top:5px;">CANCELAR</button></div></div>
     <div id="modal-add-cat" class="modal"><div class="modal-content glass-panel" style="width:340px; padding:25px;"><h2>Nuevo Item</h2><form id="cat-form"><div class="form-group"><label>Nombre</label><input type="text" id="cat-name" required class="full-width"></div><div class="form-group"><label>USD</label><input type="number" id="cat-usd" step="0.1" required class="full-width"></div><div class="form-group"><label>Clases</label><input type="number" id="cat-cls" value="0" class="full-width"></div><button type="submit" class="btn-primary full-width">AÑADIR</button></form><button onclick="closeModals()" class="btn-small full-width" style="margin-top:5px;">CERRAR</button></div></div>
     <div id="modal-history" class="modal"><div class="modal-content glass-panel" style="width:90%; max-width:550px; padding:25px;"><div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #334155; padding-bottom:15px; margin-bottom:15px;"><h2 id="hist-name" style="margin:0; color:#0ea5e9;"></h2><div id="hist-st-balance" style="font-weight:bold;"></div></div><div id="hist-list" style="max-height:450px; overflow-y:auto; padding-right:5px;"></div><button onclick="closeModals()" class="btn-primary full-width" style="margin-top:20px;">SALIR</button></div></div>
 
@@ -146,11 +149,11 @@
                 var costUSD = 0, classes = 0, items = [];
                 state.selectedItems.forEach(k => { if(!state.isCortesia) costUSD += state.prices[k].usd; classes += (state.prices[k].classes || 0); items.push(k); if(k.toLowerCase().includes('men') || k.toLowerCase().includes('mem')) { var d = new Date(); d.setMonth(d.getMonth() + 1); stu.expiry = d.toISOString().split('T')[0]; } });
                 var recOriginal = parseFloat(document.getElementById('p-received').value), cur = document.getElementById('p-cur').value;
-                var recNormalizedUSD = cur === 'USD' ? recOriginal : recOriginal / state.rate;
+                var recUSD = cur === 'USD' ? recOriginal : recOriginal / state.rate;
                 var extra = ""; if(cur === 'BS') { var m = document.getElementById('bs-method').value; extra = " [" + m + (m==='Pago Móvil'?" Ref:"+document.getElementById('bs-ref').value:"") + "]"; }
-                stu.balance += (recNormalizedUSD - costUSD); stu.classes += classes;
+                stu.balance += (recUSD - costUSD); stu.classes += classes;
                 var title = (state.isCortesia ? "🎁 CORTESÍA: " : "") + items.join('+') + extra;
-                state.logs.unshift({ type: 'PAY', sid, name: stu.name, srv: title, usd: recNormalizedUSD, amt: recOriginal, cur: cur, date: new Date().toLocaleDateString(), iso: new Date().toISOString().split('T')[0] });
+                state.logs.unshift({ type: 'PAY', sid, name: stu.name, srv: title, usd: recUSD, amt: recOriginal, cur: cur, date: new Date().toLocaleDateString(), iso: new Date().toISOString().split('T')[0] });
                 save(); renderDashboard(); this.reset(); state.selectedItems = []; state.isCortesia = false;
                 document.getElementById('pay-student-box').style.display='none'; document.getElementById('pay-flow').classList.add('hidden'); alert("Listo");
             };
@@ -189,7 +192,6 @@
             document.getElementById('report-result-area').classList.remove('hidden');
             document.getElementById('report-title').innerText = title;
             var pays = logs.filter(l => l.type === 'PAY');
-            
             var totalRefUSD = pays.reduce((a,b) => a+b.usd, 0);
             var physUSD = pays.filter(l => l.cur === 'USD').reduce((a,b) => a+(l.amt||l.usd), 0);
             var physBS = pays.filter(l => l.cur === 'BS').reduce((a,b) => a+(l.amt||(l.usd*state.rate)), 0);
@@ -203,14 +205,17 @@
             var cAtt = logs.filter(l => l.type === 'ATT').length;
             document.getElementById('report-kpis').innerHTML = `<div class="kpi-card"><label>Inscritos</label><b>${cIns}</b></div><div class="kpi-card"><label>Membresías</label><b>${cMem}</b></div><div class="kpi-card"><label>Asistencias</label><b>${cAtt}</b></div>`;
 
-            document.getElementById('report-items-list').innerHTML = pays.length === 0 ? "<p style='text-align:center;'>Sin cobros en este periodo.</p>" : pays.map(l => {
+            document.getElementById('report-items-list').innerHTML = pays.length === 0 ? "<p style='text-align:center;'>Sin registros.</p>" : pays.map(l => {
                 var mon = (l.cur==='BS' || l.srv.includes('Móvil'))?'BS':'$';
                 return `<div class="hist-card pay"><div class="report-header"><span class="report-title">${l.name}</span><span style="font-size:0.75rem;">${l.date}</span></div><div style="font-size:0.8rem; color:#94a3b8;">${l.srv}</div><div class="report-amount"><span style="color:#94a3b8; font-size:0.7rem; font-weight:400;">${mon}</span> ${fNum(l.amt||l.usd)}</div></div>`;
             }).join('');
         }
 
-        window.renderCatalogManagement = function() { var list = document.getElementById('cat-list'), r = state.rate; list.innerHTML = Object.keys(state.prices).map(k => { var p = state.prices[k]; var id = k.replace(/\s/g, ''); return `<div class="cat-item-row"><div class="cat-item-header"><h3><i class="fas fa-tag"></i> ${k}</h3> <button class="btn-del-mini" onclick="delCat('${k}')">X</button></div><div class="cat-item-body"><div class="cat-group"><label>USD</label><input type="number" step="0.1" value="${p.usd}" id="usd-${id}" oninput="document.getElementById('ref-${id}').innerText = 'Eq: '+fNum(this.value*state.rate)+' BS'"></div><div class="cat-group"><label>BS</label><input type="number" step="0.1" value="${p.bs}" id="bs-${id}"><div class="ref-tag" id="ref-${id}">Monto: ${fNum(p.usd * r)} BS</div></div><div class="cat-group"><label>Clases</label><input type="number" value="${p.classes||0}" id="cls-${id}"></div></div></div>`; }).join(''); }
-        window.catSave = function() { Object.keys(state.prices).forEach(k => { var id = k.replace(/\s/g, ''); state.prices[k] = { usd: parseFloat(document.getElementById('usd-'+id).value)||0, bs: parseFloat(document.getElementById('bs-'+id).value)||0, classes: parseInt(document.getElementById('cls-'+id).value)||0 }; }); save(); alert("Catálogo guardado"); }
+        window.renderCatalogManagement = function() { 
+            var list = document.getElementById('cat-list'), r = state.rate; 
+            list.innerHTML = Object.keys(state.prices).map(k => { var p = state.prices[k]; var id = k.replace(/\s/g, ''); return `<div class="cat-item-row"><div class="cat-item-header"><h3><i class="fas fa-tag"></i> ${k}</h3> <button class="btn-del-mini" onclick="delCat('${k}')">X</button></div><div class="cat-item-body"><div class="cat-group"><label>USD ($)</label><input type="number" step="0.1" value="${p.usd}" id="usd-${id}" oninput="document.getElementById('ref-${id}').innerText = 'Referencia: '+fNum(this.value*state.rate)+' BS'"></div><div class="cat-group"><label>BS (Local)</label><input type="number" step="0.1" value="${p.bs}" id="bs-${id}"><div class="ref-tag" id="ref-${id}">Referencia: ${fNum(p.usd * r)} BS</div></div><div class="cat-group"><label>Clases</label><input type="number" value="${p.classes||0}" id="cls-${id}"></div></div></div>`; }).join(''); 
+        }
+        window.catSave = function() { Object.keys(state.prices).forEach(k => { var id = k.replace(/\s/g, ''); state.prices[k] = { usd: parseFloat(document.getElementById('usd-'+id).value)||0, bs: parseFloat(document.getElementById('bs-'+id).value)||0, classes: parseInt(document.getElementById('cls-'+id).value)||0 }; }); save(); alert("Guardado"); }
         function delCat(k) { if(confirm("¿Borrar?")) { delete state.prices[k]; save(); renderCatalogManagement(); } }
         function initNav() { document.querySelectorAll('#main-nav li').forEach(li => li.onclick = function() { var pg = li.dataset.page; document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active')); document.getElementById(pg).classList.add('active'); document.querySelectorAll('#main-nav li').forEach(i => i.classList.remove('active')); li.classList.add('active'); if(pg=='dashboard') renderDashboard(); else if(pg=='students') renderStudents(); else if(pg=='catalogo') renderCatalogManagement(); else if(pg=='reports-view') document.getElementById('report-result-area').classList.add('hidden'); }); }
         function openNewStudent() { document.getElementById('modal-st-title').innerText = "Nuevo Alumno"; document.getElementById('st-form').reset(); var m = document.getElementById('modal-student'); m.classList.remove('hidden'); m.classList.add('active'); }
