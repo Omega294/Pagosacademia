@@ -45,6 +45,10 @@
                 <div id="login-sync-led" class="led-dot syncing"></div>
                 <span id="login-sync-text">Conectando con la nube...</span>
             </div>
+            <div id="login-local-status" class="mt-2" style="display:flex; align-items:center; gap:0.6rem; justify-content:center; font-size:0.82rem; color:var(--text-secondary);">
+                <div id="login-local-led" class="led-dot offline"></div>
+                <span id="login-local-text">Buscando servidor local PC...</span>
+            </div>
             <button id="btn-login-sync" class="btn btn-outline mt-2 hidden" style="width:100%; font-size:0.85rem;">↺ Reintentar Sincronización</button>
             <p id="login-error" class="text-danger mt-4 hidden">Credenciales incorrectas.</p>
         </div>
@@ -78,6 +82,10 @@
                 <div class="sync-status-indicator">
                     <div id="cloud-led" class="led-dot"></div>
                     <span id="cloud-status-text">Cloud Sync</span>
+                </div>
+                <div class="sync-status-indicator" style="margin-top: 0.5rem;">
+                    <div id="local-led" class="led-dot offline"></div>
+                    <span id="local-status-text">Local PC</span>
                 </div>
             </div>
 

@@ -1,0 +1,663 @@
+{
+    "students": [
+        {
+            "id": 1780427328590,
+            "name": "JUNIOR MONTIEL",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780427374708,
+            "name": "JESUS LOPERA",
+            "cedula": "",
+            "balance": 0,
+            "classes": 1,
+            "expiry": null
+        },
+        {
+            "id": 1780427850705,
+            "name": "DOUGLAS GIMENEZ",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780427952441,
+            "name": "JOSE BOZO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780428010857,
+            "name": "JUAN TORRES",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780428211049,
+            "name": "LUIS AEVALO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780428253203,
+            "name": "JESUS MANZANO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780428281818,
+            "name": "MIGNER ARELLANO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780428321792,
+            "name": "JOHAN FUMERO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 1,
+            "expiry": null
+        },
+        {
+            "id": 1780428692082,
+            "name": "PABLO VASQUEZ",
+            "cedula": "",
+            "balance": 0,
+            "classes": 4,
+            "expiry": "2026-06-04"
+        },
+        {
+            "id": 1780431602553,
+            "name": "ROMULO BETANCOURT",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780431666843,
+            "name": "CARLOS QUINTERO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 1,
+            "expiry": null
+        },
+        {
+            "id": 1780431704248,
+            "name": "NESTOR ACOSTA",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780431732947,
+            "name": "DANIEL DIAZ",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780431762968,
+            "name": "CARLOS BRICEÑO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780432083521,
+            "name": "JESUS RODRIGUEZ",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780432227176,
+            "name": "ANDRES ANTAKI",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780432408328,
+            "name": "ANDRES ANTAKI",
+            "cedula": "",
+            "balance": 0,
+            "classes": 1,
+            "expiry": null
+        },
+        {
+            "id": 1780432648368,
+            "name": "ASCANIO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780432703498,
+            "name": "CORONADO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        },
+        {
+            "id": 1780432845856,
+            "name": "JOSE DUARTE",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null
+        }
+    ],
+    "logs": [
+        {
+            "id": "log_cb3wb48dw_1780432864168",
+            "type": "PAY",
+            "sid": "1780432845856",
+            "name": "JOSE DUARTE",
+            "srv": "Practica [Pago Móvil Ref:1713]",
+            "usd": 9.999183740102849,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_a149x1jmp_1780432772608",
+            "type": "PAY",
+            "sid": "1780432703498",
+            "name": "CORONADO",
+            "srv": "Practica [Pago Móvil Ref:2497]",
+            "usd": 9.999183740102849,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_85x90434n_1780432693760",
+            "type": "PAY",
+            "sid": "1780432648368",
+            "name": "ASCANIO",
+            "srv": "Practica",
+            "usd": 10,
+            "amt": 10,
+            "cur": "USD",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_mp5piaaqd_1780432640760",
+            "type": "PAY",
+            "sid": "1780432408328",
+            "name": "ANDRES ANTAKI",
+            "srv": "Practica Guardianes [Pago Móvil Ref:0286]",
+            "usd": 4.999591870051424,
+            "amt": 2450,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 1
+        },
+        {
+            "id": "log_u8jpldmzw_1780432210944",
+            "type": "PAY",
+            "sid": "1780432083521",
+            "name": "JESUS RODRIGUEZ",
+            "srv": "Practica [Pago Móvil Ref:2499]",
+            "usd": 9.999183740102849,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_8yrv7lhm4_1780432027273",
+            "type": "PAY",
+            "sid": "1780431762968",
+            "name": "CARLOS BRICEÑO",
+            "srv": "Practica [Pago Móvil Ref:7346]",
+            "usd": 9.999183740102849,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_qxcbg9kso_1780431861009",
+            "type": "PAY",
+            "sid": "1780431732947",
+            "name": "DANIEL DIAZ",
+            "srv": "Practica [Efectivo]",
+            "usd": 9.999183740102849,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_0hwpszfvq_1780431839264",
+            "type": "PAY",
+            "sid": "1780431704248",
+            "name": "NESTOR ACOSTA",
+            "srv": "Practica [Pago Móvil Ref:0970]",
+            "usd": 9.999183740102849,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_1x0bd75bu_1780431691937",
+            "type": "PAY",
+            "sid": "1780431666843",
+            "name": "CARLOS QUINTERO",
+            "srv": "Practica Guardianes [Pago Móvil Ref:2370]",
+            "usd": 4.390917074394681,
+            "amt": 2450,
+            "cur": "BS",
+            "date": "05/06/2026",
+            "iso": "2026-06-05",
+            "rate": 557.97,
+            "difUSD": 0,
+            "cls": 1
+        },
+        {
+            "id": "log_58owk65dq_1780431655089",
+            "type": "PAY",
+            "sid": "1780431602553",
+            "name": "ROMULO BETANCOURT",
+            "srv": "Practica [Efectivo]",
+            "usd": 9.999183740102849,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "type": "ATT",
+            "sid": 1780428692082,
+            "name": "PABLO VASQUEZ",
+            "date": "2/6/2026",
+            "iso": "2026-06-02",
+            "id": "log_192pjtfmy_1780429402705"
+        },
+        {
+            "id": "log_b6rlrsryi_1780428707442",
+            "type": "PAY",
+            "sid": "1780428692082",
+            "name": "PABLO VASQUEZ",
+            "srv": "CORTESÍA PAGADA: Mensualidad",
+            "usd": 0,
+            "amt": 0,
+            "cur": "USD",
+            "date": "04/05/2026",
+            "iso": "2026-05-04",
+            "rate": 489.55,
+            "difUSD": 0,
+            "cls": 5
+        },
+        {
+            "type": "ATT",
+            "sid": 1780428553402,
+            "name": "PABLO VASQUEZ",
+            "date": "2/6/2026",
+            "iso": "2026-06-02",
+            "id": "log_67cdag8bd_1780429402705"
+        },
+        {
+            "id": "log_ydk6ctval_1780428360609",
+            "type": "PAY",
+            "sid": "1780428321792",
+            "name": "JOHAN FUMERO",
+            "srv": "1/2 Practica  [Efectivo]",
+            "usd": 5.10673067102441,
+            "amt": 2500,
+            "cur": "BS",
+            "date": "04/05/2026",
+            "iso": "2026-05-04",
+            "rate": 489.55,
+            "difUSD": 0,
+            "cls": 1
+        },
+        {
+            "id": "log_wq008xlqu_1780428306689",
+            "type": "PAY",
+            "sid": "1780428281818",
+            "name": "MIGNER ARELLANO",
+            "srv": "Practica [Pago Móvil Ref:8136]",
+            "usd": 10.009192115207844,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "04/05/2026",
+            "iso": "2026-05-04",
+            "rate": 489.55,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_vh5ved91j_1780428271545",
+            "type": "PAY",
+            "sid": "1780428253203",
+            "name": "JESUS MANZANO",
+            "srv": "Practica [Efectivo]",
+            "usd": 10.009192115207844,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "04/05/2026",
+            "iso": "2026-05-04",
+            "rate": 489.55,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_k8e4ocrpv_1780428237049",
+            "type": "PAY",
+            "sid": "1780428211049",
+            "name": "LUIS AEVALO",
+            "srv": "Practica [Pago Móvil Ref:2654]",
+            "usd": 10.009192115207844,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "04/05/2026",
+            "iso": "2026-05-04",
+            "rate": 489.55,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_pebclt5aa_1780428199465",
+            "type": "PAY",
+            "sid": "1780428010857",
+            "name": "JUAN TORRES",
+            "srv": "Practica [Pago Móvil Ref:9069]",
+            "usd": 10.009192115207844,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "04/05/2026",
+            "iso": "2026-05-04",
+            "rate": 489.55,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_uulna0w2e_1780428168537",
+            "type": "PAY",
+            "sid": "1780427952441",
+            "name": "JOSE BOZO",
+            "srv": "Practica [Pago Móvil Ref:9592]",
+            "usd": 10.009192115207844,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "04/05/2026",
+            "iso": "2026-05-04",
+            "rate": 489.55,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_s0an9tl9r_1780428141065",
+            "type": "PAY",
+            "sid": "1780427374708",
+            "name": "JESUS LOPERA",
+            "srv": "Practica Guardianes [Pago Móvil Ref:2450]",
+            "usd": 5.004596057603922,
+            "amt": 2450,
+            "cur": "BS",
+            "date": "04/05/2026",
+            "iso": "2026-05-04",
+            "rate": 489.55,
+            "difUSD": 0,
+            "cls": 1
+        },
+        {
+            "id": "log_0kife46i5_1780428107801",
+            "type": "PAY",
+            "sid": "1780427850705",
+            "name": "DOUGLAS GIMENEZ",
+            "srv": "Practica [Pago Móvil Ref:4328]",
+            "usd": 10.009192115207844,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "04/05/2026",
+            "iso": "2026-05-04",
+            "rate": 489.55,
+            "difUSD": 0,
+            "cls": 0
+        },
+        {
+            "id": "log_59cqfcm8d_1780428076713",
+            "type": "PAY",
+            "sid": "1780427328590",
+            "name": "JUNIOR MONTIEL",
+            "srv": "Practica [Pago Móvil Ref:0072]",
+            "usd": 10.009192115207844,
+            "amt": 4900,
+            "cur": "BS",
+            "date": "04/05/2026",
+            "iso": "2026-05-04",
+            "rate": 489.55,
+            "difUSD": 0,
+            "cls": 0
+        }
+    ],
+    "rate": 557.97,
+    "prices": {
+        "Mensualidad": {
+            "usd": 69.8,
+            "bs": 2800,
+            "classes": 5,
+            "type": "SER"
+        },
+        "Practica": {
+            "usd": 10,
+            "bs": 4900,
+            "classes": 0,
+            "type": "SER"
+        },
+        "Inscripcion": {
+            "usd": 30,
+            "bs": 15900,
+            "classes": 0,
+            "type": "SER"
+        },
+        "Practica Guardianes": {
+            "usd": 5,
+            "bs": 2450,
+            "classes": 1,
+            "type": "SER"
+        },
+        "1/2 Practica ": {
+            "usd": 5,
+            "bs": 2500,
+            "classes": 1,
+            "type": "SER"
+        },
+        "Gorra": {
+            "usd": 30,
+            "bs": 15900,
+            "classes": 0,
+            "type": "POP"
+        },
+        "Practica + juego": {
+            "usd": 15,
+            "bs": 8369.550000000001,
+            "classes": 0,
+            "type": "SER"
+        }
+    },
+    "egresos": [
+        {
+            "id": 1780429462046,
+            "date": "2026-05-04",
+            "description": "Estadio x1",
+            "amount": 28395,
+            "cur": "BS",
+            "rate": 489.55
+        },
+        {
+            "id": 1780429498586,
+            "date": "2026-05-04",
+            "description": "Profesores x2",
+            "amount": 14685,
+            "cur": "BS",
+            "rate": 489.55
+        },
+        {
+            "id": 1780429517154,
+            "date": "2026-05-04",
+            "description": "Administracion x1",
+            "amount": 7345,
+            "cur": "BS",
+            "rate": 489.55
+        },
+        {
+            "id": 1780429557850,
+            "date": "2026-05-04",
+            "description": "Ticket de Estacionamiento x5",
+            "amount": 6120,
+            "cur": "BS",
+            "rate": 489.55
+        },
+        {
+            "id": 1780429582713,
+            "date": "2026-05-04",
+            "description": "10% Ingresos del Día x1",
+            "amount": 4375,
+            "cur": "BS",
+            "rate": 489.55
+        }
+    ],
+    "egresos_catalog": {
+        "Ticket de Estacionamiento": {
+            "usd": 2.5
+        },
+        "Estadio": {
+            "usd": 58
+        },
+        "Profesores": {
+            "usd": 15
+        },
+        "Umpier": {
+            "usd": 15
+        },
+        "Administracion": {
+            "usd": 15
+        },
+        "10% Ingresos del Día": {
+            "usd": 10
+        },
+        "Umpier 2": {
+            "usd": 10
+        }
+    },
+    "rates_history": {
+        "2026-04-01": 473.91,
+        "2026-04-02": 473.91,
+        "2026-04-03": 473.91,
+        "2026-04-04": 473.91,
+        "2026-04-05": 473.91,
+        "2026-04-06": 474.05,
+        "2026-04-07": 474.53,
+        "2026-04-08": 475,
+        "2026-04-09": 475.95,
+        "2026-04-10": 476.14,
+        "2026-04-11": 476.14,
+        "2026-04-12": 476.14,
+        "2026-04-13": 477.14,
+        "2026-04-14": 477.62,
+        "2026-04-15": 478.58,
+        "2026-04-16": 479.77,
+        "2026-04-17": 480.25,
+        "2026-04-18": 480.25,
+        "2026-04-19": 480.25,
+        "2026-04-21": 481.69,
+        "2026-04-22": 482.75,
+        "2026-04-23": 483.33,
+        "2026-04-24": 483.86,
+        "2026-04-25": 483.86,
+        "2026-04-26": 483.86,
+        "2026-04-28": 485.23,
+        "2026-04-29": 486.2,
+        "2026-04-30": 487.11,
+        "2026-05-01": 489.55,
+        "2026-05-02": 489.55,
+        "2026-05-03": 489.55,
+        "2026-05-04": 489.55,
+        "2026-05-05": 490.04,
+        "2026-05-06": 493.38,
+        "2026-05-07": 496.83,
+        "2026-05-08": 499.86,
+        "2026-05-09": 499.86,
+        "2026-05-10": 499.86,
+        "2026-05-11": 500.46,
+        "2026-05-12": 504.91,
+        "2026-05-13": 508.6,
+        "2026-05-14": 510.78,
+        "2026-05-15": 515.18,
+        "2026-05-16": 515.18,
+        "2026-05-17": 515.18,
+        "2026-05-18": 517.96,
+        "2026-05-19": 520.3,
+        "2026-05-20": 524.12,
+        "2026-05-21": 527.45,
+        "2026-05-22": 531.1,
+        "2026-05-23": 531.1,
+        "2026-05-24": 531.1,
+        "2026-05-25": 531.1,
+        "2026-05-26": 535.38,
+        "2026-05-27": 540.04,
+        "2026-05-28": 540.81,
+        "2026-05-29": 549.37,
+        "2026-05-30": 549.37,
+        "2026-05-31": 549.37,
+        "2026-06-01": 554.43,
+        "2026-06-02": 557.97
+    }
+}

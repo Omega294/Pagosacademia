@@ -1,0 +1,14 @@
+{
+    "baseCostUSD": 70,
+    "baseCostCashUSD": 55,
+    "currentRateEurBs": 45.0,
+    "rateLastUpdated": "2026-06-01T15:00:00.000Z",
+    "markupPercentage": 0.0,
+    "teams": ["Los Tigres", "Bravos", "Cardenales", "Águilas", "Leones"],
+    "players": [],
+    "payments": [],
+    "users": [
+        { "username": "admin", "password": "admin123", "role": "admin" }
+    ],
+    "deletedPayments": []
+}

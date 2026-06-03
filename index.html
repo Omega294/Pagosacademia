@@ -68,7 +68,7 @@
         .cat-item-row { background:rgba(30,41,59,0.5); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:15px; }
         .cat-item-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; }
         .cat-item-header h3 { font-size:1rem; margin:0; color:var(--p); display:flex; align-items:center; gap:8px; }
-        .cat-item-body { display:grid !important; grid-template-columns: 1fr 1fr 1fr !important; gap:20px !important; width:100% !important; }
+        .cat-item-body { display:grid !important; grid-template-columns: 1fr 1.2fr 1.2fr 0.8fr !important; gap:20px !important; width:100% !important; }
         .cat-group { display:flex; flex-direction:column; gap:5px; }
         .cat-group label { font-size:0.6rem; color:#94a3b8; text-transform:uppercase; font-weight:800; }
         .cat-group input { background:#0f172a; border:1px solid var(--border); color:white; padding:12px; border-radius:8px; width:100%; border-bottom: 2px solid transparent; }
@@ -97,7 +97,58 @@
         .status-chip label { display:block; font-size:0.6rem; color:#64748b; font-weight:800; text-transform:uppercase; margin-bottom:4px; }
         .status-chip b { font-size:1rem; color:white; }
         
-        /* MODALS */
+        .eg-chip-btn { background:var(--card); border:1px solid var(--border); color:white; padding:15px; border-radius:12px; cursor:pointer; text-align:center; transition:0.2s; font-size:0.85rem; width: 100%; position: relative; }
+        .eg-chip-btn.active { border-color:#ef4444; background:rgba(239,68,68,0.1); color:#ef4444; font-weight:800; box-shadow:0 0 15px rgba(239,68,68,0.2); }
+        
+        .eg-form-grid {
+             display: grid;
+             grid-template-columns: 1fr 1.3fr;
+             gap: 30px;
+         }
+         @media (max-width: 650px) {
+             .eg-form-grid {
+                 grid-template-columns: 1fr !important;
+                 gap: 15px !important;
+             }
+         }
+         
+         .cortesia-switch {
+             display: inline-flex;
+             align-items: center;
+             justify-content: center;
+             gap: 10px;
+             background: rgba(30, 41, 59, 0.6);
+             border: 1px solid var(--border);
+             color: #94a3b8;
+             padding: 12px 24px;
+             border-radius: 12px;
+             cursor: pointer;
+             font-weight: 700;
+             font-size: 0.85rem;
+             text-transform: uppercase;
+             letter-spacing: 0.5px;
+             transition: all 0.2s ease;
+             margin: 15px 0;
+             width: auto;
+             user-select: none;
+             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+         }
+         .cortesia-switch:hover {
+             border-color: #facc15;
+             color: #facc15;
+             background: rgba(250, 204, 21, 0.05);
+             transform: translateY(-1px);
+             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+         }
+         .cortesia-switch.active {
+             background: rgba(250, 204, 21, 0.15);
+             border-color: #facc15;
+             color: #facc15;
+             box-shadow: 0 0 15px rgba(250, 204, 21, 0.25);
+             font-weight: 900;
+         }
+         
+         /* MODALS */
         .modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(2,6,23,0.8); backdrop-filter:blur(5px); display:flex; align-items:center; justify-content:center; z-index:2000; visibility:hidden; opacity:0; transition:all 0.3s; }
         .modal.active { visibility:visible; opacity:1; }
         .modal-content { max-width:400px; width:90%; padding:35px; position:relative; }
@@ -106,24 +157,150 @@
         .login-view { position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:3000; display:flex; align-items:center; justify-content:center; }
         .login-card { width:350px; padding:40px; text-align:center; }
         .logo.large { font-size:2.5rem; color:var(--p); margin-bottom:10px; display:block; }
+
+        /* PRINTING DESIGN SYSTEM */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                font-family: 'Outfit', 'Segoe UI', Arial, sans-serif;
+            }
+            /* Ocultar barra lateral, botones de login, formularios de fecha superiores, etc. */
+            .sidebar, .login-view, .page-header, #main-nav, .sidebar-footer, 
+            section:not(#reports-view), #reports-view > div:not(#report-result-area),
+            #report-result-area button, #report-result-area .icon-btn,
+            input, select, button, .btn-primary {
+                display: none !important;
+            }
+            .main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                background: white !important;
+            }
+            #content-area {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            #reports-view {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            #report-result-area {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .glass-panel {
+                background: transparent !important;
+                border: 1px solid #ccc !important;
+                border-radius: 8px !important;
+                color: black !important;
+                box-shadow: none !important;
+                margin-top: 15px !important;
+                padding: 20px !important;
+            }
+            /* Anular alturas max y scrolls para expandir listas de recibos y gastos por completo */
+            #report-result-area * {
+                max-height: none !important;
+                overflow: visible !important;
+                overflow-y: visible !important;
+            }
+            h1, h2, h3, h4, h5, h6, p, div, span, label, b, strong, small {
+                color: black !important;
+            }
+            #report-total-ref div {
+                color: #334155 !important;
+            }
+            #report-phys-usd, #report-phys-bs {
+                color: black !important;
+                font-size: 1.5rem !important;
+            }
+            hr {
+                border-color: #cbd5e1 !important;
+            }
+            .count-row {
+                border-bottom: 1px solid #e2e8f0 !important;
+                padding: 6px 0 !important;
+            }
+        }
     </style>
 </head>
 <body class="dark-theme">
     <!-- UI Layer: Login -->
-    <div id="view-login" class="login-view"><div class="login-card glass-panel"><span class="logo large"><i class="fas fa-graduation-cap"></i></span><h2>Centro Académico</h2><div class="form-group"><div style="position:relative;"><input type="password" id="login-password" placeholder="Pass de entrada" class="full-width"><i class="fas fa-eye" id="toggle-p" style="position:absolute; right:15px; top:18px; cursor:pointer;"></i></div></div><button id="btn-do-login" class="btn-primary full-width">INGRESAR AL SISTEMA</button></div></div>
+    <div id="view-login" class="login-view"><div class="login-card glass-panel"><span class="logo large"><i class="fas fa-graduation-cap"></i></span><h2>Centro Académico</h2><div class="form-group"><div style="position:relative;"><input type="password" id="login-password" placeholder="Pass de entrada" class="full-width"><i class="fas fa-eye" id="toggle-p" style="position:absolute; right:15px; top:18px; cursor:pointer;"></i></div></div><button id="btn-do-login" class="btn-primary full-width">INGRESAR AL SISTEMA</button><div id="login-local-status" style="margin-top:15px; display:flex; align-items:center; gap:8px; justify-content:center; font-size:0.8rem; color:#94a3b8;"><div id="login-local-led" class="led-dot offline" style="width:8px; height:8px; border-radius:50%; background:#ef4444; box-shadow:0 0 8px #ef4444;"></div><span id="login-local-text">Buscando servidor local PC...</span></div></div></div>
 
     <!-- UI Layer: Main App -->
     <div id="app-container" class="app-container hidden">
         <aside class="sidebar">
             <div class="sidebar-header"><span style="color:var(--p); font-weight:900; font-size:1.2rem; display:flex; align-items:center; gap:8px;"><i class="fas fa-graduation-cap"></i> ACADEMIA</span></div>
-            <nav class="sidebar-nav"><ul id="main-nav"><li class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span>Métricas</span></li><li data-page="reports-view"><i class="fas fa-receipt"></i> <span>Cierres</span></li><li data-page="attendance-view"><i class="fas fa-sign-in-alt"></i> <span>Control</span></li><li data-page="students"><i class="fas fa-user-friends"></i> <span>Alumnos</span></li><li data-page="payments"><i class="fas fa-cash-register"></i> <span>Caja</span></li><li data-page="catalogo"><i class="fas fa-sliders-h"></i> <span>Precios</span></li></ul></nav>
-            <div class="sidebar-footer" style="padding:20px; border-top:1px solid var(--border);"><div style="display:flex; justify-content:space-between; align-items:center;"><small style="color:#64748b;">Tasa BS:</small> <input type="number" id="global-rate" value="40.0" style="width:70px; padding:8px; font-size:0.8rem; text-align:right;" onchange="window.saveRate(this.value)"></div></div>
+            <nav class="sidebar-nav"><ul id="main-nav"><li class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span>Métricas</span></li><li data-page="reports-view"><i class="fas fa-receipt"></i> <span>Cierres</span></li><li data-page="attendance-view"><i class="fas fa-sign-in-alt"></i> <span>Control</span></li><li data-page="students"><i class="fas fa-user-friends"></i> <span>Alumnos</span></li><li data-page="payments"><i class="fas fa-cash-register"></i> <span>Caja</span></li><li data-page="catalogo"><i class="fas fa-sliders-h"></i> <span>Precios</span></li><li data-page="egresos-view"><i class="fas fa-hand-holding-usd"></i> <span>Egresos</span></li></ul></nav>
+            <div class="sidebar-footer" style="padding:20px; border-top:1px solid var(--border);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;"><small style="color:#64748b;">Tasa BS:</small> <input type="number" id="global-rate" value="40.0" style="width:70px; padding:8px; font-size:0.8rem; text-align:right;" onchange="window.saveRate(this.value)"></div>
+                <button onclick="window.openRatesHistory()" class="btn-primary" style="padding: 8px; font-size: 0.75rem; margin-bottom: 12px; width: 100%; background: rgba(14,165,233,0.1); color: var(--p); border: 1px solid var(--border); transition:0.2s;"><i class="fas fa-history"></i> Historial Tasas</button>
+                <div style="display:flex; align-items:center; gap:8px; font-size:0.75rem; color:#94a3b8; justify-content:center; background:rgba(0,0,0,0.2); padding:6px; border-radius:8px; border:1px solid var(--border);">
+                    <div id="local-led" class="led-dot offline" style="width:7px; height:7px; border-radius:50%; background:#ef4444; box-shadow:0 0 6px #ef4444;"></div>
+                    <span id="local-status-text">Local PC: Desconectado</span>
+                </div>
+            </div>
         </aside>
 
         <main class="main-content">
             <div id="content-area">
                 <!-- Page: Dashboard -->
-                <section id="dashboard" class="page-section active"><div class="welcome-banner"><h1>¡Buen día! 👋</h1><p id="dash-date-label" style="color:#64748b; font-weight:700;"></p></div><div class="stats-grid"><div class="stat-card glass-panel"><div class="stat-icon"><i class="fas fa-dollar-sign"></i></div><div class="stat-info"><h3>Total USD</h3><p id="stat-total-income">$ 0.00</p></div></div><div class="stat-card glass-panel"><div class="stat-icon"><i class="fas fa-wallet"></i></div><div class="stat-info"><h3>Total BS</h3><p id="stat-total-income-bs">0 BS</p></div></div><div class="stat-card glass-panel"><div class="stat-icon"><i class="fas fa-users-cog"></i></div><div class="stat-info"><h3>Activos</h3><p id="stat-active-students">0</p></div></div></div></section>
+                <section id="dashboard" class="page-section active">
+                    <div class="welcome-banner">
+                        <h1>¡Buen día! 👋</h1>
+                        <p id="dash-date-label" style="color:#64748b; font-weight:700;"></p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                            <div class="stat-info">
+                                <h3>Total USD</h3>
+                                <p id="stat-total-income">$ 0.00</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+                            <div class="stat-info">
+                                <h3>Total BS</h3>
+                                <p id="stat-total-income-bs">0 BS</p>
+                            </div>
+                        </div>
+                        <div class="stat-card glass-panel">
+                            <div class="stat-icon"><i class="fas fa-users-cog"></i></div>
+                            <div class="stat-info">
+                                <h3>Activos</h3>
+                                <p id="stat-active-students">0</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-panel" style="margin-top: 30px; padding: 25px;">
+                        <h2 style="color:var(--p); font-size: 1.1rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-list-ul"></i> Movimientos Registrados Hoy</h2>
+                        <div class="table-responsive">
+                            <table style="width:100%; border-collapse:collapse;">
+                                <thead>
+                                    <tr>
+                                        <th>Hora/Fecha</th>
+                                        <th>Concepto/Detalle</th>
+                                        <th>Tipo</th>
+                                        <th style="text-align: right;">Monto Original</th>
+                                        <th style="text-align: right;">Equivalente USD</th>
+                                        <th style="text-align: center;">⚙️</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dash-today-movements">
+                                    <!-- Dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
 
                 <!-- Page: Reports -->
                 <section id="reports-view" class="page-section">
@@ -139,6 +316,11 @@
                     </div>
 
                     <div id="report-result-area" class="hidden">
+                        <div style="display:flex; justify-content:flex-end; margin-bottom: 20px;">
+                            <button onclick="window.exportReportToPDF()" class="btn-primary" style="background:#10b981; border:none; padding: 12px 24px; font-size:0.9rem; font-weight:700; border-radius:8px; cursor:pointer; color:white; display:flex; align-items:center; gap:8px;">
+                                <i class="fas fa-file-pdf"></i> EXPORTAR CORTE A PDF / IMPRIMIR
+                            </button>
+                        </div>
                         <div class="sum-box glass-panel" style="padding:30px;">
                             <span style="color:#64748b; font-size:0.8rem; font-weight:800; text-transform:uppercase;">Saldo Referencial Refejado</span>
                             <h2 style="color:var(--p); font-size:2.2rem; margin:10px 0 20px 0;" id="report-total-ref">$ 0,00</h2>
@@ -150,6 +332,7 @@
                         <div class="glass-panel" style="padding:20px; margin-top:20px;"><h3 style="color:var(--p); font-size:0.9rem; margin-bottom:15px; text-transform:uppercase;">Inventario Despachado</h3><div id="report-item-counts-list"></div></div>
                         <div id="report-kpis" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(100px, 1fr)); gap:12px; margin-top:20px;"></div>
                         <div class="glass-panel" style="margin-top:25px;"><h2 id="report-title" style="text-align:center; padding:20px; border-bottom:1px solid var(--border); font-size:1rem;"></h2><div id="report-items-list" style="max-height:450px; overflow-y:auto; padding:15px;"></div></div>
+                        <div id="report-egresos-container"></div>
                     </div>
                 </section>
 
@@ -196,9 +379,10 @@
                             <div id="cortesia-toggle" class="cortesia-switch" onclick="window.toggleCortesia()"><i class="fas fa-gift"></i> ACTIVAR CORTESÍA / PATROCINIO</div>
                             <form id="pay-form">
                                 <input type="hidden" id="p-sid"><input type="hidden" id="is-cortesia" value="false">
-                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px;">
-                                    <div class="form-group"><label id="label-monto">Monto Sistema</label><input type="number" id="p-cost" readonly class="full-width"></div>
-                                    <div class="form-group"><label>Moneda Cobro</label><select id="p-cur" class="full-width" onchange="syncPayPrice(); handleBSControls();"><option value="USD">Divisas (USD)</option><option value="BS">Local (BS)</option></select></div>
+                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px; margin-top:20px;">
+                                    <div class="form-group"><label>Fecha de Cobro</label><input type="date" id="p-date" required class="full-width" style="padding: 10px;"></div>
+                                    <div class="form-group"><label id="label-monto">Monto Sistema</label><input type="number" id="p-cost" readonly class="full-width" style="padding: 10px;"></div>
+                                    <div class="form-group"><label>Moneda Cobro</label><select id="p-cur" class="full-width" onchange="syncPayPrice(); handleBSControls();" style="padding: 10px;"><option value="USD">Divisas (USD)</option><option value="BS">Local (BS)</option></select></div>
                                 </div>
                                 <div id="bs-extra-controls" class="hidden" style="margin-bottom:20px; display:grid; grid-template-columns:1fr 1fr; gap:15px;">
                                     <div class="form-group"><label>Medio</label><select id="bs-method" class="full-width" onchange="handlePagoMovil()"><option value="Efectivo">Efectivo BS</option><option value="Pago Móvil">Pago Móvil</option></select></div>
@@ -217,9 +401,43 @@
 
                 <!-- Page: Catalog (Precios) -->
                 <section id="catalogo" class="page-section">
-                    <header class="page-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;"><h2>Catálogo Maestro</h2> <button class="btn-primary" onclick="window.catOpenAdd()"><i class="fas fa-plus"></i> ITEM</button></header>
-                    <div id="cat-list" style="max-width:900px; margin:0 auto;"></div>
-                    <div class="glass-panel" style="max-width:900px; padding:20px; margin:25px auto;"><button onclick="window.catSave()" class="btn-primary full-width">ACTUALIZAR TODA LA LISTA</button></div>
+                    <header class="page-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;"><h2>Catálogo Maestro (Precios/Ingresos)</h2> <button class="btn-primary" onclick="window.catOpenAdd()"><i class="fas fa-plus"></i> ITEM</button></header>
+                    <div id="cat-list" style="max-width:900px; margin:0 auto; margin-bottom: 30px;"></div>
+                    
+                    <header class="page-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px; margin-top: 35px; border-top: 1px solid var(--border); padding-top: 25px;">
+                        <h2 style="color:#ef4444;"><i class="fas fa-hand-holding-usd"></i> Catálogo de Gastos Fijos (Egresos)</h2> 
+                        <button class="btn-primary" onclick="window.gastoFijoOpenAdd()" style="background:#ef4444; border:none;"><i class="fas fa-plus"></i> GASTO FIJO</button>
+                    </header>
+                    <div id="gasto-fijo-list" style="max-width:900px; margin:0 auto;"></div>
+                    
+                    <div class="glass-panel" style="max-width:900px; padding:20px; margin:25px auto; display:flex; gap: 15px;">
+                        <button onclick="window.catSave()" class="btn-primary full-width">ACTUALIZAR PRECIOS</button>
+                        <button onclick="window.gastoFijoSave()" class="btn-primary full-width" style="background:#ef4444; border:none;">ACTUALIZAR GASTOS FIJOS</button>
+                    </div>
+                </section>
+                
+                <!-- Page: Egresos (Expenses) -->
+                <section id="egresos-view" class="page-section">
+                    <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+                        <h2>Registro de Egresos / Gastos</h2>
+                        <button class="btn-primary" onclick="window.openNewEgreso()"><i class="fas fa-plus"></i> NUEVO EGRESO</button>
+                    </div>
+                    <div class="glass-panel table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Descripción</th>
+                                    <th>Monto Original</th>
+                                    <th>Equivalente USD</th>
+                                    <th align="center">⚙️</th>
+                                </tr>
+                            </thead>
+                            <tbody id="egresos-table-body">
+                                <!-- Egresos dinámicos -->
+                            </tbody>
+                        </table>
+                    </div>
                 </section>
             </div>
         </main>
@@ -229,20 +447,320 @@
     <div id="modal-student" class="modal"><div class="modal-content glass-panel"><h2 id="modal-st-title" style="margin-top:0;">Ficha</h2><form id="st-form"><input type="hidden" id="st-auto-select" value="false"><input type="hidden" id="st-edit-id" value=""><div class="form-group"><label>Documento CI</label><input type="text" id="st-ci" class="full-width"></div><div class="form-group"><label>Nombre Completo</label><input type="text" id="st-name" required class="full-width"></div><button type="submit" class="btn-primary full-width" style="margin-top:10px;">GUARDAR</button></form><button onclick="closeModals()" class="btn-primary full-width" style="margin-top:10px; background:transparent; color:#64748b;">CANCELAR</button></div></div>
     <div id="modal-add-cat" class="modal"><div class="modal-content glass-panel"><h2>Nuevo Item</h2><form id="cat-form"><div class="form-group"><label>Descripción</label><input type="text" id="cat-name" required class="full-width"></div><div class="form-group"><label>Tipo</label><select id="cat-type" class="full-width"><option value="SER">SERVICIO</option><option value="POP">MATERIAL POP</option></select></div><div class="form-group"><label>USD ($)</label><input type="number" id="cat-usd" step="0.1" required class="full-width"></div><div class="form-group"><label>Clases a Cargar</label><input type="number" id="cat-cls" value="0" class="full-width"></div><button type="submit" class="btn-primary full-width" style="margin-top:10px;">AÑADIR</button></form><button onclick="closeModals()" class="btn-primary full-width" style="margin-top:10px; background:transparent; color:#64748b;">CERRAR</button></div></div>
     <div id="modal-history" class="modal"><div class="modal-content glass-panel" style="max-width:550px; width:95%;"><div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:15px; margin-bottom:20px;"><h3 id="hist-name" style="margin:0; color:var(--p);"></h3><div id="hist-st-balance" style="font-weight:900;"></div></div><div id="hist-list" style="max-height:480px; overflow-y:auto;"></div><button onclick="closeModals()" class="btn-primary full-width" style="margin-top:25px;">SALIR</button></div></div>
+    <div id="modal-egreso" class="modal">
+        <div class="modal-content glass-panel" style="max-width: 900px; width: 95%; padding: 30px;">
+            <h2 style="margin-top: 0; margin-bottom: 20px;">Registrar Gasto</h2>
+            <form id="eg-form" class="eg-form-grid">
+                <!-- Columna Izquierda: Datos de Entrada -->
+                <div>
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Fecha</label>
+                        <input type="date" id="eg-date" required class="full-width" style="padding: 10px;">
+                    </div>
+                    
+                    <!-- Campos para Gasto Variable -->
+                    <div id="eg-var-fields">
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label>Descripción / Concepto</label>
+                            <input type="text" id="eg-desc" class="full-width" placeholder="Ej: Pago de Luz, Alquiler..." style="padding: 10px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label>Monto</label>
+                            <input type="number" id="eg-amount" step="0.01" class="full-width" placeholder="Ej: 25.50" style="padding: 10px;">
+                        </div>
+                    </div>
+                    
+                    <!-- Campos para Gasto Fijo -->
+                    <div id="eg-fixed-fields" class="hidden">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Cantidad</label>
+                                <input type="number" id="eg-qty" value="1" min="1" step="1" class="full-width" oninput="window.updateEgFixedSummary()" style="padding: 10px;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Monto Unitario USD</label>
+                                <input type="number" id="eg-fixed-unit-usd" step="0.01" class="full-width" oninput="window.updateEgFixedSummary()" style="padding: 10px;">
+                            </div>
+                        </div>
+                        <div id="eg-fixed-summary" style="background:rgba(239, 68, 68, 0.05); border:1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: center;"></div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Moneda de Pago</label>
+                        <select id="eg-cur" class="full-width" onchange="window.updateEgFixedSummary()" style="padding: 10px;">
+                            <option value="USD">Dólares (USD)</option>
+                            <option value="BS">Bolívares (BS)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Columna Derecha: Selección de Conceptos -->
+                <div style="display: flex; flex-direction: column;">
+                    <label style="display:block; margin-bottom:8px; font-size:0.8rem; color:#94a3b8; font-weight:700; text-transform:uppercase;">Seleccionar Concepto</label>
+                    <input type="hidden" id="eg-selected-type" value="VAR">
+                    <div class="service-grid" id="eg-chips" style="margin-top: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; max-height: 290px; overflow-y: auto; padding-right: 5px;">
+                        <!-- Botones dinámicos de selección rápida -->
+                    </div>
+                </div>
+                
+                <!-- Fila Inferior: Botones -->
+                <div class="eg-form-buttons" style="grid-column: span 2; display: flex; gap: 15px; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+                    <button type="submit" class="btn-primary" style="flex: 1; background:#ef4444; margin-top: 0; padding: 14px;">REGISTRAR</button>
+                    <button type="button" onclick="closeModals()" class="btn-primary" style="flex: 1; background:transparent; color:#64748b; border: 1px solid var(--border); margin-top: 0; padding: 14px;">CANCELAR</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-add-gasto-fijo" class="modal">
+        <div class="modal-content glass-panel">
+            <h2>Nuevo Concepto de Gasto Fijo</h2>
+            <form id="gasto-fijo-form">
+                <div class="form-group">
+                    <label>Descripción / Concepto</label>
+                    <input type="text" id="gf-name" required class="full-width" placeholder="Ej: Ticket de Estacionamiento...">
+                </div>
+                <div class="form-group">
+                    <label>Costo USD ($) - Múltiplo de 5</label>
+                    <input type="number" id="gf-usd" step="5" required class="full-width" placeholder="Ej: 5, 10, 15, 20...">
+                </div>
+                <button type="submit" class="btn-primary full-width" style="margin-top:10px; background:#ef4444;">AÑADIR AL CATÁLOGO</button>
+            </form>
+            <button onclick="closeModals()" class="btn-primary full-width" style="margin-top:10px; background:transparent; color:#64748b;">CERRAR</button>
+        </div>
+    </div>
+    
+    <div id="modal-rates-history" class="modal">
+        <div class="modal-content glass-panel" style="max-width: 480px; width: 95%; padding: 30px;">
+            <h2 style="margin-top: 0; margin-bottom: 20px;"><i class="fas fa-chart-line" style="color:var(--p);"></i> Historial de Tasas</h2>
+            
+            <form id="rate-hist-form" style="display: flex; gap: 10px; margin-bottom: 20px; background: rgba(30, 41, 59, 0.4); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
+                <div style="flex: 1.2; display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 800;">Fecha</label>
+                    <input type="date" id="rh-date" required style="padding: 8px; font-size: 0.9rem;">
+                </div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 5px;">
+                    <label style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; font-weight: 800;">Tasa BS</label>
+                    <input type="number" id="rh-rate" step="0.01" required style="padding: 8px; font-size: 0.9rem; text-align: right;">
+                </div>
+                <button type="submit" class="btn-primary" style="align-self: flex-end; padding: 10px 15px;"><i class="fas fa-plus"></i></button>
+            </form>
+            
+            <!-- Importación masiva desde CSV -->
+            <div style="margin-bottom: 20px; background: rgba(14, 165, 233, 0.03); border: 1px dashed rgba(14, 165, 233, 0.2); padding: 15px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px;">
+                <label style="font-size: 0.7rem; color: var(--p); text-transform: uppercase; font-weight: 800; display: flex; align-items: center; gap: 6px; margin-bottom: 2px;"><i class="fas fa-file-csv"></i> Carga Masiva (CSV)</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="file" id="rate-csv-file" accept=".csv" style="display: none;" onchange="window.importRatesFromCSV(this)">
+                    <button type="button" onclick="document.getElementById('rate-csv-file').click()" class="btn-primary" style="flex: 1; padding: 10px; font-size: 0.8rem; background: rgba(14, 165, 233, 0.15); border: 1px solid var(--border); color: var(--p); margin-top: 0;"><i class="fas fa-upload"></i> Seleccionar CSV</button>
+                </div>
+                <span style="font-size: 0.65rem; color: #64748b;">* Formato: Fecha (DD/MM/AAAA o AAAA-MM-DD), Tasa</span>
+            </div>
+            
+            <div style="max-height: 250px; overflow-y: auto; border: 1px solid var(--border); border-radius: 12px; background: rgba(0,0,0,0.1); margin-bottom: 20px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 10px 15px; font-size: 0.7rem; border-bottom: 1px solid var(--border);">Fecha</th>
+                            <th style="padding: 10px 15px; font-size: 0.7rem; text-align: right; border-bottom: 1px solid var(--border);">Tasa BS</th>
+                            <th style="padding: 10px 15px; font-size: 0.7rem; text-align: center; border-bottom: 1px solid var(--border);">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rates-history-table-body">
+                        <!-- Carga dinámica -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <button onclick="closeModals()" class="btn-primary full-width" style="background: transparent; border: 1px solid var(--border); color:#94a3b8;">CERRAR</button>
+        </div>
+    </div>
 
     <script>
-        var state = { students: [], logs: [], rate: 40.0, prices: {}, currentStudentId: null, selectedItems: {}, isCortesia: false, isProcessingPay: false };
+        var state = { students: [], logs: [], rate: 40.0, prices: {}, currentStudentId: null, selectedItems: {}, isCortesia: false, isProcessingPay: false, egresos: [], egresos_catalog: { "Ticket de Estacionamiento": { usd: 5.00 }, "10% Ingresos del Día": { usd: 10.00 } }, rates_history: {} };
         const fmt = new Intl.NumberFormat('es-VE', { minimumFractionDigits: 2 });
         function fNum(n) { return fmt.format(n || 0); }
         function getTodayISO() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2,'0') + "-" + String(d.getDate()).padStart(2,'0'); }
-        function init() { try { if(window.localStorage) { state.students = JSON.parse(localStorage.getItem('acad_st')) || []; state.logs = JSON.parse(localStorage.getItem('acad_logs')) || []; state.rate = parseFloat(localStorage.getItem('acad_rate')) || 40.0; var sp = JSON.parse(localStorage.getItem('acad_prices')); if(sp) state.prices = sp; else state.prices = { 'Mensualidad': { usd: 70, bs: 2800, classes: 8, type: 'SER' } }; if(sessionStorage.getItem('acad_session')==='true') bypass(); } } catch(e){} }
-        function save() { localStorage.setItem('acad_st', JSON.stringify(state.students)); localStorage.setItem('acad_logs', JSON.stringify(state.logs)); localStorage.setItem('acad_rate', state.rate); localStorage.setItem('acad_prices', JSON.stringify(state.prices)); }
-        window.saveRate = function(v) { state.rate = parseFloat(v); save(); renderDashboard(); renderCatalogManagement(); }
-        function bypass() { document.getElementById('view-login').style.display='none'; document.getElementById('app-container').style.display='flex'; document.getElementById('app-container').classList.remove('hidden'); renderDashboard(); initNav(); renderCatalogManagement(); }
+        function getRateForDate(dateStr) {
+            if (!state.rates_history || Object.keys(state.rates_history).length === 0) {
+                return state.rate || 40.0;
+            }
+            if (state.rates_history[dateStr]) {
+                return parseFloat(state.rates_history[dateStr]);
+            }
+            var dates = Object.keys(state.rates_history).sort();
+            var closestRate = null;
+            for (var i = 0; i < dates.length; i++) {
+                if (dates[i] <= dateStr) {
+                    closestRate = parseFloat(state.rates_history[dates[i]]);
+                } else {
+                    break;
+                }
+            }
+            if (closestRate !== null) {
+                return closestRate;
+            }
+            return parseFloat(state.rates_history[dates[0]]) || state.rate || 40.0;
+        }
+
+        // Local Server Storage Configuration
+        let localServerAvailable = false;
+        const LOCAL_API_URL = (window.location.port === '8080' || window.location.port === '8000') ? '/api/data' : 'api.php';
+
+        function setLocalServerStatus(status, message) {
+            const led = document.getElementById('local-led');
+            const txt = document.getElementById('local-status-text');
+            const logLed = document.getElementById('login-local-led');
+            const logTxt = document.getElementById('login-local-text');
+            
+            const update = (l, t, bg, msg) => {
+                if(l) {
+                    l.style.background = bg;
+                    l.style.boxShadow = '0 0 8px ' + bg;
+                }
+                if(t) t.textContent = msg;
+            };
+            
+            if (status === 'syncing') {
+                update(led, txt, '#3b82f6', message || 'Conectando PC...');
+                update(logLed, logTxt, '#3b82f6', message || 'Conectando PC...');
+            } else if (status === 'online') {
+                update(led, txt, '#10b981', message || 'Local PC Activo ✓');
+                update(logLed, logTxt, '#10b981', message || 'Local PC Activo ✓');
+            } else {
+                update(led, txt, '#ef4444', message || 'Modo Navegador');
+                update(logLed, logTxt, '#ef4444', message || 'Modo Navegador');
+            }
+        }
+
+        async function syncWithLocalServer() {
+            setLocalServerStatus('syncing', 'Buscando servidor local PC...');
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2500);
+                const response = await fetch(LOCAL_API_URL, { signal: controller.signal });
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) throw new Error("Server error");
+                const serverData = await response.json();
+                
+                localServerAvailable = true;
+                setLocalServerStatus('online', 'Local PC Activo ✓');
+                
+                if (serverData && !serverData.empty && !serverData.error) {
+                    if (Array.isArray(serverData.students)) state.students = serverData.students;
+                    
+                    var needsSave = false;
+                    if (Array.isArray(serverData.logs)) {
+                        state.logs = serverData.logs;
+                        state.logs.forEach(l => {
+                            if (!l.id) {
+                                l.id = 'log_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                                needsSave = true;
+                            }
+                        });
+                    }
+                    if (serverData.rate) {
+                        state.rate = parseFloat(serverData.rate);
+                        const rateEl = document.getElementById('global-rate');
+                        if (rateEl) rateEl.value = state.rate;
+                    }
+                    if (serverData.prices) state.prices = serverData.prices;
+                    if (Array.isArray(serverData.egresos)) {
+                        state.egresos = serverData.egresos;
+                        state.egresos.forEach(e => {
+                            if (!e.id) {
+                                e.id = 'eg_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+                                needsSave = true;
+                            }
+                        });
+                    }
+                    if (serverData.egresos_catalog) state.egresos_catalog = serverData.egresos_catalog;
+                    if (serverData.rates_history) state.rates_history = serverData.rates_history;
+                    
+                    if (needsSave) {
+                        save();
+                    }
+                    
+                    // Sincronizar localStorage
+                    localStorage.setItem('acad_st', JSON.stringify(state.students));
+                    localStorage.setItem('acad_logs', JSON.stringify(state.logs));
+                    localStorage.setItem('acad_rate', state.rate);
+                    localStorage.setItem('acad_prices', JSON.stringify(state.prices));
+                    localStorage.setItem('acad_egresos', JSON.stringify(state.egresos));
+                    localStorage.setItem('acad_egresos_catalog', JSON.stringify(state.egresos_catalog));
+                    localStorage.setItem('acad_rates_history', JSON.stringify(state.rates_history || {}));
+                    console.log("Datos sincronizados con éxito desde el disco físico de tu PC.");
+                } else {
+                    // Si el servidor está vacío pero tenemos datos locales en el navegador, los migramos al servidor
+                    if (state.students.length > 0 || state.logs.length > 0 || (state.egresos && state.egresos.length > 0) || (state.egresos_catalog && Object.keys(state.egresos_catalog).length > 1) || (state.rates_history && Object.keys(state.rates_history).length > 0)) {
+                        console.log("Migrando datos locales del navegador al disco físico de la PC...");
+                        await saveToLocalServer();
+                    }
+                }
+            } catch (e) {
+                console.warn("Servidor local no detectado, usando almacenamiento del navegador:", e.message);
+                localServerAvailable = false;
+                setLocalServerStatus('offline', 'Modo Navegador');
+            }
+        }
+
+        async function saveToLocalServer() {
+            if (!localServerAvailable) return;
+            try {
+                const payload = {
+                    students: state.students,
+                    logs: state.logs,
+                    rate: state.rate,
+                    prices: state.prices,
+                    egresos: state.egresos,
+                    egresos_catalog: state.egresos_catalog,
+                    rates_history: state.rates_history
+                };
+                const response = await fetch(LOCAL_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error("HTTP " + response.status);
+                console.log("Datos de la academia guardados físicamente en academy_data.json en la PC.");
+            } catch (e) {
+                console.error("Error guardando datos en la PC:", e);
+            }
+        }
+
+        function init() { try { if(window.localStorage) { state.students = JSON.parse(localStorage.getItem('acad_st')) || []; state.logs = JSON.parse(localStorage.getItem('acad_logs')) || []; (state.logs || []).forEach(l => { if (!l.id) l.id = 'log_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now(); }); state.rate = parseFloat(localStorage.getItem('acad_rate')) || 40.0; var sp = JSON.parse(localStorage.getItem('acad_prices')); if(sp) state.prices = sp; else state.prices = { 'Mensualidad': { usd: 70, bs: 2800, classes: 8, type: 'SER' } }; state.egresos = JSON.parse(localStorage.getItem('acad_egresos')) || []; state.egresos_catalog = JSON.parse(localStorage.getItem('acad_egresos_catalog')) || { "Ticket de Estacionamiento": { usd: 5.00 }, "10% Ingresos del Día": { usd: 10.00 } }; state.rates_history = JSON.parse(localStorage.getItem('acad_rates_history')) || {}; if(sessionStorage.getItem('acad_session')==='true') bypass(); } } catch(e){} }
+        function save() { 
+            localStorage.setItem('acad_st', JSON.stringify(state.students)); 
+            localStorage.setItem('acad_logs', JSON.stringify(state.logs)); 
+            localStorage.setItem('acad_rate', state.rate); 
+            localStorage.setItem('acad_prices', JSON.stringify(state.prices)); 
+            localStorage.setItem('acad_egresos', JSON.stringify(state.egresos || [])); 
+            localStorage.setItem('acad_egresos_catalog', JSON.stringify(state.egresos_catalog || {})); 
+            localStorage.setItem('acad_rates_history', JSON.stringify(state.rates_history || {})); 
+            if (localServerAvailable) saveToLocalServer();
+        }
+        window.saveRate = function(v) { 
+            state.rate = parseFloat(v); 
+            if (!state.rates_history) state.rates_history = {};
+            state.rates_history[getTodayISO()] = state.rate;
+            save(); 
+            renderDashboard(); 
+            renderCatalogManagement(); 
+            renderGastoFijoCatalog(); 
+        }
+        function bypass() { document.getElementById('view-login').style.display='none'; document.getElementById('app-container').style.display='flex'; document.getElementById('app-container').classList.remove('hidden'); renderDashboard(); initNav(); renderCatalogManagement(); renderGastoFijoCatalog(); }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => { m.classList.remove('active'); }); }
 
-        window.onload = function() {
+        window.onload = async function() {
             init();
+            await syncWithLocalServer();
+            
+            // Asegurar que el concepto dinámico inteligente esté presente
+            if (!state.egresos_catalog || !state.egresos_catalog["10% Ingresos del Día"]) {
+                if (!state.egresos_catalog) state.egresos_catalog = {};
+                state.egresos_catalog["10% Ingresos del Día"] = { usd: 10.00 };
+                save();
+            }
+            
             document.getElementById('btn-do-login').onclick = function() { var p = document.getElementById('login-password').value.trim(); if(p==='admin123' || p==='entrar') { sessionStorage.setItem('acad_session', 'true'); bypass(); } else alert("No"); };
             document.getElementById('toggle-p').onclick = function() { var p = document.getElementById('login-password'); p.type = p.type==='password'?'text':'password'; };
             document.getElementById('att-student-search').oninput = function() { searchCommon(this.value, 'att-results', selectStAtt); };
@@ -259,6 +777,10 @@
             document.getElementById('cat-form').onsubmit = function(e){ e.preventDefault(); var n = document.getElementById('cat-name').value, p = parseFloat(document.getElementById('cat-usd').value), c = parseInt(document.getElementById('cat-cls').value)||0, t = document.getElementById('cat-type').value; state.prices[n] = { usd: p, bs: p * state.rate, classes: c, type: t }; save(); closeModals(); renderCatalogManagement(); };
             document.getElementById('btn-confirm-attendance').onclick = function() { var s = state.students.find(x => x.id == state.currentStudentId); if(!s || s.classes <= 0) return; s.classes -= 1; state.logs.unshift({ type: 'ATT', sid: s.id, name: s.name, date: new Date().toLocaleDateString(), iso: getTodayISO() }); save(); selectStAtt(s.id, s.name); alert("Ingreso OK"); };
             document.getElementById('p-received').oninput = updatePaySummary;
+            document.getElementById('eg-date').onchange = function() {
+                var currentType = document.getElementById('eg-selected-type').value;
+                window.toggleEgFormType(currentType);
+            };
 
             document.getElementById('pay-form').onsubmit = function(e){
                 e.preventDefault(); if(state.isProcessingPay) return;
@@ -266,24 +788,137 @@
                 if(Object.keys(state.selectedItems).length === 0) { alert("Items?"); return; }
                 state.isProcessingPay = true; var btn = document.getElementById('btn-submit-pay'); btn.innerText = "PROCESANDO CONTABILIDAD...";
 
+                var payDateVal = document.getElementById('p-date').value || getTodayISO();
+                var dateParts = payDateVal.split('-');
+                var displayDate = dateParts[2] + '/' + dateParts[1] + '/' + dateParts[0];
+                var rateApplied = getRateForDate(payDateVal);
+
                 var cU = 0, cB = 0, cls = 0, items = [];
                 Object.keys(state.selectedItems).forEach(k => {
                     var qty = state.selectedItems[k]; if(!state.isCortesia) { cU += (state.prices[k].usd * qty); cB += (state.prices[k].bs * qty); }
                     cls += ( (state.prices[k].classes || 0) * qty );
                     items.push(k + (qty > 1 ? " x"+qty : ""));
-                    if(state.prices[k].type==='SER' && (k.toLowerCase().includes('men') || k.toLowerCase().includes('mem'))) { var d = new Date(); d.setMonth(d.getMonth() + 1); stu.expiry = d.toISOString().split('T')[0]; }
+                    if(state.prices[k].type==='SER' && (k.toLowerCase().includes('men') || k.toLowerCase().includes('mem'))) { 
+                        var d = new Date(payDateVal + 'T00:00:00'); 
+                        d.setMonth(d.getMonth() + 1); 
+                        stu.expiry = d.toISOString().split('T')[0]; 
+                    }
                 });
                 var rec = parseFloat(document.getElementById('p-received').value), cur = document.getElementById('p-cur').value;
-                if(!state.isCortesia) { var difUSD = (cur === 'USD') ? (rec - cU) : (rec - cB) / state.rate; stu.balance += difUSD; }
+                var actualDifUSD = 0;
+                if(!state.isCortesia) { 
+                    actualDifUSD = (cur === 'USD') ? (rec - cU) : (rec - cB) / rateApplied; 
+                    stu.balance += actualDifUSD; 
+                }
                 stu.classes += cls;
                 var ext = ""; if(cur === 'BS') { var m = document.getElementById('bs-method').value; ext = " [" + m + (m==='Pago Móvil'?" Ref:"+document.getElementById('bs-ref').value:"") + "]"; }
-                state.logs.unshift({ type: 'PAY', sid, name: stu.name, srv: (state.isCortesia ? "CORTESÍA PAGADA: " : "") + items.join('+') + ext, usd: (cur==='USD'?rec:rec/state.rate), amt: rec, cur: cur, date: new Date().toLocaleDateString(), iso: getTodayISO() });
+                state.logs.unshift({ 
+                    id: 'log_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now(),
+                    type: 'PAY', 
+                    sid, 
+                    name: stu.name, 
+                    srv: (state.isCortesia ? "CORTESÍA PAGADA: " : "") + items.join('+') + ext, 
+                    usd: (cur==='USD'?rec:rec/rateApplied), 
+                    amt: rec, 
+                    cur: cur, 
+                    date: displayDate, 
+                    iso: payDateVal, 
+                    rate: rateApplied,
+                    difUSD: actualDifUSD,
+                    cls: cls
+                });
                 save(); renderDashboard(); 
                 setTimeout(() => { 
                     this.reset(); state.selectedItems = {}; state.isCortesia = false; state.isProcessingPay = false;
                     btn.innerText = "REGISTRADO"; document.getElementById('cortesia-toggle').classList.remove('active');
                     document.getElementById('pay-student-box').style.display='none'; document.getElementById('pay-flow').classList.add('hidden'); alert("Listo");
                 }, 700);
+            };
+ 
+            document.getElementById('eg-form').onsubmit = function(e) {
+                e.preventDefault();
+                var d = document.getElementById('eg-date').value;
+                var type = document.getElementById('eg-selected-type').value;
+                var cur = document.getElementById('eg-cur').value;
+                var rateApplied = getRateForDate(d);
+                
+                var desc = "";
+                var amt = 0;
+                
+                if (type === 'VAR') {
+                    desc = document.getElementById('eg-desc').value.trim();
+                    amt = parseFloat(document.getElementById('eg-amount').value) || 0;
+                    if (!desc || amt <= 0) {
+                        alert("Por favor rellene todos los campos del gasto variable.");
+                        return;
+                    }
+                } else {
+                    var qty = parseInt(document.getElementById('eg-qty').value) || 1;
+                    var costUsd = parseFloat(document.getElementById('eg-fixed-unit-usd').value) || 0;
+                    desc = type + " x" + qty;
+                    
+                    var totalUsd = costUsd * qty;
+                    if (cur === 'USD') {
+                        amt = totalUsd;
+                    } else {
+                        var rawBs = totalUsd * rateApplied;
+                        amt = Math.round(rawBs / 5) * 5;
+                    }
+                }
+                
+                if (!d || amt <= 0) {
+                    alert("Fecha o monto inválido.");
+                    return;
+                }
+                
+                var id = Date.now();
+                if (!state.egresos) state.egresos = [];
+                state.egresos.push({ id: id, date: d, description: desc, amount: amt, cur: cur, rate: rateApplied });
+                save();
+                closeModals();
+                renderEgresos();
+                renderDashboard();
+                alert("Gasto registrado con éxito.");
+            };
+ 
+            document.getElementById('gasto-fijo-form').onsubmit = function(e) {
+                e.preventDefault();
+                var n = document.getElementById('gf-name').value.trim();
+                var p = parseFloat(document.getElementById('gf-usd').value) || 0;
+                if (!n || p <= 0) {
+                    alert("Por favor rellene todos los campos con valores válidos.");
+                    return;
+                }
+                if (!state.egresos_catalog) state.egresos_catalog = {};
+                state.egresos_catalog[n] = { usd: p };
+                save();
+                closeModals();
+                renderGastoFijoCatalog();
+                alert("Gasto Fijo añadido al catálogo con éxito.");
+            };
+
+            document.getElementById('rate-hist-form').onsubmit = function(e) {
+                e.preventDefault();
+                var d = document.getElementById('rh-date').value;
+                var r = parseFloat(document.getElementById('rh-rate').value) || 0;
+                if (!d || r <= 0) {
+                    alert("Fecha o tasa inválida.");
+                    return;
+                }
+                if (!state.rates_history) state.rates_history = {};
+                state.rates_history[d] = r;
+                save();
+                window.renderRatesHistoryTable();
+                document.getElementById('rate-hist-form').reset();
+                alert("Tasa guardada en el historial con éxito.");
+                if (d === getTodayISO()) {
+                    state.rate = r;
+                    var rateEl = document.getElementById('global-rate');
+                    if (rateEl) rateEl.value = r;
+                    renderDashboard();
+                    renderCatalogManagement();
+                    renderGastoFijoCatalog();
+                }
             };
         };
 
@@ -314,33 +949,786 @@
         function searchCommon(q, tId, cb) { var res = document.getElementById(tId); if(!q.trim()) { res.classList.add('hidden'); return; } var filt = state.students.filter(s => s.name.toLowerCase().includes(q.toLowerCase()) || (s.cedula||"").includes(q)); var html = filt.map(s => `<div class="search-item" onclick="${cb.name}('${s.id}','${s.name}'); document.getElementById('${tId}').classList.add('hidden');">${s.name} <small>(${s.cedula||'---'})</small></div>`).join(''); if(tId==='global-search-res' || tId==='pay-results') html += `<div class="search-item" onclick="quickNewStudent('${q}')" style="color:var(--p);">+ Registrar Alumno: "${q.toUpperCase()}"</div>`; res.innerHTML = html; res.classList.remove('hidden'); }
         function quickNewStudent(n) { window.openNewStudent(n.toUpperCase()); document.getElementById('st-auto-select').value="true"; }
         function selectStAtt(id, name) { state.currentStudentId = id; var s = state.students.find(x => x.id == id); document.getElementById('att-student-card').style.display = 'block'; document.getElementById('att-name').innerText = s.name; document.getElementById('att-classes').innerText = s.classes; document.getElementById('att-balance').innerText = "$" + fNum(s.balance); var isExp = s.expiry ? (new Date() > new Date(s.expiry)) : true; document.getElementById('att-expiry').innerText = s.expiry || "Vence Hoy/Ayer"; document.getElementById('btn-confirm-attendance').disabled = (isExp || s.classes <= 0); }
-        function selectStPay(id, name) { var s = state.students.find(x => x.id == id); document.getElementById('p-sid').value = id; state.selectedItems = {}; state.isCortesia = false; document.getElementById('cortesia-toggle').classList.remove('active'); document.getElementById('pay-st-name').innerText = s.name; document.getElementById('p-status-balance').innerText = "$" + fNum(s.balance); document.getElementById('p-status-classes').innerText = s.classes; document.getElementById('p-status-expiry').innerText = s.expiry||"N/A"; document.getElementById('pay-student-box').style.display='block'; document.getElementById('pay-flow').classList.remove('hidden'); renderPayChips(); handleBSControls(); }
+        function selectStPay(id, name) { var s = state.students.find(x => x.id == id); document.getElementById('p-sid').value = id; state.selectedItems = {}; state.isCortesia = false; document.getElementById('cortesia-toggle').classList.remove('active'); document.getElementById('pay-st-name').innerText = s.name; document.getElementById('p-status-balance').innerText = "$" + fNum(s.balance); document.getElementById('p-status-classes').innerText = s.classes; document.getElementById('p-status-expiry').innerText = s.expiry||"N/A"; document.getElementById('p-date').value = getTodayISO(); document.getElementById('pay-student-box').style.display='block'; document.getElementById('pay-flow').classList.remove('hidden'); renderPayChips(); handleBSControls(); }
         function renderPayChips() { document.getElementById('pay-chips').innerHTML = Object.keys(state.prices).map(k => { var p = state.prices[k], qty = state.selectedItems[k] || 0; return `<div class="service-btn ${qty>0?'active':''}" onclick="toggleSrv('${k}')"><span class="qty-badge ${qty>0?'':'hidden'}">x${qty}</span><span class="type-tag">${p.type||'SER'}</span><br>${k}<br><b>$${p.usd}</b></div>`; }).join(''); }
         function toggleSrv(k) { var p = state.prices[k]; if(p.type === 'POP') state.selectedItems[k] = (state.selectedItems[k] || 0) + 1; else { if(state.selectedItems[k]) delete state.selectedItems[k]; else state.selectedItems[k] = 1; } renderPayChips(); syncPayPrice(); }
         function syncPayPrice() { if(state.isCortesia) return; var cur = document.getElementById('p-cur').value, tot = 0; Object.keys(state.selectedItems).forEach(k => { tot += ( (cur === 'USD' ? state.prices[k].usd : state.prices[k].bs) * state.selectedItems[k] ); }); document.getElementById('p-cost').value = tot.toFixed(2); document.getElementById('p-received').value = tot.toFixed(2); updatePaySummary(); }
         function updatePaySummary() { var req = parseFloat(document.getElementById('p-cost').value)||0, rec = parseFloat(document.getElementById('p-received').value)||0, c = document.getElementById('p-cur').value, sum = document.getElementById('p-summary'), txt = document.getElementById('p-summary-text'); sum.style.display='block'; var diff = rec - req; if(state.isCortesia) { txt.innerHTML = `INGRESO EXTERNO: ${rec} ${c}<br><small>(Mantiene balance neutro del alumno)</small>`; } else { txt.innerHTML = `RECIBIDO: ${rec} ${c}<br><small>${diff > 0 ? '+ '+diff.toFixed(2)+' favor' : (diff < 0 ? diff.toFixed(2)+' deuda' : 'PAGADO')}</small>`; } }
-        function renderDashboard() { document.getElementById('dash-date-label').innerText = "Hoy: " + new Date().toLocaleDateString(); var pays = state.logs.filter(l => l.type === 'PAY' && l.iso === getTodayISO()); var total = pays.reduce((a,b) => a+b.usd, 0); document.getElementById('stat-total-income').innerText = '$ ' + fNum(total); document.getElementById('stat-total-income-bs').innerText = fNum(total * state.rate) + ' BS'; document.getElementById('stat-active-students').innerText = state.students.length; }
+        function renderDashboard() {
+            document.getElementById('dash-date-label').innerText = "Hoy: " + new Date().toLocaleDateString();
+            
+            var todayISO = getTodayISO();
+            var pays = state.logs.filter(l => l.type === 'PAY' && l.iso === todayISO);
+            var egresos = (state.egresos || []).filter(e => e.date === todayISO);
+            
+            // Separar la contabilidad por moneda física de transacción
+            var incomeUSD = pays.filter(p => p.cur === 'USD').reduce((a,b) => a + b.amt, 0);
+            var expenseUSD = egresos.filter(e => e.cur === 'USD').reduce((a,b) => a + b.amount, 0);
+            var netUSD = incomeUSD - expenseUSD;
+            
+            var incomeBS = pays.filter(p => p.cur === 'BS').reduce((a,b) => a + b.amt, 0);
+            var expenseBS = egresos.filter(e => e.cur === 'BS').reduce((a,b) => a + b.amount, 0);
+            var netBS = incomeBS - expenseBS;
+            
+            document.getElementById('stat-total-income').innerText = '$ ' + fNum(netUSD);
+            document.getElementById('stat-total-income-bs').innerText = fNum(netBS) + ' BS';
+            document.getElementById('stat-active-students').innerText = state.students.length;
+            
+            var movements = [];
+            pays.forEach(p => {
+                movements.push({
+                    id: p.id,
+                    deleteAction: 'window.delPayment',
+                    date: p.date,
+                    desc: `<strong>${p.name}</strong> - ${p.srv}`,
+                    type: 'Ingreso',
+                    typeColor: '#10b981',
+                    typeBg: 'rgba(16,185,129,0.15)',
+                    amountOrig: `+ ${p.cur === 'USD' ? '$' : ''} ${fNum(p.amt)} ${p.cur === 'BS' ? 'BS' : ''}`,
+                    amountUsd: `+ $ ${fNum(p.usd)}`,
+                    amountColor: '#10b981'
+                });
+            });
+            egresos.forEach(eg => {
+                var rateApplied = eg.rate || getRateForDate(eg.date) || state.rate;
+                var eqUsd = eg.cur === 'USD' ? eg.amount : eg.amount / rateApplied;
+                var rateText = eg.cur === 'BS' ? ` <small style="color:#64748b;">(Tasa: ${fNum(rateApplied)})</small>` : '';
+                movements.push({
+                    id: eg.id,
+                    deleteAction: 'window.delEgreso',
+                    date: new Date(eg.date + 'T00:00:00').toLocaleDateString(),
+                    desc: `<strong>EGRESO:</strong> ${eg.description}${rateText}`,
+                    type: 'Egreso',
+                    typeColor: '#ef4444',
+                    typeBg: 'rgba(239,68,68,0.15)',
+                    amountOrig: `- ${eg.cur === 'USD' ? '$' : ''} ${fNum(eg.amount)} ${eg.cur === 'BS' ? 'BS' : ''}`,
+                    amountUsd: `- $ ${fNum(eqUsd)}`,
+                    amountColor: '#ef4444'
+                });
+            });
+            
+            var tbody = document.getElementById('dash-today-movements');
+            if (tbody) {
+                if (movements.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 25px; color:#64748b;">No hay movimientos registrados hoy.</td></tr>`;
+                } else {
+                    tbody.innerHTML = movements.map(m => `
+                        <tr>
+                            <td>${m.date}</td>
+                            <td>${m.desc}</td>
+                            <td><span style="color:${m.typeColor}; background:${m.typeBg}; padding:4px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">${m.type}</span></td>
+                            <td align="right" style="color:${m.amountColor}; font-weight:700;">${m.amountOrig}</td>
+                            <td align="right" style="color:${m.amountColor}; font-weight:700;">${m.amountUsd}</td>
+                            <td align="center">
+                                <button class="icon-btn" style="color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="${m.deleteAction}('${m.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+        }
+
+        window.exportReportToPDF = function() {
+            var oldTitle = document.title;
+            var reportTitle = document.getElementById('report-title').innerText || "Cierre_de_Caja";
+            
+            // Reemplazar espacios y caracteres raros para nombre de archivo limpio
+            var cleanTitle = reportTitle.replace(/\s+/g, '_').replace(/[:\/\\*?\"<>|]/g, '');
+            document.title = cleanTitle;
+            
+            window.print();
+            
+            // Restaurar el título original
+            setTimeout(function() {
+                document.title = oldTitle;
+            }, 1000);
+        };
+
+        window.delPayment = function(id) {
+            var logEntry = state.logs.find(x => x.id === id);
+            if (!logEntry) {
+                // Intento fallback si no tiene ID o difiere en memoria
+                console.warn("Log no encontrado por ID, buscando por propiedades únicas...");
+                logEntry = state.logs.find(x => x.id == id);
+            }
+            
+            if (!logEntry) {
+                alert("No se pudo encontrar el registro de pago. Intenta recargar la página.");
+                return;
+            }
+            
+            if (confirm(`¿Seguro que deseas eliminar este registro de pago de ${logEntry.name}?\nSe revertirá su saldo y clases agregadas.`)) {
+                if (logEntry.sid) {
+                    var stu = state.students.find(x => x.id == logEntry.sid);
+                    if (stu) {
+                        stu.balance -= (logEntry.difUSD || 0);
+                        stu.classes -= (logEntry.cls || 0);
+                        if (stu.classes < 0) stu.classes = 0;
+                    }
+                }
+                state.logs = state.logs.filter(x => x.id !== logEntry.id);
+                save();
+                renderDashboard();
+                if (typeof renderStudents === 'function') renderStudents();
+                
+                // Si la vista de reportes está activa y visible, refrescarla de inmediato
+                var repView = document.getElementById('reports-view');
+                if (repView && repView.classList.contains('active')) {
+                    var titleText = document.getElementById('report-title').innerText || "";
+                    if (titleText.includes("CORTE DIA")) {
+                        runDailyReport();
+                    } else if (titleText.includes("CORTE MES")) {
+                        runMonthlyReport();
+                    }
+                }
+                
+                alert("Pago eliminado y saldo del alumno revertido con éxito.");
+            }
+        };
         function renderStudents() { document.getElementById('students-table-body').innerHTML = state.students.map(s => `<tr><td>${s.name}</td><td>${s.cedula||'---'}</td><td align="center">${s.classes}</td><td align="center"><b class="${s.balance<0?'balance-neg':'balance-pos'}">$${fNum(s.balance)}</b></td><td align="center"><button class="icon-btn" onclick="editStu('${s.id}')"><i class="fas fa-edit"></i></button> <button class="btn-primary" style="padding:6px 12px; font-size:0.7rem;" onclick="showHist('${s.id}', '${s.name}')">Log</button> <button class="icon-btn" style="color:#ef4444;" onclick="delStu('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join(''); }
         function editStu(id) { var s = state.students.find(x => x.id == id); document.getElementById('modal-st-title').innerText = "Editar Alumno"; document.getElementById('st-name').value = s.name; document.getElementById('st-ci').value = s.cedula||""; document.getElementById('st-edit-id').value = id; document.getElementById('modal-student').classList.add('active'); }
         function delStu(id) { if(confirm("Borrar?")) { state.students = state.students.filter(x => x.id != id); save(); renderStudents(); } }
         window.resetOnlyStudents = function() { if(confirm("Limpiar Alumnos?")) { state.students = []; state.logs = []; save(); location.reload(); } }
         window.dangerResetAll = function() { if(confirm("RESET TOTAL?")) { localStorage.clear(); location.reload(); } }
         function showHist(sid, name) { document.getElementById('hist-name').innerText = name; var s = state.students.find(x => x.id == sid); document.getElementById('hist-st-balance').innerHTML = `<span class="${s.balance<0?'balance-neg':'balance-pos'}">Bal: $${fNum(s.balance)}</span>`; var f = state.logs.filter(l => l.sid == sid); document.getElementById('hist-list').innerHTML = f.length === 0 ? "<p>Vacío.</p>" : f.map(l => { var mon = (l.cur === 'BS' || (l.srv && (l.srv.includes('Móvil') || l.srv.includes('Ref:')))) ? 'BS' : '$'; return `<div class="glass-panel" style="padding:15px; margin-bottom:10px;"><div style="display:flex; justify-content:space-between; font-size:0.7rem; color:#64748b;"><b>${l.type==='PAY'?'RECIBO':'PUERTA'}</b><span>${l.date}</span></div><div style="margin:5px 0; font-size:0.85rem;">${l.srv || 'Entrada Marcada'}</div>${l.type==='PAY' ? `<div style="color:var(--p); font-weight:900;">${mon} ${fNum(l.amt)}</div>` : ''}</div>`; }).join(''); document.getElementById('modal-history').classList.add('active'); }
-        function runDailyReport() { var d = document.getElementById('report-date-input').value; if(!d) return; showReport("CORTE DIA: " + d, state.logs.filter(l => l.iso === d)); }
-        function runMonthlyReport() { var m = document.getElementById('report-month-input').value; if(!m) return; showReport("CORTE MES: " + m, state.logs.filter(l => l.iso && l.iso.startsWith(m))); }
-        function showReport(title, logs) { document.getElementById('report-result-area').classList.remove('hidden'); document.getElementById('report-title').innerText = title; var pays = logs.filter(l => l.type === 'PAY'); var tr = pays.reduce((a,b) => a+b.usd, 0), pU = pays.filter(l => l.cur === 'USD').reduce((a,b) => a+b.amt, 0), pB = pays.filter(l => l.cur === 'BS').reduce((a,b) => a+b.amt, 0); document.getElementById('report-total-ref').innerText = "$ " + fNum(tr); document.getElementById('report-phys-usd').innerText = "$ " + fNum(pU); document.getElementById('report-phys-bs').innerText = fNum(pB) + " BS"; var counts = {}; Object.keys(state.prices).forEach(k => counts[k] = 0); pays.forEach(l => { Object.keys(state.prices).forEach(k => { if (l.srv.includes(k)) { var regex = new RegExp(k + " x(\\d+)"); var match = l.srv.match(regex); counts[k] += match ? parseInt(match[1]) : 1; } }); }); var cHtml = ""; Object.keys(counts).forEach(k => { if(counts[k] > 0) cHtml += `<div class="count-row"><span class="count-name">${k}</span><span class="count-qty">x${counts[k]}</span></div>`; }); document.getElementById('report-item-counts-list').innerHTML = cHtml || "<p style='text-align:center;'>Vancío</p>"; var cI = counts['Inscripción'] || pays.filter(l => l.srv.toLowerCase().includes('ins')).length, cM = counts['Mensualidad'] || pays.filter(l => (l.srv.toLowerCase().includes('men') || l.srv.toLowerCase().includes('mem'))).length, cA = logs.filter(l => l.type === 'ATT').length; document.getElementById('report-kpis').innerHTML = `<div class="status-chip"><label>Inscritos</label><b>${cI}</b></div><div class="status-chip"><label>Mensuales</label><b>${cM}</b></div><div class="status-chip"><label>Puerta</label><b>${cA}</b></div>`; document.getElementById('report-items-list').innerHTML = pays.length === 0 ? "<p style='text-align:center;'>Ningún recibo.</p>" : pays.map(l => `<div class="glass-panel" style="padding:15px; margin-bottom:10px;"><div style="display:flex; justify-content:space-between; font-size:0.75rem;"><b>${l.name}</b><span>${l.date}</span></div><div style="font-size:0.8rem; color:#64748b; margin-top:4px;">${l.srv}</div><div style="color:var(--p); font-weight:900; margin-top:5px;">${l.cur||'USD'} ${fNum(l.amt)}</div></div>`).join(''); }
+        function runDailyReport() { var d = document.getElementById('report-date-input').value; if(!d) return; showReport("CORTE DIA: " + d, state.logs.filter(l => l.iso === d), d, false); }
+        function runMonthlyReport() { var m = document.getElementById('report-month-input').value; if(!m) return; showReport("CORTE MES: " + m, state.logs.filter(l => l.iso && l.iso.startsWith(m)), m, true); }
+        function showReport(title, logs, filter, isMonthly) { 
+            document.getElementById('report-result-area').classList.remove('hidden'); 
+            document.getElementById('report-title').innerText = title; 
+            
+            var pays = logs.filter(l => l.type === 'PAY'); 
+            var tr = pays.reduce((a,b) => a+b.usd, 0);
+            var pU = pays.filter(l => l.cur === 'USD').reduce((a,b) => a+b.amt, 0);
+            var pB = pays.filter(l => l.cur === 'BS').reduce((a,b) => a+b.amt, 0); 
+            
+            // Filtrar y calcular egresos (gastos)
+            var matchingEgresos = state.egresos.filter(eg => {
+                if (isMonthly) return eg.date && eg.date.startsWith(filter);
+                return eg.date === filter;
+            });
+            var egUSD = matchingEgresos.filter(eg => eg.cur === 'USD').reduce((a,b) => a+b.amount, 0);
+            var egBS = matchingEgresos.filter(eg => eg.cur === 'BS').reduce((a,b) => a+b.amount, 0);
+            var egTotalEquivalent = matchingEgresos.reduce((a,b) => a + (b.cur === 'USD' ? b.amount : b.amount / (b.rate || getRateForDate(b.date))), 0);
+            
+            // Net calculations
+            var netUSD = pU - egUSD;
+            var netBS = pB - egBS;
+            var netEquivalent = tr - egTotalEquivalent;
+
+            // Render net calculations with harmonized premium styling
+            document.getElementById('report-total-ref').innerHTML = `
+                <div style="font-size: 1.1rem; color: #94a3b8; font-weight: 500; margin-bottom: 8px;">Ingresos: $ ${fNum(tr)} | Gastos: $ ${fNum(egTotalEquivalent)}</div>
+                <div>Caja Neta: <span style="color: ${netEquivalent >= 0 ? '#10b981' : '#ef4444'}; font-weight: 700;">$ ${fNum(netEquivalent)}</span></div>
+            `;
+            
+            document.getElementById('report-phys-usd').innerHTML = `
+                <div style="font-size: 1.2rem; color: #10b981;">+ $ ${fNum(pU)} <span style="font-size: 0.75rem; color:#64748b; font-weight:normal;">(Ingresos)</span></div>
+                <div style="font-size: 1.1rem; color: #ef4444;">- $ ${fNum(egUSD)} <span style="font-size: 0.75rem; color:#64748b; font-weight:normal;">(Gastos)</span></div>
+                <hr style="opacity: 0.1; margin: 8px 0; border: 0; border-top: 1px solid var(--border);">
+                <div style="font-size: 1.4rem; font-weight: bold; color: ${netUSD >= 0 ? '#10b981' : '#ef4444'};">Neto: $ ${fNum(netUSD)}</div>
+            `;
+
+            document.getElementById('report-phys-bs').innerHTML = `
+                <div style="font-size: 1.2rem; color: #facc15;">+ ${fNum(pB)} BS <span style="font-size: 0.75rem; color:#64748b; font-weight:normal;">(Ingresos)</span></div>
+                <div style="font-size: 1.1rem; color: #ef4444;">- ${fNum(egBS)} BS <span style="font-size: 0.75rem; color:#64748b; font-weight:normal;">(Gastos)</span></div>
+                <hr style="opacity: 0.1; margin: 8px 0; border: 0; border-top: 1px solid var(--border);">
+                <div style="font-size: 1.4rem; font-weight: bold; color: ${netBS >= 0 ? '#facc15' : '#ef4444'};">Neto: ${fNum(netBS)} BS</div>
+            `;
+
+            var counts = {}; 
+            Object.keys(state.prices).forEach(k => counts[k] = 0); 
+            pays.forEach(l => { 
+                // l.srv puede ser algo como "Practica+Gorra [Pago Móvil Ref:1234]"
+                // Primero separamos la parte del producto de los metodos de pago entre corchetes
+                var cleanSrv = l.srv.split('[')[0].trim();
+                // Separamos por el caracter '+' por si compraron multiples tipos de items
+                var itemsBought = cleanSrv.split('+');
+                
+                itemsBought.forEach(itemStr => {
+                    itemStr = itemStr.trim();
+                    // Buscar si hay una cantidad explicada con " xN"
+                    var qty = 1;
+                    var match = itemStr.match(/(.+)\s+x(\d+)$/);
+                    var prodName = itemStr;
+                    if (match) {
+                        prodName = match[1].trim();
+                        qty = parseInt(match[2]);
+                    }
+                    
+                    // Ahora hacemos coincidir el nombre exacto con el catalogo
+                    if (counts.hasOwnProperty(prodName)) {
+                        counts[prodName] += qty;
+                    } else {
+                        // En caso de discrepancia menor por espacios, buscamos coincidencia exacta de strings
+                        var exactKey = Object.keys(state.prices).find(k => k.trim() === prodName.trim());
+                        if (exactKey) {
+                            counts[exactKey] += qty;
+                        }
+                    }
+                });
+            }); 
+            
+            var cHtml = ""; 
+            Object.keys(counts).forEach(k => { 
+                if(counts[k] > 0) cHtml += `<div class="count-row"><span class="count-name">${k}</span><span class="count-qty">x${counts[k]}</span></div>`; 
+            }); 
+            
+            document.getElementById('report-item-counts-list').innerHTML = cHtml || "<p style='text-align:center;'>Vacio</p>"; 
+            
+            var cI = counts['Inscripción'] || pays.filter(l => l.srv.toLowerCase().includes('ins')).length, 
+                cM = counts['Mensualidad'] || pays.filter(l => (l.srv.toLowerCase().includes('men') || l.srv.toLowerCase().includes('mem'))).length, 
+                cA = logs.filter(l => l.type === 'ATT').length; 
+            
+            document.getElementById('report-kpis').innerHTML = `<div class="status-chip"><label>Inscritos</label><b>${cI}</b></div><div class="status-chip"><label>Mensuales</label><b>${cM}</b></div><div class="status-chip"><label>Puerta</label><b>${cA}</b></div>`; 
+            
+            document.getElementById('report-items-list').innerHTML = pays.length === 0 ? "<p style='text-align:center;'>Ningún recibo.</p>" : pays.map(l => {
+                var rateNote = l.cur === 'BS' ? `<small style="color:#64748b; font-weight:normal; margin-left: 8px;">(Tasa: ${fNum(l.rate || getRateForDate(l.iso))} BS)</small>` : '';
+                return `
+                    <div class="glass-panel" style="padding:15px; margin-bottom:10px; position:relative;">
+                        <button class="icon-btn" style="position:absolute; right:15px; bottom:15px; color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="window.delPayment('${l.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding-right: 30px;">
+                            <b>${l.name}</b>
+                            <span>${l.date}</span>
+                        </div>
+                        <div style="font-size:0.8rem; color:#64748b; margin-top:4px;">${l.srv}</div>
+                        <div style="color:var(--p); font-weight:900; margin-top:5px;">${l.cur||'USD'} ${fNum(l.amt)} ${rateNote}</div>
+                    </div>
+                `;
+            }).join(''); 
+            
+            // Renderizar la lista de gastos en el cierre diario
+            var container = document.getElementById('report-egresos-container');
+            if (container) {
+                if (matchingEgresos.length > 0) {
+                    var egHtml = `
+                        <div class="glass-panel" style="margin-top:25px; border-color: #ef4444; background: rgba(239, 68, 68, 0.02);">
+                            <h3 style="color:#ef4444; font-size:0.9rem; padding:20px; border-bottom:1px solid var(--border); margin:0; text-transform:uppercase;"><i class="fas fa-hand-holding-usd"></i> Desglose de Egresos / Gastos</h3>
+                            <div style="padding:15px; max-height:250px; overflow-y:auto;">
+                    `;
+                    egHtml += matchingEgresos.map(eg => {
+                        var rUsed = eg.rate || getRateForDate(eg.date);
+                        var rateNote = eg.cur === 'BS' ? `<small style="color:#64748b; font-weight:normal; margin-left: 8px;">(Tasa: ${fNum(rUsed)} BS)</small>` : '';
+                        return `
+                        <div class="glass-panel" style="padding:15px; margin-bottom:10px; border: 1px solid rgba(239,68,68,0.2); position:relative;">
+                            <button class="icon-btn" style="position:absolute; right:15px; bottom:15px; color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="window.delEgreso('${eg.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding-right: 30px;">
+                                <b>${eg.description}</b>
+                                <span>${new Date(eg.date + 'T00:00:00').toLocaleDateString()}</span>
+                            </div>
+                            <div style="color:#ef4444; font-weight:900; margin-top:5px;">-${eg.cur === 'USD' ? '$' : ''} ${fNum(eg.amount)} ${eg.cur === 'BS' ? 'BS' : ''} ${rateNote}</div>
+                        </div>
+                        `;
+                    }).join('');
+                    egHtml += `</div></div>`;
+                    container.innerHTML = egHtml;
+                } else {
+                    container.innerHTML = "";
+                }
+            }
+        }
         
         window.renderCatalogManagement = function() { 
             var list = document.getElementById('cat-list'), r = state.rate; 
-            list.innerHTML = Object.keys(state.prices).map(k => { var p = state.prices[k]; var id = k.replace(/\s/g, ''); 
-                return `<div class="cat-item-row"><div class="cat-item-header"><h3><i class="fas fa-tag"></i> ${k} <span class="type-tag">${p.type||'SER'}</span></h3> <button class="icon-btn" style="color:#ef4444;" onclick="delCat('${k}')"><i class="fas fa-times"></i></button></div><div class="cat-item-body"><div class="cat-group"><label>Dólares ($)</label><input type="number" step="0.1" value="${p.usd}" id="usd-${id}" oninput="document.getElementById('ref-${id}').innerText = 'Ref: '+fNum(this.value*state.rate)+' BS'"></div><div class="cat-group"><label>Bolívares (BS)</label><input type="number" step="0.1" value="${p.bs}" id="bs-${id}"><span class="ref-tag" id="ref-${id}">Sistema: ${fNum(p.usd * r)} BS</span></div><div class="cat-group"><label>Clases</label><input type="number" value="${p.classes||0}" id="cls-${id}"></div></div></div>`; 
+            list.innerHTML = Object.keys(state.prices).map(k => { 
+                var p = state.prices[k]; 
+                var id = k.replace(/\s/g, ''); 
+                return `
+                    <div class="cat-item-row" style="border-color: rgba(14,165,233,0.15);">
+                        <div class="cat-item-header">
+                            <h3><i class="fas fa-tag"></i> ${k} <span class="type-tag">${p.type||'SER'}</span></h3> 
+                            <button class="icon-btn" style="color:#ef4444;" onclick="delCat('${k}')"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="cat-item-body">
+                            <div class="cat-group">
+                                <label>Dólares ($)</label>
+                                <input type="number" step="0.1" value="${p.usd}" id="usd-${id}" oninput="document.getElementById('ref-${id}').innerText = 'Sistema: '+fNum(this.value*state.rate)+' BS'">
+                                <span class="ref-tag" id="ref-${id}">Sistema: ${fNum(p.usd * r)} BS</span>
+                            </div>
+                            
+                            <div class="cat-group">
+                                <label>Bolívares (BS)</label>
+                                <input type="number" step="5" value="${p.bs}" id="bs-${id}">
+                                <span class="ref-tag" style="color:#ef4444; font-weight:bold;"><i class="fas fa-exclamation-triangle"></i> Múltiplos de 5</span>
+                            </div>
+                            
+                            <div class="cat-group" style="background: rgba(14,165,233,0.03); border: 1px dashed rgba(14,165,233,0.2); padding: 8px; border-radius: 10px;">
+                                <label style="color:#0ea5e9; font-weight: 800;"><i class="fas fa-calculator"></i> Calculadora BS</label>
+                                <input type="number" placeholder="Ej: 30" id="calc-usd-${id}" style="background:#0f172a; padding: 10px; font-size: 0.9rem;" oninput="window.runCatalogCalc('${id}', this.value)">
+                                <span class="ref-tag" id="calc-note-${id}" style="color:#10b981; font-weight:bold;">Tasa especial USD</span>
+                            </div>
+                            
+                            <div class="cat-group">
+                                <label>Clases</label>
+                                <input type="number" value="${p.classes||0}" id="cls-${id}">
+                            </div>
+                        </div>
+                    </div>
+                `; 
             }).join(''); 
-        }
-        window.catSave = function() { Object.keys(state.prices).forEach(k => { var id = k.replace(/\s/g, ''); state.prices[k].usd = parseFloat(document.getElementById('usd-'+id).value)||0; state.prices[k].bs = parseFloat(document.getElementById('bs-'+id).value)||0; state.prices[k].classes = parseInt(document.getElementById('cls-'+id).value)||0; }); save(); alert("Catálogo Actualizado"); }
+        };
+
+        window.runCatalogCalc = function(id, val) {
+            var usdVal = parseFloat(val) || 0;
+            if (usdVal <= 0) {
+                document.getElementById('calc-note-' + id).innerText = "Tasa especial USD";
+                return;
+            }
+            var rawBs = usdVal * state.rate;
+            var roundedBs = Math.round(rawBs / 5) * 5;
+            
+            // Set the Bolivares input field value
+            document.getElementById('bs-' + id).value = roundedBs;
+            
+            // Update reference label
+            document.getElementById('calc-note-' + id).innerHTML = `
+                <i class="fas fa-check-circle"></i> ${fNum(roundedBs)} BS<br>
+                <small style="color:#64748b; font-weight:normal;">(Sin redondear: ${fNum(rawBs)} BS)</small>
+            `;
+        };
+
+        window.catSave = function() { 
+            let allValid = true;
+            Object.keys(state.prices).forEach(k => {
+                var id = k.replace(/\s/g, '');
+                var bsVal = parseFloat(document.getElementById('bs-'+id).value) || 0;
+                if (bsVal % 5 !== 0) {
+                    allValid = false;
+                }
+            });
+            
+            if (!allValid) {
+                if (!confirm("Hay precios en Bolívares (BS) que no son múltiplos de 5. ¿Deseas que el sistema los ajuste automáticamente al múltiplo de 5 más cercano antes de guardar?")) {
+                    return;
+                }
+                // Auto-adjust if confirmed
+                Object.keys(state.prices).forEach(k => {
+                    var id = k.replace(/\s/g, '');
+                    var bsVal = parseFloat(document.getElementById('bs-'+id).value) || 0;
+                    if (bsVal % 5 !== 0) {
+                        var rounded = Math.round(bsVal / 5) * 5;
+                        document.getElementById('bs-'+id).value = rounded;
+                    }
+                });
+            }
+            
+            Object.keys(state.prices).forEach(k => { 
+                var id = k.replace(/\s/g, ''); 
+                state.prices[k].usd = parseFloat(document.getElementById('usd-'+id).value)||0; 
+                state.prices[k].bs = parseFloat(document.getElementById('bs-'+id).value)||0; 
+                state.prices[k].classes = parseInt(document.getElementById('cls-'+id).value)||0; 
+            }); 
+            save(); 
+            renderCatalogManagement();
+            alert("Catálogo Maestro Actualizado con precios en BS redondeados a múltiplos de 5."); 
+        };
         function delCat(k) { if(confirm("Borrar item?")) { delete state.prices[k]; save(); renderCatalogManagement(); } }
-        function initNav() { document.querySelectorAll('#main-nav li').forEach(li => li.onclick = function() { var pg = li.dataset.page; document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active')); document.getElementById(pg).classList.add('active'); document.querySelectorAll('#main-nav li').forEach(i => i.classList.remove('active')); li.classList.add('active'); if(pg=='dashboard') renderDashboard(); else if(pg=='students') renderStudents(); else if(pg=='catalogo') renderCatalogManagement(); else if(pg=='reports-view') document.getElementById('report-result-area').classList.add('hidden'); if(window.innerWidth <= 768) window.scrollTo(0, 0); }); }
+        
+        function initNav() { 
+            document.querySelectorAll('#main-nav li').forEach(li => li.onclick = function() { 
+                var pg = li.dataset.page; 
+                document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active')); 
+                document.getElementById(pg).classList.add('active'); 
+                document.querySelectorAll('#main-nav li').forEach(i => i.classList.remove('active')); 
+                li.classList.add('active'); 
+                if(pg=='dashboard') renderDashboard(); 
+                else if(pg=='students') renderStudents(); 
+                else if(pg=='catalogo') { renderCatalogManagement(); renderGastoFijoCatalog(); }
+                else if(pg=='egresos-view') renderEgresos();
+                else if(pg=='reports-view') document.getElementById('report-result-area').classList.add('hidden'); 
+                if(window.innerWidth <= 768) window.scrollTo(0, 0); 
+            }); 
+        }
+        
         window.openNewStudent = function(defName = "") { document.getElementById('modal-st-title').innerText = "Nuevo Alumno"; document.getElementById('st-edit-id').value=""; document.getElementById('st-form').reset(); if(defName) document.getElementById('st-name').value = defName; document.getElementById('modal-student').classList.add('active'); }
         window.catOpenAdd = function() { document.getElementById('modal-add-cat').classList.add('active'); }
+
+        // MÓDULO DE GESTIÓN DE EGRESOS (GASTOS)
+        window.openNewEgreso = function() {
+            document.getElementById('eg-form').reset();
+            document.getElementById('eg-date').value = getTodayISO();
+            window.renderEgChips();
+            window.selectEgType('VAR');
+            document.getElementById('modal-egreso').classList.add('active');
+        };
+
+        window.renderEgresos = function() {
+            const tbody = document.getElementById('egresos-table-body');
+            if (!tbody) return;
+            if (!state.egresos) state.egresos = [];
+            
+            tbody.innerHTML = state.egresos.length === 0 ? `<tr><td colspan="5" style="text-align:center; padding: 30px; color:#64748b;">Ningún egreso o gasto registrado.</td></tr>` : state.egresos.map(eg => {
+                var rateApplied = eg.rate || getRateForDate(eg.date) || state.rate;
+                var eqUsd = eg.cur === 'USD' ? eg.amount : eg.amount / rateApplied;
+                var rateText = eg.cur === 'BS' ? ` <small style="color:#64748b;">(Tasa: ${fNum(rateApplied)})</small>` : '';
+                return `
+                    <tr>
+                        <td>${new Date(eg.date + 'T00:00:00').toLocaleDateString()}</td>
+                        <td><strong>${eg.description}${rateText}</strong></td>
+                        <td><b style="color:#ef4444;">-${eg.cur === 'USD' ? '$' : ''} ${fNum(eg.amount)} ${eg.cur === 'BS' ? 'BS' : ''}</b></td>
+                        <td style="color:#ef4444;">-$ ${fNum(eqUsd)}</td>
+                        <td align="center">
+                            <button class="icon-btn" style="color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="delEgreso('${eg.id}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        };
+
+        window.delEgreso = function(id) {
+            if (confirm("¿Seguro que deseas eliminar este registro de gasto?")) {
+                state.egresos = state.egresos.filter(x => String(x.id) !== String(id));
+                save();
+                renderEgresos();
+                renderDashboard();
+                
+                // Si la vista de reportes está activa y visible, refrescarla de inmediato
+                var repView = document.getElementById('reports-view');
+                if (repView && repView.classList.contains('active')) {
+                    var titleText = document.getElementById('report-title').innerText || "";
+                    if (titleText.includes("CORTE DIA")) {
+                        runDailyReport();
+                    } else if (titleText.includes("CORTE MES")) {
+                        runMonthlyReport();
+                    }
+                }
+            }
+        };
+
+        // GESTIÓN DE CATÁLOGO DE GASTOS FIJOS (EGRESOS CONSTANTES)
+        window.gastoFijoOpenAdd = function() {
+            document.getElementById('modal-add-gasto-fijo').classList.add('active');
+            document.getElementById('gasto-fijo-form').reset();
+        };
+
+        window.renderGastoFijoCatalog = function() {
+            var list = document.getElementById('gasto-fijo-list'), r = state.rate;
+            if (!list) return;
+            if (!state.egresos_catalog) {
+                state.egresos_catalog = { "Ticket de Estacionamiento": { usd: 5.00 }, "10% Ingresos del Día": { usd: 10.00 } };
+            }
+            list.innerHTML = Object.keys(state.egresos_catalog).map(k => {
+                var p = state.egresos_catalog[k];
+                var id = k.replace(/\s/g, '');
+                var isDynamic = (k === "10% Ingresos del Día");
+                var dynamicNote = isDynamic ? `<span style="color:#0ea5e9; font-size:0.7rem; font-weight:bold; display:block; margin-top:5px;"><i class="fas fa-magic"></i> Calcula 10% de ingresos reales del día</span>` : '';
+                return `
+                    <div class="cat-item-row" style="border-color: rgba(239, 68, 68, 0.2);">
+                        <div class="cat-item-header">
+                            <h3 style="color:#ef4444;"><i class="fas fa-tag"></i> ${k}</h3>
+                            <button class="icon-btn" style="color:#ef4444;" onclick="window.delGastoFijoCat('${k}')"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="cat-item-body" style="grid-template-columns: 1fr 1fr !important; gap: 20px;">
+                            <div class="cat-group">
+                                <label>${isDynamic ? 'Costo Base Múltiplo de 5' : 'Costo Dólares ($)'}</label>
+                                <input type="number" step="0.01" value="${p.usd}" id="g-usd-${id}" oninput="document.getElementById('g-ref-${id}').innerText = 'Ref: '+fNum(this.value*state.rate)+' BS'">
+                                ${dynamicNote}
+                            </div>
+                            <div class="cat-group">
+                                <label>Equivalente Bolívares (BS)</label>
+                                <span class="ref-tag" id="g-ref-${id}" style="color:#facc15; font-size:1.1rem; padding: 12px 0;">${fNum(p.usd * r)} BS</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+
+        window.gastoFijoSave = function() {
+            if (!state.egresos_catalog) return;
+            
+            let allValid = true;
+            Object.keys(state.egresos_catalog).forEach(k => {
+                var id = k.replace(/\s/g, '');
+                var val = parseFloat(document.getElementById('g-usd-'+id).value) || 0;
+                if (val <= 0) {
+                    allValid = false;
+                }
+            });
+            
+            if (!allValid) {
+                alert("Todos los montos de gastos fijos deben ser mayores a 0.");
+                return;
+            }
+            
+            Object.keys(state.egresos_catalog).forEach(k => {
+                var id = k.replace(/\s/g, '');
+                state.egresos_catalog[k].usd = parseFloat(document.getElementById('g-usd-'+id).value) || 0;
+            });
+            save();
+            renderGastoFijoCatalog();
+            alert("Catálogo de Gastos Fijos Actualizado");
+        };
+
+        window.delGastoFijoCat = function(k) {
+            if (confirm("¿Seguro que deseas eliminar '" + k + "' del catálogo de gastos fijos?")) {
+                delete state.egresos_catalog[k];
+                save();
+                renderGastoFijoCatalog();
+            }
+        };
+
+        // CONTROL DINÁMICO DE MODAL DE EGRESOS CON BOTONES (CHIPS) Y PRECIO AJUSTABLE
+        window.renderEgChips = function() {
+            const container = document.getElementById('eg-chips');
+            if (!container) return;
+            
+            let html = `
+                <button type="button" class="eg-chip-btn active" id="chip-VAR" onclick="window.selectEgType('VAR')">
+                    <i class="fas fa-edit"></i><br>Variable / Manual
+                </button>
+            `;
+            
+            if (state.egresos_catalog) {
+                Object.keys(state.egresos_catalog).forEach(k => {
+                    var cost = state.egresos_catalog[k].usd;
+                    var cleanId = k.replace(/\s/g, '');
+                    html += `
+                        <button type="button" class="eg-chip-btn" id="chip-${cleanId}" onclick="window.selectEgType('${k}')">
+                            <i class="fas fa-tag"></i><br>${k}<br><b>$${cost.toFixed(2)}</b>
+                        </button>
+                    `;
+                });
+            }
+            container.innerHTML = html;
+        };
+
+        window.selectEgType = function(val) {
+            document.getElementById('eg-selected-type').value = val;
+            
+            // Toggle active classes across all chips
+            document.querySelectorAll('.eg-chip-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Highlight the selected chip
+            var cleanId = val.replace(/\s/g, '');
+            var activeBtn = document.getElementById('chip-' + cleanId);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+            
+            window.toggleEgFormType(val);
+        };
+
+        window.toggleEgFormType = function(val) {
+            const varFields = document.getElementById('eg-var-fields');
+            const fixedFields = document.getElementById('eg-fixed-fields');
+            const descInput = document.getElementById('eg-desc');
+            const amtInput = document.getElementById('eg-amount');
+            
+            if (val === 'VAR') {
+                varFields.classList.remove('hidden');
+                fixedFields.classList.add('hidden');
+                descInput.required = true;
+                amtInput.required = true;
+            } else {
+                varFields.classList.add('hidden');
+                fixedFields.classList.remove('hidden');
+                descInput.required = false;
+                amtInput.required = false;
+                document.getElementById('eg-qty').value = 1;
+                
+                // Prefill unit price with catalog price so it can be manually adjusted
+                if (state.egresos_catalog[val]) {
+                    if (val === "10% Ingresos del Día") {
+                        var targetDate = document.getElementById('eg-date').value || getTodayISO();
+                        var pays = state.logs.filter(l => l.type === 'PAY' && l.iso === targetDate);
+                        var totalUsd = pays.reduce((a,b) => a+b.usd, 0);
+                        var tenPercent = totalUsd * 0.1;
+                        document.getElementById('eg-fixed-unit-usd').value = tenPercent.toFixed(2);
+                    } else {
+                        document.getElementById('eg-fixed-unit-usd').value = state.egresos_catalog[val].usd;
+                    }
+                }
+                
+                window.updateEgFixedSummary();
+            }
+        };
+
+        window.updateEgFixedSummary = function() {
+            const val = document.getElementById('eg-selected-type').value;
+            if (val === 'VAR') return;
+            
+            const qty = parseInt(document.getElementById('eg-qty').value) || 1;
+            const cur = document.getElementById('eg-cur').value;
+            const costUsd = parseFloat(document.getElementById('eg-fixed-unit-usd').value) || 0;
+            
+            const totalUsd = costUsd * qty;
+            const rawBs = totalUsd * state.rate;
+            const roundedBs = Math.round(rawBs / 5) * 5;
+            
+            const summaryDiv = document.getElementById('eg-fixed-summary');
+            if (!summaryDiv) return;
+            
+            if (cur === 'USD') {
+                summaryDiv.innerHTML = `
+                    <span style="color:#94a3b8; font-size:0.75rem; text-transform:uppercase; font-weight:800; display:block;">Costo Unitario Ajustado: $${costUsd.toFixed(2)}</span>
+                    <h3 style="color:#ef4444; font-size:1.5rem; margin:8px 0; font-weight:900;">Total: $ ${fNum(totalUsd)}</h3>
+                    <small style="color:#64748b;">(Ref: ${fNum(roundedBs)} BS redondeado a múltiplos de 5)</small>
+                `;
+            } else {
+                summaryDiv.innerHTML = `
+                    <span style="color:#94a3b8; font-size:0.75rem; text-transform:uppercase; font-weight:800; display:block;">Costo Unitario Ajustado: ${fNum(costUsd * state.rate)} BS</span>
+                    <h3 style="color:#ef4444; font-size:1.5rem; margin:8px 0; font-weight:900;">Total: ${fNum(roundedBs)} BS</h3>
+                    <small style="color:#64748b;">(Ref redondeada: $${fNum(roundedBs / state.rate)} USD | Sin redondear: ${fNum(rawBs)} BS)</small>
+                `;
+            }
+        };
+
+        window.openRatesHistory = function() {
+            try {
+                console.log("Boton Historial Tasas Clickeado!");
+                document.getElementById('rate-hist-form').reset();
+                document.getElementById('rh-date').value = getTodayISO();
+                var globalRateInput = document.getElementById('global-rate');
+                var globalRate = globalRateInput ? (parseFloat(globalRateInput.value) || state.rate || 40.0) : (state.rate || 40.0);
+                document.getElementById('rh-rate').value = globalRate.toFixed(2);
+                window.renderRatesHistoryTable();
+                document.getElementById('modal-rates-history').classList.add('active');
+            } catch (err) {
+                alert("Error en Historial Tasas: " + err.message + "\n" + err.stack);
+            }
+        };
+
+        window.renderRatesHistoryTable = function() {
+            var tbody = document.getElementById('rates-history-table-body');
+            if (!tbody) return;
+            if (typeof state.rates_history !== 'object' || state.rates_history === null) {
+                state.rates_history = {};
+            }
+            
+            var dates = Object.keys(state.rates_history).sort().reverse();
+            
+            tbody.innerHTML = dates.length === 0 ? `<tr><td colspan="3" style="text-align:center; padding: 15px; color:#64748b; font-size: 0.8rem;">Ninguna tasa registrada en el historial.</td></tr>` : dates.map(d => {
+                var r = state.rates_history[d];
+                var dateParts = d.split('-');
+                var displayDate = dateParts.length === 3 ? (dateParts[2] + '/' + dateParts[1] + '/' + dateParts[0]) : d;
+                return `
+                    <tr>
+                        <td style="padding: 10px 15px; font-size: 0.8rem;">${displayDate}</td>
+                        <td style="padding: 10px 15px; font-size: 0.8rem; text-align: right; font-weight: bold; color: #facc15;">${fNum(r)} BS</td>
+                        <td style="padding: 10px 15px; font-size: 0.8rem; text-align: center;">
+                            <button class="icon-btn" style="color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="window.delRateFromHist('${d}')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        };
+
+        window.delRateFromHist = function(d) {
+            if (confirm("¿Seguro que deseas eliminar la tasa del día " + d + " del historial?")) {
+                delete state.rates_history[d];
+                save();
+                window.renderRatesHistoryTable();
+            }
+        };
+
+        window.importRatesFromCSV = function(input) {
+            var file = input.files[0];
+            if (!file) return;
+            
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var content = e.target.result;
+                var lines = content.split(/\r?\n/);
+                var count = 0;
+                var skipped = 0;
+                
+                if (typeof state.rates_history !== 'object' || state.rates_history === null) {
+                    state.rates_history = {};
+                }
+                
+                lines.forEach((line, idx) => {
+                    if (!line.trim()) return;
+                    
+                    // Soporte para comas (,) o punto y comas (;) como separadores
+                    var cols = line.includes(';') ? line.split(';') : line.split(',');
+                    if (cols.length < 2) {
+                        skipped++;
+                        return;
+                    }
+                    
+                    var rawDate = cols[0].trim();
+                    var rawRateStr = cols[1].trim().replace('$', '').replace(/\s/g, '');
+                    
+                    // Manejar formato decimal europeo (coma como decimal: 39,5 -> 39.5)
+                    // pero con cuidado de no romper comas de separación
+                    rawRateStr = rawRateStr.replace(',', '.');
+                    
+                    var rawRate = parseFloat(rawRateStr);
+                    
+                    // Saltar cabecera
+                    if (idx === 0 && isNaN(rawRate)) {
+                        skipped++;
+                        return;
+                    }
+                    
+                    if (isNaN(rawRate) || rawRate <= 0) {
+                        skipped++;
+                        return;
+                    }
+                    
+                    var formattedDate = normalizeDateStr(rawDate);
+                    if (formattedDate) {
+                        state.rates_history[formattedDate] = rawRate;
+                        count++;
+                    } else {
+                        skipped++;
+                    }
+                });
+                
+                save();
+                window.renderRatesHistoryTable();
+                input.value = ''; // Reset input uploader
+                alert("Importación de tasas finalizada:\n- " + count + " tasas cargadas con éxito.\n- " + skipped + " filas omitidas o con formato inválido.");
+                
+                // Actualizar tasa global si la fecha de hoy fue importada
+                var todayISO = getTodayISO();
+                if (state.rates_history[todayISO]) {
+                    state.rate = state.rates_history[todayISO];
+                    var rateEl = document.getElementById('global-rate');
+                    if (rateEl) rateEl.value = state.rate;
+                    renderDashboard();
+                    renderCatalogManagement();
+                    renderGastoFijoCatalog();
+                }
+            };
+            reader.readAsText(file, 'utf-8');
+        };
+
+        function normalizeDateStr(str) {
+            str = str.trim().replace(/\//g, '-');
+            if (!str) return null;
+            
+            // Caso YYYY-MM-DD
+            if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(str)) {
+                var parts = str.split('-');
+                return parts[0] + '-' + parts[1].padStart(2, '0') + '-' + parts[2].padStart(2, '0');
+            }
+            
+            // Caso DD-MM-YYYY
+            if (/^\d{1,2}-\d{1,2}-\d{4}$/.test(str)) {
+                var parts = str.split('-');
+                return parts[2] + '-' + parts[1].padStart(2, '0') + '-' + parts[0].padStart(2, '0');
+            }
+            
+            // Fallback con constructor Date nativo
+            try {
+                var d = new Date(str);
+                if (!isNaN(d.getTime())) {
+                    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+                }
+            } catch(e) {}
+            
+            return null;
+        }
     </script>
 </body>
 </html>

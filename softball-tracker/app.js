@@ -1,6 +1,104 @@
 // State Management
 const STATE_KEY = 'softball_tournament_data';
 
+// Local Server Storage Configuration
+let localServerAvailable = false;
+const LOCAL_API_URL = '/api/data';
+
+function setLocalServerStatus(status, message) {
+    const localLed = document.getElementById('local-led');
+    const localText = document.getElementById('local-status-text');
+    const loginLocalLed = document.getElementById('login-local-led');
+    const loginLocalText = document.getElementById('login-local-text');
+    
+    const applyStatus = (led, text) => {
+        if (!led) return;
+        led.classList.remove('online', 'offline', 'syncing');
+        if (status === 'syncing') {
+            led.classList.add('syncing');
+            if (text) text.textContent = message || 'Sincronizando local...';
+        } else if (status === 'online') {
+            led.classList.add('online');
+            if (text) text.textContent = message || 'Local PC Activo ✓';
+        } else {
+            led.classList.add('offline');
+            if (text) text.textContent = message || 'Local PC: Desconectado';
+        }
+    };
+
+    applyStatus(localLed, localText);
+    applyStatus(loginLocalLed, loginLocalText);
+}
+
+async function syncWithLocalServer() {
+    setLocalServerStatus('syncing', 'Buscando servidor local PC...');
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        
+        const response = await fetch(LOCAL_API_URL, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) throw new Error("HTTP error " + response.status);
+        const serverData = await response.json();
+        
+        localServerAvailable = true;
+        setLocalServerStatus('online', 'Servidor Local: Activo ✓');
+        console.log("Servidor local detectado con éxito.");
+        
+        if (serverData && !serverData.empty && !serverData.error) {
+            const mergedData = { ...serverData };
+            delete mergedData.session;
+            
+            if (mergedData.users && Array.isArray(mergedData.users) && mergedData.users.length > 0) {
+                appState.users = mergedData.users;
+            }
+            
+            appState = { ...appState, ...mergedData, users: appState.users };
+            localStorage.setItem(STATE_KEY, JSON.stringify(appState));
+            console.log("Datos cargados exitosamente desde el archivo local en tu PC.");
+        } else {
+            const saved = localStorage.getItem(STATE_KEY);
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && (parsed.players?.length > 0 || parsed.payments?.length > 0)) {
+                        console.log("Migrando datos existentes del navegador hacia el archivo tournament_data.json en la PC...");
+                        appState = { ...appState, ...parsed };
+                        await saveToLocalServer();
+                    }
+                } catch (jsonErr) {
+                    console.error("Error al analizar datos para migrar:", jsonErr);
+                }
+            }
+        }
+    } catch (e) {
+        console.warn("Servidor local de base de datos no disponible:", e.message);
+        localServerAvailable = false;
+        setLocalServerStatus('offline', 'Local PC: Desconectado (Modo Navegador)');
+    }
+}
+
+async function saveToLocalServer() {
+    if (!localServerAvailable) return;
+    try {
+        const toSave = { ...appState };
+        delete toSave.session;
+        
+        const response = await fetch(LOCAL_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8'
+            },
+            body: JSON.stringify(toSave)
+        });
+        if (!response.ok) throw new Error("HTTP error " + response.status);
+        console.log("Cambios guardados fisicamente en tournament_data.json en tu PC.");
+    } catch (e) {
+        console.error("Error guardando en el archivo local de la PC:", e);
+    }
+}
+
 async function hashPassword(plain) {
     // crypto.subtle solo funciona en HTTPS/localhost, no en file://
     if (!crypto?.subtle) return null;
@@ -116,6 +214,9 @@ async function initApp() {
     try {
         console.log("App starting...");
         loadData();
+        
+        // Sincronizar/cargar base de datos física local de la PC
+        await syncWithLocalServer();
         
         // Ensure we try to sync users BEFORE allowing login
         await initSupabase();
@@ -233,6 +334,7 @@ function saveData() {
         delete toSave.session;
         localStorage.setItem(STATE_KEY, JSON.stringify(toSave));
         if (supabaseClient) saveToCloud();
+        if (localServerAvailable) saveToLocalServer();
     } catch (e) {
         console.error("Error saving data:", e);
     }
