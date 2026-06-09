@@ -19,18 +19,45 @@
         .main-content { flex:1; padding:20px; padding-bottom:80px; } /* gap for bottom nav */
         
         /* SIDEBAR / NAV RESPONSIVE */
-        .sidebar { width:260px; background:#020617; border-right:1px solid var(--border); display:flex; flex-direction:column; }
+        .sidebar { 
+            width:260px; 
+            background:#020617; 
+            border-right:1px solid var(--border); 
+            display:flex; 
+            flex-direction:column; 
+            height:100vh; 
+            position:fixed; 
+            top:0; 
+            left:0; 
+            overflow-y:auto; 
+            scrollbar-width:thin; 
+            scrollbar-color:var(--border) transparent; 
+        }
+        .sidebar::-webkit-scrollbar {
+            width:4px;
+        }
+        .sidebar::-webkit-scrollbar-track {
+            background:transparent;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background:var(--border);
+            border-radius:2px;
+        }
         .sidebar-header { padding:25px; border-bottom:1px solid var(--border); }
         .sidebar-nav { flex:1; padding:15px; }
         .sidebar-nav ul { list-style:none; padding:0; margin:0; }
         .sidebar-nav li { padding:14px 18px; cursor:pointer; border-radius:12px; display:flex; align-items:center; gap:12px; margin-bottom:6px; color:#94a3b8; font-weight:600; transition:all 0.2s; }
         .sidebar-nav li:hover { background:var(--p-d); color:var(--p); }
         .sidebar-nav li.active { background:var(--p); color:white; box-shadow:0 10px 15px rgba(14,165,233,0.3); }
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .sidebar { width: 80px; overflow: hidden; }
+            .sidebar .logo span, .sidebar-nav li span, .sidebar-footer { display: none; }
+        }
         
         /* MOBILE VIEW ADJUSTMENTS */
         @media (max-width: 768px) {
             .app-container { flex-direction:column; }
-            .sidebar { position:fixed; bottom:0; width:100%; height:70px; flex-direction:row; z-index:1000; border-right:none; border-top:1px solid var(--border); background:rgba(2,6,23,0.95); backdrop-filter:blur(10px); }
+            .sidebar { position:fixed; bottom:0; width:100%; height:70px; flex-direction:row; z-index:1000; border-right:none; border-top:1px solid var(--border); background:rgba(2,6,23,0.95); backdrop-filter:blur(10px); overflow:hidden; }
             .sidebar-header { display:none; }
             .sidebar-footer { display:none; }
             .sidebar-nav { padding:0; width:100%; }
@@ -96,6 +123,13 @@
         .status-chip { background:rgba(14,165,233,0.05); padding:10px; border-radius:12px; text-align:center; border:1px solid var(--border); flex:1; }
         .status-chip label { display:block; font-size:0.6rem; color:#64748b; font-weight:800; text-transform:uppercase; margin-bottom:4px; }
         .status-chip b { font-size:1rem; color:white; }
+        .status-chip.balance-favorable { background:rgba(16,185,129,0.15) !important; border-color:#10b981 !important; }
+        .status-chip.balance-favorable b { color:#10b981 !important; }
+        .status-chip.balance-deuda { background:rgba(239,68,68,0.15) !important; border-color:#ef4444 !important; }
+        .status-chip.balance-deuda b { color:#ef4444 !important; }
+        .balance-pos { color:#10b981 !important; }
+        .balance-neg { color:#ef4444 !important; }
+        button:disabled { opacity: 0.6; cursor: not-allowed !important; transform: none !important; box-shadow: none !important; }
         
         .eg-chip-btn { background:var(--card); border:1px solid var(--border); color:white; padding:15px; border-radius:12px; cursor:pointer; text-align:center; transition:0.2s; font-size:0.85rem; width: 100%; position: relative; }
         .eg-chip-btn.active { border-color:#ef4444; background:rgba(239,68,68,0.1); color:#ef4444; font-weight:800; box-shadow:0 0 15px rgba(239,68,68,0.2); }
@@ -172,6 +206,10 @@
             input, select, button, .btn-primary {
                 display: none !important;
             }
+            .reason-print {
+                display: inline !important;
+                color: black !important;
+            }
             .main-content {
                 margin: 0 !important;
                 padding: 0 !important;
@@ -231,57 +269,154 @@
 </head>
 <body class="dark-theme">
     <!-- UI Layer: Login -->
-    <div id="view-login" class="login-view"><div class="login-card glass-panel"><span class="logo large"><i class="fas fa-graduation-cap"></i></span><h2>Centro Académico</h2><div class="form-group"><div style="position:relative;"><input type="password" id="login-password" placeholder="Pass de entrada" class="full-width"><i class="fas fa-eye" id="toggle-p" style="position:absolute; right:15px; top:18px; cursor:pointer;"></i></div></div><button id="btn-do-login" class="btn-primary full-width">INGRESAR AL SISTEMA</button><div id="login-local-status" style="margin-top:15px; display:flex; align-items:center; gap:8px; justify-content:center; font-size:0.8rem; color:#94a3b8;"><div id="login-local-led" class="led-dot offline" style="width:8px; height:8px; border-radius:50%; background:#ef4444; box-shadow:0 0 8px #ef4444;"></div><span id="login-local-text">Buscando servidor local PC...</span></div></div></div>
+    <div id="view-login" class="login-view">
+        <div class="login-card glass-panel">
+            <span class="logo large"><i class="fas fa-graduation-cap"></i></span>
+            <h2>Centro Académico</h2>
+            <div class="form-group" style="text-align: left;">
+                <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase; margin-bottom: 6px; display: block;">Usuario</label>
+                <input type="text" id="login-username" placeholder="Nombre de usuario" class="full-width" style="margin-bottom:15px; width: 100%;">
+            </div>
+            <div class="form-group" style="text-align: left;">
+                <label style="font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase; margin-bottom: 6px; display: block;">Contraseña</label>
+                <div style="position:relative;">
+                    <input type="password" id="login-password" placeholder="Contraseña" class="full-width" style="width: 100%;">
+                    <i class="fas fa-eye" id="toggle-p" style="position:absolute; right:15px; top:18px; cursor:pointer;"></i>
+                </div>
+            </div>
+            <button id="btn-do-login" class="btn-primary full-width" style="margin-top: 15px;">INGRESAR AL SISTEMA</button>
+            <div id="login-local-status" style="margin-top:15px; display:flex; align-items:center; gap:8px; justify-content:center; font-size:0.8rem; color:#94a3b8;">
+                <div id="login-local-led" class="led-dot offline" style="width:8px; height:8px; border-radius:50%; background:#ef4444; box-shadow:0 0 8px #ef4444;"></div>
+                <span id="login-local-text">Buscando servidor local PC...</span>
+            </div>
+        </div>
+    </div>
+
 
     <!-- UI Layer: Main App -->
     <div id="app-container" class="app-container hidden">
         <aside class="sidebar">
             <div class="sidebar-header"><span style="color:var(--p); font-weight:900; font-size:1.2rem; display:flex; align-items:center; gap:8px;"><i class="fas fa-graduation-cap"></i> ACADEMIA</span></div>
-            <nav class="sidebar-nav"><ul id="main-nav"><li class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span>Métricas</span></li><li data-page="reports-view"><i class="fas fa-receipt"></i> <span>Cierres</span></li><li data-page="attendance-view"><i class="fas fa-sign-in-alt"></i> <span>Control</span></li><li data-page="students"><i class="fas fa-user-friends"></i> <span>Alumnos</span></li><li data-page="payments"><i class="fas fa-cash-register"></i> <span>Caja</span></li><li data-page="catalogo"><i class="fas fa-sliders-h"></i> <span>Precios</span></li><li data-page="egresos-view"><i class="fas fa-hand-holding-usd"></i> <span>Egresos</span></li></ul></nav>
+            <nav class="sidebar-nav">
+                <ul id="main-nav">
+                    <li class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> <span>Métricas</span></li>
+                    <li data-page="reports-view" id="nav-reports"><i class="fas fa-receipt"></i> <span>Cierres</span></li>
+                    <li data-page="attendance-view" id="nav-attendance"><i class="fas fa-sign-in-alt"></i> <span>Control</span></li>
+                    <li data-page="students" id="nav-students"><i class="fas fa-user-friends"></i> <span>Alumnos</span></li>
+                    <li data-page="payments" id="nav-payments"><i class="fas fa-cash-register"></i> <span>Caja</span></li>
+                    <li data-page="catalogo" id="nav-catalogo"><i class="fas fa-sliders-h"></i> <span>Precios</span></li>
+                    <li data-page="egresos-view" id="nav-egresos"><i class="fas fa-hand-holding-usd"></i> <span>Egresos</span></li>
+                    <li data-page="users-view" id="nav-users" class="hidden"><i class="fas fa-user-shield"></i> <span>Usuarios</span></li>
+                </ul>
+            </nav>
             <div class="sidebar-footer" style="padding:20px; border-top:1px solid var(--border);">
+                <!-- Active User Status -->
+                <div id="active-user-container" style="display:none; align-items:center; gap:8px; margin-bottom: 15px; font-size:0.8rem; color:#94a3b8; background:rgba(30, 41, 59, 0.4); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);">
+                    <i class="fas fa-user-circle" style="color:var(--p); font-size:1.15rem;"></i>
+                    <div style="display:flex; flex-direction:column; line-height:1.2;">
+                        <span id="active-user-name" style="color:white; font-weight:700; font-size:0.85rem;">...</span>
+                        <span id="active-user-role" style="font-size:0.7rem; color:#64748b; text-transform:uppercase; font-weight:800;">...</span>
+                    </div>
+                </div>
+                
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;"><small style="color:#64748b;">Tasa BS:</small> <input type="number" id="global-rate" value="40.0" style="width:70px; padding:8px; font-size:0.8rem; text-align:right;" onchange="window.saveRate(this.value)"></div>
-                <button onclick="window.openRatesHistory()" class="btn-primary" style="padding: 8px; font-size: 0.75rem; margin-bottom: 12px; width: 100%; background: rgba(14,165,233,0.1); color: var(--p); border: 1px solid var(--border); transition:0.2s;"><i class="fas fa-history"></i> Historial Tasas</button>
-                <div style="display:flex; align-items:center; gap:8px; font-size:0.75rem; color:#94a3b8; justify-content:center; background:rgba(0,0,0,0.2); padding:6px; border-radius:8px; border:1px solid var(--border);">
+                <button onclick="window.openRatesHistory()" class="btn-primary" id="btn-historial-tasas" style="padding: 8px; font-size: 0.75rem; margin-bottom: 12px; width: 100%; background: rgba(14,165,233,0.1); color: var(--p); border: 1px solid var(--border); transition:0.2s;"><i class="fas fa-history"></i> Historial Tasas</button>
+                <div style="display:flex; align-items:center; gap:8px; font-size:0.75rem; color:#94a3b8; justify-content:center; background:rgba(0,0,0,0.2); padding:6px; border-radius:8px; border:1px solid var(--border); margin-bottom:12px;">
                     <div id="local-led" class="led-dot offline" style="width:7px; height:7px; border-radius:50%; background:#ef4444; box-shadow:0 0 6px #ef4444;"></div>
                     <span id="local-status-text">Local PC: Desconectado</span>
                 </div>
+                <button onclick="window.logout()" class="btn-primary" id="btn-logout" style="padding: 8px; font-size: 0.75rem; width: 100%; background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); transition:0.2s; margin-top:0;"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
             </div>
         </aside>
+
 
         <main class="main-content">
             <div id="content-area">
                 <!-- Page: Dashboard -->
                 <section id="dashboard" class="page-section active">
-                    <div class="welcome-banner">
-                        <h1>¡Buen día! 👋</h1>
-                        <p id="dash-date-label" style="color:#64748b; font-weight:700;"></p>
+                    <div class="welcome-banner" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; margin-bottom:25px;">
+                        <div>
+                            <h1>¡Buen día! 👋</h1>
+                            <p id="dash-date-label" style="color:#64748b; font-weight:700; margin:5px 0 0 0;"></p>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0; width:180px;">
+                            <label style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; font-weight:800;">Filtrar Fecha</label>
+                            <input type="date" id="dash-date-input" style="padding:10px; font-size:0.9rem;">
+                        </div>
                     </div>
-                    <div class="stats-grid">
-                        <div class="stat-card glass-panel">
-                            <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
-                            <div class="stat-info">
-                                <h3>Total USD</h3>
-                                <p id="stat-total-income">$ 0.00</p>
+                    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                        <!-- Card 1: Ingresos -->
+                        <div class="stat-card glass-panel" style="border-left: 5px solid #10b981; flex-direction: column; align-items: flex-start; gap: 10px;">
+                            <div style="display:flex; align-items:center; gap:12px; width:100%;">
+                                <div class="stat-icon" style="background:rgba(16,185,129,0.1); color:#10b981; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.1rem;"><i class="fas fa-arrow-down"></i></div>
+                                <h3 style="margin:0; font-size:0.8rem; color:#94a3b8; text-transform:uppercase; font-weight:800;">Ingresos del Día</h3>
+                            </div>
+                            <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+                                <span style="font-size:0.75rem; color:#64748b;">En Divisas:</span>
+                                <b id="stat-income-usd" style="font-size:1.2rem; color:#10b981;">$ 0.00</b>
+                            </div>
+                            <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-size:0.75rem; color:#64748b;">En Bolívares:</span>
+                                <b id="stat-income-bs" style="font-size:1.2rem; color:#10b981;">0,00 BS</b>
                             </div>
                         </div>
-                        <div class="stat-card glass-panel">
-                            <div class="stat-icon"><i class="fas fa-wallet"></i></div>
-                            <div class="stat-info">
-                                <h3>Total BS</h3>
-                                <p id="stat-total-income-bs">0 BS</p>
+
+                        <!-- Card 2: Egresos -->
+                        <div class="stat-card glass-panel" style="border-left: 5px solid #ef4444; flex-direction: column; align-items: flex-start; gap: 10px;">
+                            <div style="display:flex; align-items:center; gap:12px; width:100%;">
+                                <div class="stat-icon" style="background:rgba(239,68,68,0.1); color:#ef4444; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.1rem;"><i class="fas fa-arrow-up"></i></div>
+                                <h3 style="margin:0; font-size:0.8rem; color:#94a3b8; text-transform:uppercase; font-weight:800;">Egresos del Día</h3>
+                            </div>
+                            <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+                                <span style="font-size:0.75rem; color:#64748b;">En Divisas:</span>
+                                <b id="stat-expense-usd" style="font-size:1.2rem; color:#ef4444;">$ 0.00</b>
+                            </div>
+                            <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-size:0.75rem; color:#64748b;">En Bolívares:</span>
+                                <b id="stat-expense-bs" style="font-size:1.2rem; color:#ef4444;">0,00 BS</b>
                             </div>
                         </div>
-                        <div class="stat-card glass-panel">
-                            <div class="stat-icon"><i class="fas fa-users-cog"></i></div>
-                            <div class="stat-info">
-                                <h3>Activos</h3>
-                                <p id="stat-active-students">0</p>
+
+                        <!-- Card 3: Neto -->
+                        <div class="stat-card glass-panel" id="stat-net-card" style="border-left: 5px solid #0ea5e9; flex-direction: column; align-items: flex-start; gap: 10px;">
+                            <div style="display:flex; align-items:center; gap:12px; width:100%;">
+                                <div class="stat-icon" id="stat-net-icon" style="background:rgba(14,165,233,0.1); color:#0ea5e9; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.1rem;"><i class="fas fa-wallet"></i></div>
+                                <h3 style="margin:0; font-size:0.8rem; color:#94a3b8; text-transform:uppercase; font-weight:800;">Balance Neto</h3>
+                            </div>
+                            <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-top:5px;">
+                                <span style="font-size:0.75rem; color:#64748b;">En Divisas:</span>
+                                <b id="stat-net-usd" style="font-size:1.2rem; color:white;">$ 0.00</b>
+                            </div>
+                            <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+                                <span style="font-size:0.75rem; color:#64748b;">En Bolívares:</span>
+                                <b id="stat-net-bs" style="font-size:1.2rem; color:white;">0,00 BS</b>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Actividad/Servicios -->
+                        <div class="stat-card glass-panel" style="border-left: 5px solid #facc15; flex-direction: column; align-items: flex-start; gap: 8px; min-height: 200px;">
+                            <div style="display:flex; align-items:center; gap:12px; width:100%; margin-bottom: 5px;">
+                                <div class="stat-icon" style="background:rgba(250,204,21,0.1); color:#facc15; width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.1rem;"><i class="fas fa-calendar-check"></i></div>
+                                <h3 style="margin:0; font-size:0.8rem; color:#94a3b8; text-transform:uppercase; font-weight:800;">Servicios y Actividad</h3>
+                            </div>
+                            <div style="width:100%; display:flex; flex-direction:column; gap:6px; font-size:0.75rem; color:#f8fafc;">
+                                <div style="display:flex; justify-content:space-between; width:100%;"><span>Sólo Práctica:</span> <b id="stat-act-only-practica" style="color:#facc15;">0</b></div>
+                                <div style="display:flex; justify-content:space-between; width:100%;"><span>Práctica Guardianes:</span> <b id="stat-act-practica-guardianes" style="color:#facc15;">0</b></div>
+                                <div style="display:flex; justify-content:space-between; width:100%;"><span>Práctica y Juego:</span> <b id="stat-act-practica-juego" style="color:#facc15;">0</b></div>
+                                <div style="display:flex; justify-content:space-between; width:100%;"><span>Sólo Juego:</span> <b id="stat-act-only-juego" style="color:#facc15;">0</b></div>
+                                <div style="display:flex; justify-content:space-between; width:100%;"><span>Cortesías:</span> <b id="stat-act-cortesias" style="color:#facc15;">0</b></div>
+                                <div style="display:flex; justify-content:space-between; width:100%;"><span>Asistencias Puerta:</span> <b id="stat-act-puerta" style="color:#facc15;">0</b></div>
+                                <div style="display:flex; justify-content:space-between; width:100%;"><span>Otros Servicios:</span> <b id="stat-act-otros" style="color:#facc15;">0</b></div>
+                            </div>
+                            <div id="stat-activity-pop-container" style="width:100%; border-top:1px solid var(--border); padding-top:6px; margin-top:4px; display:none; font-size:0.7rem;">
+                                <span style="color:#94a3b8; font-weight:bold; display:block; margin-bottom:2px;">Material POP Vendido:</span>
+                                <div id="stat-activity-pop-list" style="color:#10b981; max-height:45px; overflow-y:auto; line-height:1.2;"></div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="glass-panel" style="margin-top: 30px; padding: 25px;">
-                        <h2 style="color:var(--p); font-size: 1.1rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-list-ul"></i> Movimientos Registrados Hoy</h2>
+                        <h2 id="dash-movements-title" style="color:var(--p); font-size: 1.1rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px;"><i class="fas fa-list-ul"></i> Movimientos Registrados Hoy</h2>
                         <div class="table-responsive">
                             <table style="width:100%; border-collapse:collapse;">
                                 <thead>
@@ -305,9 +440,36 @@
                 <!-- Page: Reports -->
                 <section id="reports-view" class="page-section">
                     <div class="page-header" style="margin-bottom:25px;"><h2>Reportes de Cierre</h2></div>
+                    
+                    <div id="reports-filter-panel" class="glass-panel" style="padding:20px; margin-bottom:25px; display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
+                        <div style="flex:1; min-width:200px;">
+                            <label style="display:block; font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase; margin-bottom:6px;">Lugar / Estado</label>
+                            <select id="report-filter-location" class="full-width" style="width:100%; padding:12px;" onchange="window.refreshActiveReport()"></select>
+                        </div>
+                        <div style="flex:1; min-width:200px;">
+                            <label style="display:block; font-size:0.75rem; color:#94a3b8; font-weight:700; text-transform:uppercase; margin-bottom:6px;">Usuario</label>
+                            <select id="report-filter-user" class="full-width" style="width:100%; padding:12px;" onchange="window.refreshActiveReport()"></select>
+                        </div>
+                    </div>
+                    
                     <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin-bottom:25px;">
                         <div class="glass-panel" style="padding:20px;"><label>Fecha Día</label><input type="date" id="report-date-input" class="full-width" style="margin:10px 0;"><button onclick="runDailyReport()" class="btn-primary full-width">OPERAR CORTE DÍA</button></div>
                         <div class="glass-panel" style="padding:20px;"><label>Mes Calendario</label><input type="month" id="report-month-input" class="full-width" style="margin:10px 0;"><button onclick="runMonthlyReport()" class="btn-primary full-width">OPERAR CORTE MES</button></div>
+                    </div>
+                    
+                    <div id="workdays-config-panel" class="glass-panel" style="padding:20px; margin-bottom:25px;">
+                        <h4 style="margin:0 0 8px 0; color:var(--p); font-size: 0.9rem; text-transform: uppercase; display: flex; align-items: center; gap: 8px;"><i class="fas fa-calendar-alt"></i> Configuración de Días de Trabajo</h4>
+                        <p style="font-size:0.8rem; color:#94a3b8; margin: 0 0 15px 0;">Selecciona los días programados para clases en la academia. Esto se usará para calcular la relación de días trabajados en los cierres mensuales.</p>
+                        <div style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:15px;" id="workday-checkboxes">
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.9rem;"><input type="checkbox" value="1"> Lun</label>
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.9rem;"><input type="checkbox" value="2"> Mar</label>
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.9rem;"><input type="checkbox" value="3"> Mié</label>
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.9rem;"><input type="checkbox" value="4"> Jue</label>
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.9rem;"><input type="checkbox" value="5"> Vie</label>
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.9rem;"><input type="checkbox" value="6"> Sáb</label>
+                            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; font-size:0.9rem;"><input type="checkbox" value="0"> Dom</label>
+                        </div>
+                        <button onclick="window.saveWorkdays()" class="btn-primary" id="btn-save-workdays" style="padding:10px 20px; font-size:0.85rem; margin-top:0;"><i class="fas fa-save"></i> GUARDAR CONFIGURACIÓN</button>
                     </div>
                     
                     <div class="glass-panel" style="padding:20px; margin-bottom:25px; border-color:#f59e0b; background:rgba(245,158,11,0.05); text-align:center;">
@@ -329,9 +491,10 @@
                                 <div class="cash-card usd" style="border-bottom:5px solid #10b981;"><label style="font-size:0.7rem; color:#64748b; font-weight:800;">EFECTIVO DOLARES</label><h1 id="report-phys-usd" style="margin:8px 0; font-size:1.8rem;">$ 0,00</h1></div>
                             </div>
                         </div>
-                        <div class="glass-panel" style="padding:20px; margin-top:20px;"><h3 style="color:var(--p); font-size:0.9rem; margin-bottom:15px; text-transform:uppercase;">Inventario Despachado</h3><div id="report-item-counts-list"></div></div>
+                        <div id="report-inventory-container" class="glass-panel" style="padding:20px; margin-top:20px;"><h3 style="color:var(--p); font-size:0.9rem; margin-bottom:15px; text-transform:uppercase;">Inventario Despachado</h3><div id="report-item-counts-list"></div></div>
                         <div id="report-kpis" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(100px, 1fr)); gap:12px; margin-top:20px;"></div>
-                        <div class="glass-panel" style="margin-top:25px;"><h2 id="report-title" style="text-align:center; padding:20px; border-bottom:1px solid var(--border); font-size:1rem;"></h2><div id="report-items-list" style="max-height:450px; overflow-y:auto; padding:15px;"></div></div>
+                        <div id="report-details-container" class="glass-panel" style="margin-top:25px;"><h2 id="report-title" style="text-align:center; padding:20px; border-bottom:1px solid var(--border); font-size:1rem;"></h2><div id="report-items-list" style="max-height:450px; overflow-y:auto; padding:15px;"></div></div>
+                        <div id="report-monthly-dashboard" class="hidden" style="margin-top:25px;"></div>
                         <div id="report-egresos-container"></div>
                     </div>
                 </section>
@@ -345,10 +508,14 @@
                             <h2 id="att-name" style="text-align:center; margin-bottom:20px;"></h2>
                             <div style="display:flex; gap:15px;">
                                 <div class="status-chip"><label>CLASES</label><b id="att-classes">0</b></div>
-                                <div class="status-chip"><label>BALANCE</label><b id="att-balance">$0.00</b></div>
+                                <div class="status-chip" id="att-balance-container"><label>SALDO</label><b id="att-balance">$0.00</b></div>
                                 <div class="status-chip"><label>VENCE</label><b id="att-expiry">---</b></div>
                             </div>
-                            <button id="btn-confirm-attendance" class="btn-primary full-width" style="background:#f59e0b; margin-top:30px; font-size:1.1rem; padding:20px;">MARCAR ENTRADA</button>
+                            <div class="form-group" style="margin-top:20px;">
+                                <label>Fecha de Acceso</label>
+                                <input type="date" id="att-date" class="full-width" style="padding:10px;">
+                            </div>
+                            <button id="btn-confirm-attendance" class="btn-primary full-width" style="background:#f59e0b; margin-top:20px; font-size:1.1rem; padding:20px;">MARCAR ENTRADA</button>
                         </div>
                     </div>
                 </section>
@@ -368,7 +535,7 @@
                         <div id="pay-student-box" class="glass-panel" style="padding:25px; margin:25px 0; display:none; border-color:var(--p);">
                             <h2 id="pay-st-name" style="margin:0 0 15px 0; text-align:center;"></h2>
                             <div style="display:flex; gap:10px;">
-                                <div class="status-chip"><label>S. FAVOR</label><b id="p-status-balance">$0.00</b></div>
+                                <div class="status-chip" id="p-balance-container"><label>SALDO</label><b id="p-status-balance">$0.00</b></div>
                                 <div class="status-chip"><label>CLASES</label><b id="p-status-classes">0</b></div>
                                 <div class="status-chip"><label>VENCE</label><b id="p-status-expiry">---</b></div>
                             </div>
@@ -439,12 +606,65 @@
                         </table>
                     </div>
                 </section>
+
+                <!-- Page: Users Management -->
+                <section id="users-view" class="page-section">
+                    <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:25px;">
+                        <h2>Administración de Usuarios</h2>
+                        <button class="btn-primary" onclick="window.openNewUser()"><i class="fas fa-user-plus"></i> NUEVO USUARIO</button>
+                    </div>
+                    <div class="glass-panel table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nombre de Usuario</th>
+                                    <th>Estado / Lugar</th>
+                                    <th>Rol</th>
+                                    <th style="text-align: center;">⚙️</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <!-- Users dynamic loading -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
 
     <!-- Modals -->
-    <div id="modal-student" class="modal"><div class="modal-content glass-panel"><h2 id="modal-st-title" style="margin-top:0;">Ficha</h2><form id="st-form"><input type="hidden" id="st-auto-select" value="false"><input type="hidden" id="st-edit-id" value=""><div class="form-group"><label>Documento CI</label><input type="text" id="st-ci" class="full-width"></div><div class="form-group"><label>Nombre Completo</label><input type="text" id="st-name" required class="full-width"></div><button type="submit" class="btn-primary full-width" style="margin-top:10px;">GUARDAR</button></form><button onclick="closeModals()" class="btn-primary full-width" style="margin-top:10px; background:transparent; color:#64748b;">CANCELAR</button></div></div>
+    <div id="modal-user" class="modal">
+        <div class="modal-content glass-panel" style="max-width:400px; width:90%; padding:35px; position:relative;">
+            <h2 id="modal-user-title" style="margin-top:0;">Nuevo Usuario</h2>
+            <form id="user-form">
+                <input type="hidden" id="user-edit-username" value="">
+                <div class="form-group">
+                    <label>Nombre de Usuario</label>
+                    <input type="text" id="user-username" required class="full-width" placeholder="Ej: admin">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="user-password" required class="full-width" placeholder="Ej: 123">
+                </div>
+                <div class="form-group">
+                    <label>Rol de Acceso</label>
+                    <select id="user-role" class="full-width">
+                        <option value="admin">Administrador (Todo accesible)</option>
+                        <option value="gestor">Gestor / Coordinador (Sin control de usuarios)</option>
+                        <option value="observador">Observador (Solo reportes/cierres)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Estado / Lugar</label>
+                    <input type="text" id="user-location" class="full-width" placeholder="Ej: Caracas">
+                </div>
+                <button type="submit" class="btn-primary full-width" style="margin-top:20px;">GUARDAR</button>
+            </form>
+            <button onclick="closeModals()" class="btn-primary full-width" style="margin-top:10px; background:transparent; color:#64748b; border: 1px solid var(--border);">CANCELAR</button>
+        </div>
+    </div>
+    <div id="modal-student" class="modal"><div class="modal-content glass-panel"><h2 id="modal-st-title" style="margin-top:0;">Ficha</h2><form id="st-form"><input type="hidden" id="st-auto-select" value="false"><input type="hidden" id="st-edit-id" value=""><div class="form-group"><label>Documento CI</label><input type="text" id="st-ci" class="full-width"></div><div class="form-group"><label>Nombre Completo</label><input type="text" id="st-name" required class="full-width"></div><div class="form-group"><label>Lugar / Estado</label><input type="text" id="st-location" class="full-width" list="locations-list" placeholder="Ej: Caracas"></div><button type="submit" class="btn-primary full-width" style="margin-top:10px;">GUARDAR</button></form><button onclick="closeModals()" class="btn-primary full-width" style="margin-top:10px; background:transparent; color:#64748b;">CANCELAR</button></div></div>
     <div id="modal-add-cat" class="modal"><div class="modal-content glass-panel"><h2>Nuevo Item</h2><form id="cat-form"><div class="form-group"><label>Descripción</label><input type="text" id="cat-name" required class="full-width"></div><div class="form-group"><label>Tipo</label><select id="cat-type" class="full-width"><option value="SER">SERVICIO</option><option value="POP">MATERIAL POP</option></select></div><div class="form-group"><label>USD ($)</label><input type="number" id="cat-usd" step="0.1" required class="full-width"></div><div class="form-group"><label>Clases a Cargar</label><input type="number" id="cat-cls" value="0" class="full-width"></div><button type="submit" class="btn-primary full-width" style="margin-top:10px;">AÑADIR</button></form><button onclick="closeModals()" class="btn-primary full-width" style="margin-top:10px; background:transparent; color:#64748b;">CERRAR</button></div></div>
     <div id="modal-history" class="modal"><div class="modal-content glass-panel" style="max-width:550px; width:95%;"><div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:15px; margin-bottom:20px;"><h3 id="hist-name" style="margin:0; color:var(--p);"></h3><div id="hist-st-balance" style="font-weight:900;"></div></div><div id="hist-list" style="max-height:480px; overflow-y:auto;"></div><button onclick="closeModals()" class="btn-primary full-width" style="margin-top:25px;">SALIR</button></div></div>
     <div id="modal-egreso" class="modal">
@@ -483,6 +703,11 @@
                             </div>
                         </div>
                         <div id="eg-fixed-summary" style="background:rgba(239, 68, 68, 0.05); border:1px solid rgba(239, 68, 68, 0.2); padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: center;"></div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label>Lugar / Estado</label>
+                        <input type="text" id="eg-location" class="full-width" list="locations-list" placeholder="Ej: Caracas" style="padding: 10px;">
                     </div>
                     
                     <div class="form-group" style="margin-bottom: 0;">
@@ -575,7 +800,7 @@
     </div>
 
     <script>
-        var state = { students: [], logs: [], rate: 40.0, prices: {}, currentStudentId: null, selectedItems: {}, isCortesia: false, isProcessingPay: false, egresos: [], egresos_catalog: { "Ticket de Estacionamiento": { usd: 5.00 }, "10% Ingresos del Día": { usd: 10.00 } }, rates_history: {} };
+        var state = { students: [], logs: [], rate: 40.0, prices: {}, currentStudentId: null, selectedItems: {}, isCortesia: false, isProcessingPay: false, egresos: [], egresos_catalog: { "Ticket de Estacionamiento": { usd: 5.00 }, "10% Ingresos del Día": { usd: 10.00 } }, rates_history: {}, non_workday_reasons: {}, users: [], workdays: [1, 2, 3] };
         const fmt = new Intl.NumberFormat('es-VE', { minimumFractionDigits: 2 });
         function fNum(n) { return fmt.format(n || 0); }
         function getTodayISO() { var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2,'0') + "-" + String(d.getDate()).padStart(2,'0'); }
@@ -675,6 +900,13 @@
                     }
                     if (serverData.egresos_catalog) state.egresos_catalog = serverData.egresos_catalog;
                     if (serverData.rates_history) state.rates_history = serverData.rates_history;
+                    if (serverData.non_workday_reasons) state.non_workday_reasons = serverData.non_workday_reasons;
+                    if (Array.isArray(serverData.users)) {
+                        state.users = serverData.users;
+                    }
+                    if (Array.isArray(serverData.workdays)) {
+                        state.workdays = serverData.workdays;
+                    }
                     
                     if (needsSave) {
                         save();
@@ -688,10 +920,13 @@
                     localStorage.setItem('acad_egresos', JSON.stringify(state.egresos));
                     localStorage.setItem('acad_egresos_catalog', JSON.stringify(state.egresos_catalog));
                     localStorage.setItem('acad_rates_history', JSON.stringify(state.rates_history || {}));
+                    localStorage.setItem('acad_non_workday_reasons', JSON.stringify(state.non_workday_reasons || {}));
+                    localStorage.setItem('acad_users', JSON.stringify(state.users || []));
+                    localStorage.setItem('acad_workdays', JSON.stringify(state.workdays || []));
                     console.log("Datos sincronizados con éxito desde el disco físico de tu PC.");
                 } else {
                     // Si el servidor está vacío pero tenemos datos locales en el navegador, los migramos al servidor
-                    if (state.students.length > 0 || state.logs.length > 0 || (state.egresos && state.egresos.length > 0) || (state.egresos_catalog && Object.keys(state.egresos_catalog).length > 1) || (state.rates_history && Object.keys(state.rates_history).length > 0)) {
+                    if (state.students.length > 0 || state.logs.length > 0 || (state.egresos && state.egresos.length > 0) || (state.egresos_catalog && Object.keys(state.egresos_catalog).length > 1) || (state.rates_history && Object.keys(state.rates_history).length > 0) || (state.non_workday_reasons && Object.keys(state.non_workday_reasons).length > 0) || (state.users && state.users.length > 0)) {
                         console.log("Migrando datos locales del navegador al disco físico de la PC...");
                         await saveToLocalServer();
                     }
@@ -713,7 +948,10 @@
                     prices: state.prices,
                     egresos: state.egresos,
                     egresos_catalog: state.egresos_catalog,
-                    rates_history: state.rates_history
+                    rates_history: state.rates_history,
+                    non_workday_reasons: state.non_workday_reasons,
+                    users: state.users,
+                    workdays: state.workdays
                 };
                 const response = await fetch(LOCAL_API_URL, {
                     method: 'POST',
@@ -727,7 +965,31 @@
             }
         }
 
-        function init() { try { if(window.localStorage) { state.students = JSON.parse(localStorage.getItem('acad_st')) || []; state.logs = JSON.parse(localStorage.getItem('acad_logs')) || []; (state.logs || []).forEach(l => { if (!l.id) l.id = 'log_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now(); }); state.rate = parseFloat(localStorage.getItem('acad_rate')) || 40.0; var sp = JSON.parse(localStorage.getItem('acad_prices')); if(sp) state.prices = sp; else state.prices = { 'Mensualidad': { usd: 70, bs: 2800, classes: 8, type: 'SER' } }; state.egresos = JSON.parse(localStorage.getItem('acad_egresos')) || []; state.egresos_catalog = JSON.parse(localStorage.getItem('acad_egresos_catalog')) || { "Ticket de Estacionamiento": { usd: 5.00 }, "10% Ingresos del Día": { usd: 10.00 } }; state.rates_history = JSON.parse(localStorage.getItem('acad_rates_history')) || {}; if(sessionStorage.getItem('acad_session')==='true') bypass(); } } catch(e){} }
+        function init() { 
+            try { 
+                if(window.localStorage) { 
+                    state.students = JSON.parse(localStorage.getItem('acad_st')) || []; 
+                    state.logs = JSON.parse(localStorage.getItem('acad_logs')) || []; 
+                    (state.logs || []).forEach(l => { if (!l.id) l.id = 'log_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now(); }); 
+                    state.rate = parseFloat(localStorage.getItem('acad_rate')) || 40.0; 
+                    var sp = JSON.parse(localStorage.getItem('acad_prices')); 
+                    if(sp) state.prices = sp; 
+                    else state.prices = { 'Mensualidad': { usd: 70, bs: 2800, classes: 8, type: 'SER' } }; 
+                    state.egresos = JSON.parse(localStorage.getItem('acad_egresos')) || []; 
+                    state.egresos_catalog = JSON.parse(localStorage.getItem('acad_egresos_catalog')) || { "Ticket de Estacionamiento": { usd: 5.00 }, "10% Ingresos del Día": { usd: 10.00 } }; 
+                    state.rates_history = JSON.parse(localStorage.getItem('acad_rates_history')) || {}; 
+                    state.non_workday_reasons = JSON.parse(localStorage.getItem('acad_non_workday_reasons')) || {}; 
+                    state.users = JSON.parse(localStorage.getItem('acad_users')) || [];
+                    if (!state.users || state.users.length === 0) {
+                        state.users = [
+                            { username: 'admin', password: '123', role: 'admin' }
+                        ];
+                    }
+                    state.workdays = JSON.parse(localStorage.getItem('acad_workdays')) || [1, 2, 3];
+                    if(sessionStorage.getItem('acad_session')==='true') bypass(); 
+                } 
+            } catch(e){} 
+        }
         function save() { 
             localStorage.setItem('acad_st', JSON.stringify(state.students)); 
             localStorage.setItem('acad_logs', JSON.stringify(state.logs)); 
@@ -736,6 +998,9 @@
             localStorage.setItem('acad_egresos', JSON.stringify(state.egresos || [])); 
             localStorage.setItem('acad_egresos_catalog', JSON.stringify(state.egresos_catalog || {})); 
             localStorage.setItem('acad_rates_history', JSON.stringify(state.rates_history || {})); 
+            localStorage.setItem('acad_non_workday_reasons', JSON.stringify(state.non_workday_reasons || {})); 
+            localStorage.setItem('acad_users', JSON.stringify(state.users || [])); 
+            localStorage.setItem('acad_workdays', JSON.stringify(state.workdays || [])); 
             if (localServerAvailable) saveToLocalServer();
         }
         window.saveRate = function(v) { 
@@ -747,8 +1012,62 @@
             renderCatalogManagement(); 
             renderGastoFijoCatalog(); 
         }
-        function bypass() { document.getElementById('view-login').style.display='none'; document.getElementById('app-container').style.display='flex'; document.getElementById('app-container').classList.remove('hidden'); renderDashboard(); initNav(); renderCatalogManagement(); renderGastoFijoCatalog(); }
+        window.setNonWorkdayReason = function(dateStr, value) {
+            if (!state.non_workday_reasons) state.non_workday_reasons = {};
+            if (value) {
+                state.non_workday_reasons[dateStr] = value;
+            } else {
+                delete state.non_workday_reasons[dateStr];
+            }
+            save();
+            var reportMonthInput = document.getElementById('report-month-input');
+            if (reportMonthInput && reportMonthInput.value) {
+                runMonthlyReport();
+            }
+        };
+        function bypass() { 
+            var username = sessionStorage.getItem('acad_username') || 'admin';
+            var u = state.users.find(x => x.username.toLowerCase() === username.toLowerCase());
+            if (u) {
+                sessionStorage.setItem('acad_user_location', u.location || 'Caracas');
+                sessionStorage.setItem('acad_user_role', u.role);
+            }
+            document.getElementById('view-login').style.display='none'; 
+            document.getElementById('app-container').style.display='flex'; 
+            document.getElementById('app-container').classList.remove('hidden'); 
+            applyPermissions();
+            renderDashboard(); 
+            initNav(); 
+            renderCatalogManagement(); 
+            renderGastoFijoCatalog(); 
+        }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => { m.classList.remove('active'); }); }
+
+        window.logout = function() {
+            if (confirm("¿Seguro que deseas cerrar sesión?")) {
+                sessionStorage.clear();
+                location.reload();
+            }
+        };
+
+        function handleLoginAction() {
+            var u = document.getElementById('login-username').value.trim();
+            var p = document.getElementById('login-password').value.trim();
+            if (!u || !p) {
+                alert("Por favor ingrese usuario y contraseña.");
+                return;
+            }
+            var found = state.users.find(x => x.username.toLowerCase() === u.toLowerCase() && x.password === p);
+            if (found) {
+                sessionStorage.setItem('acad_session', 'true');
+                sessionStorage.setItem('acad_username', found.username);
+                sessionStorage.setItem('acad_user_role', found.role);
+                sessionStorage.setItem('acad_user_location', found.location || 'Caracas');
+                bypass();
+            } else {
+                alert("Credenciales incorrectas.");
+            }
+        }
 
         window.onload = async function() {
             init();
@@ -761,7 +1080,34 @@
                 save();
             }
             
-            document.getElementById('btn-do-login').onclick = function() { var p = document.getElementById('login-password').value.trim(); if(p==='admin123' || p==='entrar') { sessionStorage.setItem('acad_session', 'true'); bypass(); } else alert("No"); };
+            // Asegurar usuarios por defecto (admin y Walter) y asignar datos existentes a Walter
+            if (!state.users) state.users = [];
+            
+            var adminUser = state.users.find(x => x.username.toLowerCase() === 'admin');
+            if (adminUser) {
+                adminUser.location = 'Todos';
+            } else {
+                state.users.unshift({ username: 'admin', password: '123', role: 'admin', location: 'Todos' });
+            }
+            
+            var walterUser = state.users.find(x => x.username.toLowerCase() === 'walter');
+            if (!walterUser) {
+                state.users.push({ username: 'Walter', password: '19444294', role: 'gestor', location: 'Caracas' });
+            } else {
+                walterUser.password = '19444294';
+                walterUser.role = 'gestor';
+                walterUser.location = 'Caracas';
+            }
+            
+            if (state.students) state.students.forEach(s => { if (!s.user) s.user = 'Walter'; });
+            if (state.logs) state.logs.forEach(l => { if (!l.user) l.user = 'Walter'; });
+            if (state.egresos) state.egresos.forEach(e => { if (!e.user) e.user = 'Walter'; });
+            
+            save();
+            
+            document.getElementById('btn-do-login').onclick = handleLoginAction;
+            document.getElementById('login-username').onkeypress = function(e) { if(e.key === 'Enter') handleLoginAction(); };
+            document.getElementById('login-password').onkeypress = function(e) { if(e.key === 'Enter') handleLoginAction(); };
             document.getElementById('toggle-p').onclick = function() { var p = document.getElementById('login-password'); p.type = p.type==='password'?'text':'password'; };
             document.getElementById('att-student-search').oninput = function() { searchCommon(this.value, 'att-results', selectStAtt); };
             document.getElementById('pay-student-search').oninput = function() { searchCommon(this.value, 'pay-results', selectStPay); };
@@ -769,13 +1115,99 @@
             document.getElementById('st-form').onsubmit = function(e) { 
                 e.preventDefault(); var eid = document.getElementById('st-edit-id').value;
                 var n = document.getElementById('st-name').value.toUpperCase(), ci = document.getElementById('st-ci').value;
-                if(eid) { var s = state.students.find(x => x.id == eid); s.name = n; s.cedula = ci; }
-                else { var id = Date.now(); state.students.push({ id, name: n, cedula: ci, balance: 0, classes: 0, expiry: null }); }
+                var loc = document.getElementById('st-location').value.trim();
+                var currentUser = sessionStorage.getItem('acad_username') || 'admin';
+                if(eid) { 
+                    var s = state.students.find(x => x.id == eid); 
+                    s.name = n; 
+                    s.cedula = ci; 
+                    s.location = loc;
+                }
+                else { 
+                    var id = Date.now(); 
+                    state.students.push({ id, name: n, cedula: ci, balance: 0, classes: 0, expiry: null, user: currentUser, location: loc }); 
+                }
                 save(); closeModals(); renderStudents(); if(document.getElementById('st-auto-select').value==='true' && !eid) selectStPay(id, n); 
+            };
+
+            document.getElementById('user-form').onsubmit = function(e) {
+                e.preventDefault();
+                var editUsername = document.getElementById('user-edit-username').value.trim();
+                var u = document.getElementById('user-username').value.trim();
+                var p = document.getElementById('user-password').value.trim();
+                var r = document.getElementById('user-role').value;
+                var loc = document.getElementById('user-location').value.trim();
+                
+                if (!u || !p) {
+                    alert("Nombre de usuario y contraseña son requeridos.");
+                    return;
+                }
+                
+                if (editUsername) {
+                    var idx = state.users.findIndex(x => x.username.toLowerCase() === editUsername.toLowerCase());
+                    if (idx > -1) {
+                        state.users[idx].password = p;
+                        state.users[idx].role = r;
+                        state.users[idx].location = loc;
+                        
+                        var currentActiveUser = sessionStorage.getItem('acad_username') || 'admin';
+                        if (editUsername.toLowerCase() === currentActiveUser.toLowerCase()) {
+                            sessionStorage.setItem('acad_user_role', r);
+                            applyPermissions();
+                        }
+                    }
+                } else {
+                    var exists = state.users.some(x => x.username.toLowerCase() === u.toLowerCase());
+                    if (exists) {
+                        alert("El nombre de usuario ya existe.");
+                        return;
+                    }
+                    state.users.push({ username: u, password: p, role: r, location: loc });
+                }
+                
+                save();
+                closeModals();
+                renderUsers();
+                alert("Usuario guardado con éxito.");
             };
             
             document.getElementById('cat-form').onsubmit = function(e){ e.preventDefault(); var n = document.getElementById('cat-name').value, p = parseFloat(document.getElementById('cat-usd').value), c = parseInt(document.getElementById('cat-cls').value)||0, t = document.getElementById('cat-type').value; state.prices[n] = { usd: p, bs: p * state.rate, classes: c, type: t }; save(); closeModals(); renderCatalogManagement(); };
-            document.getElementById('btn-confirm-attendance').onclick = function() { var s = state.students.find(x => x.id == state.currentStudentId); if(!s || s.classes <= 0) return; s.classes -= 1; state.logs.unshift({ type: 'ATT', sid: s.id, name: s.name, date: new Date().toLocaleDateString(), iso: getTodayISO() }); save(); selectStAtt(s.id, s.name); alert("Ingreso OK"); };
+            document.getElementById('btn-confirm-attendance').onclick = function() { 
+                var s = state.students.find(x => x.id == state.currentStudentId); 
+                if(!s || s.classes <= 0) return; 
+                
+                var attDateVal = document.getElementById('att-date').value || getTodayISO();
+                var dateParts = attDateVal.split('-');
+                var displayDate = dateParts[2] + '/' + dateParts[1] + '/' + dateParts[0];
+                s.classes -= 1;
+                var stuLoc = s.location || '';
+                if (!stuLoc) {
+                    var username = sessionStorage.getItem('acad_username') || 'admin';
+                    var u = state.users.find(x => x.username.toLowerCase() === username.toLowerCase());
+                    stuLoc = u ? (u.location || 'Caracas') : 'Caracas';
+                }
+                state.logs.unshift({ 
+                    type: 'ATT', 
+                    sid: s.id, 
+                    name: s.name, 
+                    date: displayDate, 
+                    iso: attDateVal,
+                    user: sessionStorage.getItem('acad_username') || 'admin',
+                    location: stuLoc
+                }); 
+                save(); 
+                selectStAtt(s.id, s.name); 
+                alert("Ingreso OK"); 
+            };
+            document.getElementById('att-date').onchange = function() {
+                selectStAtt(state.currentStudentId, '', true);
+            };
+            var dashDateInput = document.getElementById('dash-date-input');
+            if (dashDateInput) {
+                dashDateInput.onchange = function() {
+                    renderDashboard(this.value);
+                };
+            }
             document.getElementById('p-received').oninput = updatePaySummary;
             document.getElementById('eg-date').onchange = function() {
                 var currentType = document.getElementById('eg-selected-type').value;
@@ -812,6 +1244,12 @@
                 }
                 stu.classes += cls;
                 var ext = ""; if(cur === 'BS') { var m = document.getElementById('bs-method').value; ext = " [" + m + (m==='Pago Móvil'?" Ref:"+document.getElementById('bs-ref').value:"") + "]"; }
+                var stuLoc = stu.location || '';
+                if (!stuLoc) {
+                    var username = sessionStorage.getItem('acad_username') || 'admin';
+                    var u = state.users.find(x => x.username.toLowerCase() === username.toLowerCase());
+                    stuLoc = u ? (u.location || 'Caracas') : 'Caracas';
+                }
                 state.logs.unshift({ 
                     id: 'log_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now(),
                     type: 'PAY', 
@@ -825,13 +1263,17 @@
                     iso: payDateVal, 
                     rate: rateApplied,
                     difUSD: actualDifUSD,
-                    cls: cls
+                    cls: cls,
+                    user: sessionStorage.getItem('acad_username') || 'admin',
+                    location: stuLoc
                 });
                 save(); renderDashboard(); 
                 setTimeout(() => { 
                     this.reset(); state.selectedItems = {}; state.isCortesia = false; state.isProcessingPay = false;
                     btn.innerText = "REGISTRADO"; document.getElementById('cortesia-toggle').classList.remove('active');
-                    document.getElementById('pay-student-box').style.display='none'; document.getElementById('pay-flow').classList.add('hidden'); alert("Listo");
+                    document.getElementById('pay-student-box').style.display='none'; document.getElementById('pay-flow').classList.add('hidden'); 
+                    document.getElementById('pay-student-search').value = "";
+                    alert("Listo");
                 }, 700);
             };
  
@@ -873,7 +1315,8 @@
                 
                 var id = Date.now();
                 if (!state.egresos) state.egresos = [];
-                state.egresos.push({ id: id, date: d, description: desc, amount: amt, cur: cur, rate: rateApplied });
+                var loc = document.getElementById('eg-location') ? document.getElementById('eg-location').value.trim() : '';
+                state.egresos.push({ id: id, date: d, description: desc, amount: amt, cur: cur, rate: rateApplied, user: sessionStorage.getItem('acad_username') || 'admin', location: loc });
                 save();
                 closeModals();
                 renderEgresos();
@@ -948,39 +1391,238 @@
         function handlePagoMovil() { var m = document.getElementById('bs-method').value, box = document.getElementById('bs-ref-container'); if(m === 'Pago Móvil') box.classList.remove('hidden'); else box.classList.add('hidden'); }
         function searchCommon(q, tId, cb) { var res = document.getElementById(tId); if(!q.trim()) { res.classList.add('hidden'); return; } var filt = state.students.filter(s => s.name.toLowerCase().includes(q.toLowerCase()) || (s.cedula||"").includes(q)); var html = filt.map(s => `<div class="search-item" onclick="${cb.name}('${s.id}','${s.name}'); document.getElementById('${tId}').classList.add('hidden');">${s.name} <small>(${s.cedula||'---'})</small></div>`).join(''); if(tId==='global-search-res' || tId==='pay-results') html += `<div class="search-item" onclick="quickNewStudent('${q}')" style="color:var(--p);">+ Registrar Alumno: "${q.toUpperCase()}"</div>`; res.innerHTML = html; res.classList.remove('hidden'); }
         function quickNewStudent(n) { window.openNewStudent(n.toUpperCase()); document.getElementById('st-auto-select').value="true"; }
-        function selectStAtt(id, name) { state.currentStudentId = id; var s = state.students.find(x => x.id == id); document.getElementById('att-student-card').style.display = 'block'; document.getElementById('att-name').innerText = s.name; document.getElementById('att-classes').innerText = s.classes; document.getElementById('att-balance').innerText = "$" + fNum(s.balance); var isExp = s.expiry ? (new Date() > new Date(s.expiry)) : true; document.getElementById('att-expiry').innerText = s.expiry || "Vence Hoy/Ayer"; document.getElementById('btn-confirm-attendance').disabled = (isExp || s.classes <= 0); }
-        function selectStPay(id, name) { var s = state.students.find(x => x.id == id); document.getElementById('p-sid').value = id; state.selectedItems = {}; state.isCortesia = false; document.getElementById('cortesia-toggle').classList.remove('active'); document.getElementById('pay-st-name').innerText = s.name; document.getElementById('p-status-balance').innerText = "$" + fNum(s.balance); document.getElementById('p-status-classes').innerText = s.classes; document.getElementById('p-status-expiry').innerText = s.expiry||"N/A"; document.getElementById('p-date').value = getTodayISO(); document.getElementById('pay-student-box').style.display='block'; document.getElementById('pay-flow').classList.remove('hidden'); renderPayChips(); handleBSControls(); }
+        function selectStAtt(id, name, keepDate = false) { 
+            state.currentStudentId = id; 
+            var s = state.students.find(x => x.id == id); 
+            document.getElementById('att-student-card').style.display = 'block'; 
+            document.getElementById('att-name').innerText = s.name; 
+            document.getElementById('att-classes').innerText = s.classes; 
+            document.getElementById('att-balance').innerText = "$" + fNum(s.balance); 
+            var balContainer = document.getElementById('att-balance-container');
+            if (balContainer) {
+                balContainer.classList.remove('balance-favorable', 'balance-deuda');
+                if (s.balance > 0) balContainer.classList.add('balance-favorable');
+                else if (s.balance < 0) balContainer.classList.add('balance-deuda');
+            }
+            
+            var dateInput = document.getElementById('att-date');
+            if (!keepDate && dateInput) {
+                dateInput.value = getTodayISO();
+            }
+            var selectedDate = (dateInput && dateInput.value) ? dateInput.value : getTodayISO();
+            
+            var isExp = s.expiry ? (selectedDate > s.expiry) : false; 
+            document.getElementById('att-expiry').innerText = s.expiry || "N/A"; 
+            
+            var btn = document.getElementById('btn-confirm-attendance');
+            if (isExp) {
+                btn.innerText = "MEMBRESÍA VENCIDA EL " + s.expiry.split('-').reverse().join('/');
+                btn.style.background = "#ef4444";
+                btn.disabled = true;
+            } else if (s.classes <= 0) {
+                btn.innerText = "SIN CLASES DISPONIBLES";
+                btn.style.background = "#64748b";
+                btn.disabled = true;
+            } else {
+                btn.innerText = "MARCAR ENTRADA";
+                btn.style.background = "#f59e0b";
+                btn.disabled = false;
+            }
+        }
+        function selectStPay(id, name) { 
+            var s = state.students.find(x => x.id == id); 
+            document.getElementById('p-sid').value = id; 
+            state.selectedItems = {}; 
+            state.isCortesia = false; 
+            document.getElementById('cortesia-toggle').classList.remove('active'); 
+            document.getElementById('pay-st-name').innerText = s.name; 
+            document.getElementById('p-status-balance').innerText = "$" + fNum(s.balance); 
+            var balContainer = document.getElementById('p-balance-container');
+            if (balContainer) {
+                balContainer.classList.remove('balance-favorable', 'balance-deuda');
+                if (s.balance > 0) balContainer.classList.add('balance-favorable');
+                else if (s.balance < 0) balContainer.classList.add('balance-deuda');
+            }
+            document.getElementById('p-status-classes').innerText = s.classes; 
+            document.getElementById('p-status-expiry').innerText = s.expiry||"N/A"; 
+            document.getElementById('p-date').value = getTodayISO(); 
+            document.getElementById('pay-student-box').style.display='block'; 
+            document.getElementById('pay-flow').classList.remove('hidden'); 
+            renderPayChips(); 
+            handleBSControls(); 
+        }
         function renderPayChips() { document.getElementById('pay-chips').innerHTML = Object.keys(state.prices).map(k => { var p = state.prices[k], qty = state.selectedItems[k] || 0; return `<div class="service-btn ${qty>0?'active':''}" onclick="toggleSrv('${k}')"><span class="qty-badge ${qty>0?'':'hidden'}">x${qty}</span><span class="type-tag">${p.type||'SER'}</span><br>${k}<br><b>$${p.usd}</b></div>`; }).join(''); }
         function toggleSrv(k) { var p = state.prices[k]; if(p.type === 'POP') state.selectedItems[k] = (state.selectedItems[k] || 0) + 1; else { if(state.selectedItems[k]) delete state.selectedItems[k]; else state.selectedItems[k] = 1; } renderPayChips(); syncPayPrice(); }
         function syncPayPrice() { if(state.isCortesia) return; var cur = document.getElementById('p-cur').value, tot = 0; Object.keys(state.selectedItems).forEach(k => { tot += ( (cur === 'USD' ? state.prices[k].usd : state.prices[k].bs) * state.selectedItems[k] ); }); document.getElementById('p-cost').value = tot.toFixed(2); document.getElementById('p-received').value = tot.toFixed(2); updatePaySummary(); }
         function updatePaySummary() { var req = parseFloat(document.getElementById('p-cost').value)||0, rec = parseFloat(document.getElementById('p-received').value)||0, c = document.getElementById('p-cur').value, sum = document.getElementById('p-summary'), txt = document.getElementById('p-summary-text'); sum.style.display='block'; var diff = rec - req; if(state.isCortesia) { txt.innerHTML = `INGRESO EXTERNO: ${rec} ${c}<br><small>(Mantiene balance neutro del alumno)</small>`; } else { txt.innerHTML = `RECIBIDO: ${rec} ${c}<br><small>${diff > 0 ? '+ '+diff.toFixed(2)+' favor' : (diff < 0 ? diff.toFixed(2)+' deuda' : 'PAGADO')}</small>`; } }
-        function renderDashboard() {
-            document.getElementById('dash-date-label').innerText = "Hoy: " + new Date().toLocaleDateString();
+        function renderDashboard(dateVal) {
+            var dateInput = document.getElementById('dash-date-input');
+            var selectedDate = dateVal || (dateInput ? dateInput.value : '') || getTodayISO();
+            if (dateInput && !dateInput.value) {
+                dateInput.value = selectedDate;
+            }
             
-            var todayISO = getTodayISO();
-            var pays = state.logs.filter(l => l.type === 'PAY' && l.iso === todayISO);
-            var egresos = (state.egresos || []).filter(e => e.date === todayISO);
+            var dateParts = selectedDate.split('-');
+            var displayDateString = dateParts[2] + '/' + dateParts[1] + '/' + dateParts[0];
             
-            // Separar la contabilidad por moneda física de transacción
+            document.getElementById('dash-date-label').innerText = "Día Seleccionado: " + displayDateString;
+            
+            var moveTitle = document.getElementById('dash-movements-title');
+            if (moveTitle) {
+                moveTitle.innerHTML = `<i class="fas fa-list-ul"></i> Movimientos Registrados (${displayDateString})`;
+            }
+            
+            var pays = state.logs.filter(l => l.type === 'PAY' && l.iso === selectedDate);
+            var egresos = (state.egresos || []).filter(e => e.date === selectedDate);
+            
+            // Separar ingresos por moneda física
             var incomeUSD = pays.filter(p => p.cur === 'USD').reduce((a,b) => a + b.amt, 0);
-            var expenseUSD = egresos.filter(e => e.cur === 'USD').reduce((a,b) => a + b.amount, 0);
-            var netUSD = incomeUSD - expenseUSD;
-            
             var incomeBS = pays.filter(p => p.cur === 'BS').reduce((a,b) => a + b.amt, 0);
+            
+            // Separar egresos por moneda física
+            var expenseUSD = egresos.filter(e => e.cur === 'USD').reduce((a,b) => a + b.amount, 0);
             var expenseBS = egresos.filter(e => e.cur === 'BS').reduce((a,b) => a + b.amount, 0);
+            
+            // Calcular netos
+            var netUSD = incomeUSD - expenseUSD;
             var netBS = incomeBS - expenseBS;
             
-            document.getElementById('stat-total-income').innerText = '$ ' + fNum(netUSD);
-            document.getElementById('stat-total-income-bs').innerText = fNum(netBS) + ' BS';
-            document.getElementById('stat-active-students').innerText = state.students.length;
+            // Actualizar textos financieros
+            document.getElementById('stat-income-usd').innerText = '$ ' + fNum(incomeUSD);
+            document.getElementById('stat-income-bs').innerText = fNum(incomeBS) + ' BS';
+            
+            document.getElementById('stat-expense-usd').innerText = '$ ' + fNum(expenseUSD);
+            document.getElementById('stat-expense-bs').innerText = fNum(expenseBS) + ' BS';
+            
+            var netUsdElem = document.getElementById('stat-net-usd');
+            var netBsElem = document.getElementById('stat-net-bs');
+            var netCard = document.getElementById('stat-net-card');
+            var netIcon = document.getElementById('stat-net-icon');
+            
+            netUsdElem.innerText = (netUSD >= 0 ? '+ ' : '') + '$ ' + fNum(netUSD);
+            netBsElem.innerText = (netBS >= 0 ? '+ ' : '') + fNum(netBS) + ' BS';
+            
+            // Color dinámico para Neto
+            if (netUSD > 0 || (netUSD === 0 && netBS >= 0)) {
+                netUsdElem.style.color = '#10b981';
+                netBsElem.style.color = '#10b981';
+                if (netCard) netCard.style.borderLeftColor = '#10b981';
+                if (netIcon) { netIcon.style.color = '#10b981'; netIcon.style.background = 'rgba(16,185,129,0.1)'; }
+            } else {
+                netUsdElem.style.color = '#ef4444';
+                netBsElem.style.color = '#ef4444';
+                if (netCard) netCard.style.borderLeftColor = '#ef4444';
+                if (netIcon) { netIcon.style.color = '#ef4444'; netIcon.style.background = 'rgba(239,68,68,0.1)'; }
+            }
+            
+            // Calcular Asistencia/Servicios y POP
+            var countOnlyPractica = 0;
+            var countPracticaGuardianes = 0;
+            var countPracticaJuego = 0;
+            var countOnlyJuego = 0;
+            var countCortesias = 0;
+            var countOtros = 0;
+            var popSales = {};
+            var totalPopQty = 0;
+            
+            // Asistencias desde la puerta (ATT logs)
+            var attLogs = state.logs.filter(l => l.type === 'ATT' && l.iso === selectedDate);
+            var countPuerta = attLogs.length;
+            
+            pays.forEach(p => {
+                var srvPart = p.srv.split(' [')[0].trim();
+                var srvLower = srvPart.toLowerCase();
+                
+                // Check if it is a POP material
+                var items = srvPart.replace("CORTESÍA PAGADA: ", "").split('+');
+                var hasPop = false;
+                
+                items.forEach(itemRaw => {
+                    var item = itemRaw.trim();
+                    var catalogItem = state.prices[item];
+                    var isPop = false;
+                    
+                    if (catalogItem && catalogItem.type === 'POP') {
+                        isPop = true;
+                    } else if (item.toLowerCase().includes('pop') || item.toLowerCase().includes('gorra') || item.toLowerCase().includes('camisa') || item.toLowerCase().includes('uniforme') || item.toLowerCase().includes('material')) {
+                        isPop = true;
+                    }
+                    
+                    if (isPop) {
+                        hasPop = true;
+                        var price = catalogItem ? catalogItem.usd : p.usd;
+                        if (!popSales[item]) {
+                            popSales[item] = { qty: 0, usd: 0 };
+                        }
+                        popSales[item].qty += 1;
+                        popSales[item].usd += price;
+                        totalPopQty += 1;
+                    }
+                });
+                
+                if (srvLower.includes('cortesía') || srvLower.includes('cortesia')) {
+                    countCortesias += 1;
+                } else {
+                    var hasPractica = srvLower.includes('practica') || srvLower.includes('práctica');
+                    var hasJuego = srvLower.includes('juego');
+                    var hasGuardianes = srvLower.includes('guardianes') || srvLower.includes('guardiane');
+                    
+                    if (hasPractica && hasJuego) {
+                        countPracticaJuego += 1;
+                    } else if (hasPractica) {
+                        if (hasGuardianes) {
+                            countPracticaGuardianes += 1;
+                        } else {
+                            countOnlyPractica += 1;
+                        }
+                    } else if (hasJuego) {
+                        countOnlyJuego += 1;
+                    } else {
+                        var srvNameOnly = srvPart.replace("CORTESÍA PAGADA: ", "");
+                        var catItem = state.prices[srvNameOnly];
+                        if (!(catItem && catItem.type === 'POP') && !hasPop) {
+                            countOtros += 1;
+                        }
+                    }
+                }
+            });
+            
+            // Actualizar textos de actividad
+            document.getElementById('stat-act-only-practica').innerText = countOnlyPractica;
+            document.getElementById('stat-act-practica-guardianes').innerText = countPracticaGuardianes;
+            document.getElementById('stat-act-practica-juego').innerText = countPracticaJuego;
+            document.getElementById('stat-act-only-juego').innerText = countOnlyJuego;
+            document.getElementById('stat-act-cortesias').innerText = countCortesias;
+            document.getElementById('stat-act-puerta').innerText = countPuerta;
+            document.getElementById('stat-act-otros').innerText = countOtros;
+            
+            // Contenedor POP
+            var popContainer = document.getElementById('stat-activity-pop-container');
+            var popList = document.getElementById('stat-activity-pop-list');
+            if (popContainer && popList) {
+                if (totalPopQty > 0) {
+                    popContainer.style.display = 'block';
+                    popList.innerHTML = Object.keys(popSales).map(k => {
+                        var s = popSales[k];
+                        return `<div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                            <span>${k} x${s.qty}</span>
+                            <b>$${fNum(s.usd)}</b>
+                        </div>`;
+                    }).join('');
+                } else {
+                    popContainer.style.display = 'none';
+                    popList.innerHTML = '';
+                }
+            }
             
             var movements = [];
             pays.forEach(p => {
+                var userTag = p.user ? `<span style="font-size: 0.7rem; color: #94a3b8; background: rgba(255, 255, 255, 0.05); padding: 2px 6px; border-radius: 4px; margin-left: 6px;"><i class="fas fa-user" style="font-size: 0.6rem; margin-right: 3px;"></i>${p.user}</span>` : '';
                 movements.push({
                     id: p.id,
                     deleteAction: 'window.delPayment',
                     date: p.date,
-                    desc: `<strong>${p.name}</strong> - ${p.srv}`,
+                    desc: `<strong>${p.name}</strong> - ${p.srv}${userTag}`,
                     type: 'Ingreso',
                     typeColor: '#10b981',
                     typeBg: 'rgba(16,185,129,0.15)',
@@ -993,11 +1635,12 @@
                 var rateApplied = eg.rate || getRateForDate(eg.date) || state.rate;
                 var eqUsd = eg.cur === 'USD' ? eg.amount : eg.amount / rateApplied;
                 var rateText = eg.cur === 'BS' ? ` <small style="color:#64748b;">(Tasa: ${fNum(rateApplied)})</small>` : '';
+                var userTag = eg.user ? `<span style="font-size: 0.7rem; color: #94a3b8; background: rgba(255, 255, 255, 0.05); padding: 2px 6px; border-radius: 4px; margin-left: 6px;"><i class="fas fa-user" style="font-size: 0.6rem; margin-right: 3px;"></i>${eg.user}</span>` : '';
                 movements.push({
                     id: eg.id,
                     deleteAction: 'window.delEgreso',
                     date: new Date(eg.date + 'T00:00:00').toLocaleDateString(),
-                    desc: `<strong>EGRESO:</strong> ${eg.description}${rateText}`,
+                    desc: `<strong>EGRESO:</strong> ${eg.description}${rateText}${userTag}`,
                     type: 'Egreso',
                     typeColor: '#ef4444',
                     typeBg: 'rgba(239,68,68,0.15)',
@@ -1010,22 +1653,28 @@
             var tbody = document.getElementById('dash-today-movements');
             if (tbody) {
                 if (movements.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 25px; color:#64748b;">No hay movimientos registrados hoy.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 25px; color:#64748b;">No hay movimientos registrados en esta fecha.</td></tr>`;
                 } else {
-                    tbody.innerHTML = movements.map(m => `
-                        <tr>
-                            <td>${m.date}</td>
-                            <td>${m.desc}</td>
-                            <td><span style="color:${m.typeColor}; background:${m.typeBg}; padding:4px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">${m.type}</span></td>
-                            <td align="right" style="color:${m.amountColor}; font-weight:700;">${m.amountOrig}</td>
-                            <td align="right" style="color:${m.amountColor}; font-weight:700;">${m.amountUsd}</td>
-                            <td align="center">
-                                <button class="icon-btn" style="color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="${m.deleteAction}('${m.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `).join('');
+                    tbody.innerHTML = movements.map(m => {
+                        var role = sessionStorage.getItem('acad_user_role') || 'admin';
+                        var deleteBtnHtml = (role === 'observador') ? '' : `
+                            <button class="icon-btn" style="color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="${m.deleteAction}('${m.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        `;
+                        return `
+                            <tr>
+                                <td>${m.date}</td>
+                                <td>${m.desc}</td>
+                                <td><span style="color:${m.typeColor}; background:${m.typeBg}; padding:4px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">${m.type}</span></td>
+                                <td align="right" style="color:${m.amountColor}; font-weight:700;">${m.amountOrig}</td>
+                                <td align="right" style="color:${m.amountColor}; font-weight:700;">${m.amountUsd}</td>
+                                <td align="center">
+                                    ${deleteBtnHtml}
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
                 }
             }
         }
@@ -1047,6 +1696,11 @@
         };
 
         window.delPayment = function(id) {
+            var role = sessionStorage.getItem('acad_user_role') || 'admin';
+            if (role === 'observador') {
+                alert("Acceso denegado: El rol de observador no permite eliminar pagos.");
+                return;
+            }
             var logEntry = state.logs.find(x => x.id === id);
             if (!logEntry) {
                 // Intento fallback si no tiene ID o difiere en memoria
@@ -1087,14 +1741,40 @@
                 alert("Pago eliminado y saldo del alumno revertido con éxito.");
             }
         };
-        function renderStudents() { document.getElementById('students-table-body').innerHTML = state.students.map(s => `<tr><td>${s.name}</td><td>${s.cedula||'---'}</td><td align="center">${s.classes}</td><td align="center"><b class="${s.balance<0?'balance-neg':'balance-pos'}">$${fNum(s.balance)}</b></td><td align="center"><button class="icon-btn" onclick="editStu('${s.id}')"><i class="fas fa-edit"></i></button> <button class="btn-primary" style="padding:6px 12px; font-size:0.7rem;" onclick="showHist('${s.id}', '${s.name}')">Log</button> <button class="icon-btn" style="color:#ef4444;" onclick="delStu('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`).join(''); }
+        function renderStudents() { 
+            document.getElementById('students-table-body').innerHTML = state.students.map(s => {
+                var userTag = s.user ? `<span style="font-size: 0.7rem; color: #94a3b8; background: rgba(255, 255, 255, 0.05); padding: 2px 6px; border-radius: 4px; margin-left: 6px;"><i class="fas fa-user" style="font-size: 0.6rem; margin-right: 3px;"></i>${s.user}</span>` : '';
+                return `<tr><td><strong>${s.name}</strong>${userTag}</td><td>${s.cedula||'---'}</td><td align="center">${s.classes}</td><td align="center"><b class="${s.balance<0?'balance-neg':'balance-pos'}">$${fNum(s.balance)}</b></td><td align="center"><button class="icon-btn" onclick="editStu('${s.id}')"><i class="fas fa-edit"></i></button> <button class="btn-primary" style="padding:6px 12px; font-size:0.7rem;" onclick="showHist('${s.id}', '${s.name}')">Log</button> <button class="icon-btn" style="color:#ef4444;" onclick="delStu('${s.id}')"><i class="fas fa-trash"></i></button></td></tr>`;
+            }).join(''); 
+        }
         function editStu(id) { var s = state.students.find(x => x.id == id); document.getElementById('modal-st-title').innerText = "Editar Alumno"; document.getElementById('st-name').value = s.name; document.getElementById('st-ci').value = s.cedula||""; document.getElementById('st-edit-id').value = id; document.getElementById('modal-student').classList.add('active'); }
-        function delStu(id) { if(confirm("Borrar?")) { state.students = state.students.filter(x => x.id != id); save(); renderStudents(); } }
-        window.resetOnlyStudents = function() { if(confirm("Limpiar Alumnos?")) { state.students = []; state.logs = []; save(); location.reload(); } }
-        window.dangerResetAll = function() { if(confirm("RESET TOTAL?")) { localStorage.clear(); location.reload(); } }
+        function delStu(id) { 
+            var role = sessionStorage.getItem('acad_user_role') || 'admin';
+            if (role === 'observador') {
+                alert("Acceso denegado: El rol de observador no permite eliminar alumnos.");
+                return;
+            }
+            if(confirm("Borrar?")) { state.students = state.students.filter(x => x.id != id); save(); renderStudents(); } 
+        }
+        window.resetOnlyStudents = function() { 
+            var role = sessionStorage.getItem('acad_user_role') || 'admin';
+            if (role === 'observador') {
+                alert("Acceso denegado: El rol de observador no permite reiniciar alumnos.");
+                return;
+            }
+            if(confirm("Limpiar Alumnos?")) { state.students = []; state.logs = []; save(); location.reload(); } 
+        }
+        window.dangerResetAll = function() { 
+            var role = sessionStorage.getItem('acad_user_role') || 'admin';
+            if (role === 'observador') {
+                alert("Acceso denegado: El rol de observador no permite reiniciar el sistema.");
+                return;
+            }
+            if(confirm("RESET TOTAL?")) { localStorage.clear(); location.reload(); } 
+        }
         function showHist(sid, name) { document.getElementById('hist-name').innerText = name; var s = state.students.find(x => x.id == sid); document.getElementById('hist-st-balance').innerHTML = `<span class="${s.balance<0?'balance-neg':'balance-pos'}">Bal: $${fNum(s.balance)}</span>`; var f = state.logs.filter(l => l.sid == sid); document.getElementById('hist-list').innerHTML = f.length === 0 ? "<p>Vacío.</p>" : f.map(l => { var mon = (l.cur === 'BS' || (l.srv && (l.srv.includes('Móvil') || l.srv.includes('Ref:')))) ? 'BS' : '$'; return `<div class="glass-panel" style="padding:15px; margin-bottom:10px;"><div style="display:flex; justify-content:space-between; font-size:0.7rem; color:#64748b;"><b>${l.type==='PAY'?'RECIBO':'PUERTA'}</b><span>${l.date}</span></div><div style="margin:5px 0; font-size:0.85rem;">${l.srv || 'Entrada Marcada'}</div>${l.type==='PAY' ? `<div style="color:var(--p); font-weight:900;">${mon} ${fNum(l.amt)}</div>` : ''}</div>`; }).join(''); document.getElementById('modal-history').classList.add('active'); }
-        function runDailyReport() { var d = document.getElementById('report-date-input').value; if(!d) return; showReport("CORTE DIA: " + d, state.logs.filter(l => l.iso === d), d, false); }
-        function runMonthlyReport() { var m = document.getElementById('report-month-input').value; if(!m) return; showReport("CORTE MES: " + m, state.logs.filter(l => l.iso && l.iso.startsWith(m)), m, true); }
+        function runDailyReport() { var d = document.getElementById('report-date-input').value; if(!d) return; showReport("CORTE DIA: " + d, window.filterLogsForReport(state.logs.filter(l => l.iso === d)), d, false); }
+        function runMonthlyReport() { var m = document.getElementById('report-month-input').value; if(!m) return; showReport("CORTE MES: " + m, window.filterLogsForReport(state.logs.filter(l => l.iso && l.iso.startsWith(m))), m, true); }
         function showReport(title, logs, filter, isMonthly) { 
             document.getElementById('report-result-area').classList.remove('hidden'); 
             document.getElementById('report-title').innerText = title; 
@@ -1105,10 +1785,10 @@
             var pB = pays.filter(l => l.cur === 'BS').reduce((a,b) => a+b.amt, 0); 
             
             // Filtrar y calcular egresos (gastos)
-            var matchingEgresos = state.egresos.filter(eg => {
+            var matchingEgresos = window.filterEgresosForReport(state.egresos.filter(eg => {
                 if (isMonthly) return eg.date && eg.date.startsWith(filter);
                 return eg.date === filter;
-            });
+            }));
             var egUSD = matchingEgresos.filter(eg => eg.cur === 'USD').reduce((a,b) => a+b.amount, 0);
             var egBS = matchingEgresos.filter(eg => eg.cur === 'BS').reduce((a,b) => a+b.amount, 0);
             var egTotalEquivalent = matchingEgresos.reduce((a,b) => a + (b.cur === 'USD' ? b.amount : b.amount / (b.rate || getRateForDate(b.date))), 0);
@@ -1171,63 +1851,382 @@
                 });
             }); 
             
-            var cHtml = ""; 
-            Object.keys(counts).forEach(k => { 
-                if(counts[k] > 0) cHtml += `<div class="count-row"><span class="count-name">${k}</span><span class="count-qty">x${counts[k]}</span></div>`; 
-            }); 
-            
-            document.getElementById('report-item-counts-list').innerHTML = cHtml || "<p style='text-align:center;'>Vacio</p>"; 
-            
-            var cI = counts['Inscripción'] || pays.filter(l => l.srv.toLowerCase().includes('ins')).length, 
-                cM = counts['Mensualidad'] || pays.filter(l => (l.srv.toLowerCase().includes('men') || l.srv.toLowerCase().includes('mem'))).length, 
-                cA = logs.filter(l => l.type === 'ATT').length; 
-            
-            document.getElementById('report-kpis').innerHTML = `<div class="status-chip"><label>Inscritos</label><b>${cI}</b></div><div class="status-chip"><label>Mensuales</label><b>${cM}</b></div><div class="status-chip"><label>Puerta</label><b>${cA}</b></div>`; 
-            
-            document.getElementById('report-items-list').innerHTML = pays.length === 0 ? "<p style='text-align:center;'>Ningún recibo.</p>" : pays.map(l => {
-                var rateNote = l.cur === 'BS' ? `<small style="color:#64748b; font-weight:normal; margin-left: 8px;">(Tasa: ${fNum(l.rate || getRateForDate(l.iso))} BS)</small>` : '';
-                return `
-                    <div class="glass-panel" style="padding:15px; margin-bottom:10px; position:relative;">
-                        <button class="icon-btn" style="position:absolute; right:15px; bottom:15px; color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="window.delPayment('${l.id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                        <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding-right: 30px;">
-                            <b>${l.name}</b>
-                            <span>${l.date}</span>
+            if (isMonthly) {
+                // Ocultar elementos diarios y mostrar dashboard mensual
+                document.getElementById('report-inventory-container').classList.add('hidden');
+                document.getElementById('report-kpis').classList.add('hidden');
+                document.getElementById('report-details-container').classList.add('hidden');
+                document.getElementById('report-monthly-dashboard').classList.remove('hidden');
+
+                // Calcular KPIs para el mes
+                var cI = counts['Inscripción'] || counts['Inscripcion'] || pays.filter(l => l.srv.toLowerCase().includes('ins')).length;
+                var cM = counts['Mensualidad'] || pays.filter(l => (l.srv.toLowerCase().includes('men') || l.srv.toLowerCase().includes('mem'))).length;
+
+                // Calcular días de clase programados según configuración del mes
+                var scheduledDates = [];
+                var parts = filter.split('-'); // filter tiene formato YYYY-MM
+                var year = parseInt(parts[0]);
+                var month = parseInt(parts[1]);
+                var numDays = new Date(year, month, 0).getDate();
+                for (var day = 1; day <= numDays; day++) {
+                    var date = new Date(year, month - 1, day);
+                    var dayOfWeek = date.getDay(); // 0 = Domingo, 1 = Lunes, etc.
+                    if ((state.workdays || [1, 2, 3]).includes(dayOfWeek)) {
+                        var yyyy = year;
+                        var mm = String(month).padStart(2, '0');
+                        var dd = String(day).padStart(2, '0');
+                        scheduledDates.push(`${yyyy}-${mm}-${dd}`);
+                    }
+                }
+
+                // Identificar fechas reales trabajadas en el mes
+                var activeDates = new Set();
+                logs.forEach(l => {
+                    if (l.iso) activeDates.add(l.iso);
+                });
+                matchingEgresos.forEach(eg => {
+                    if (eg.date) activeDates.add(eg.date);
+                });
+
+                var workedDays = [];
+                var notWorkedDays = [];
+
+                var allActiveDatesArr = Array.from(activeDates).sort();
+                allActiveDatesArr.forEach(d => {
+                    if (d.startsWith(filter)) {
+                        workedDays.push(d);
+                    }
+                });
+
+                scheduledDates.forEach(d => {
+                    if (!activeDates.has(d)) {
+                        notWorkedDays.push(d);
+                    }
+                });
+
+                var daysOfWeekNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                function getDayLabel(dStr) {
+                    var dateParts = dStr.split('-');
+                    var dObj = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+                    var name = daysOfWeekNames[dObj.getDay()];
+                    return `${name} ${dateParts[2]}/${dateParts[1]}`;
+                }
+
+                var workedHtml = workedDays.length === 0 ? '<p style="color:#64748b; font-size:0.8rem; margin:0;">Ningún día con actividad.</p>' : workedDays.map(d => `<div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:0.85rem;"><i class="fas fa-check-circle" style="color:#10b981;"></i> <span>${getDayLabel(d)}</span></div>`).join('');
+                var notWorkedHtml = notWorkedDays.length === 0 ? '<p style="color:#64748b; font-size:0.8rem; margin:0;">Ningún día sin actividad.</p>' : notWorkedDays.map(d => {
+                    var reason = (state.non_workday_reasons && state.non_workday_reasons[d]) || '';
+                    return `
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:0.85rem; flex-wrap: wrap;">
+                            <span style="opacity: 0.65; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-times-circle" style="color:#ef4444;"></i> 
+                                <span>${getDayLabel(d)}</span>
+                            </span>
+                            <span class="reason-print" style="font-weight:bold; font-size:0.8rem; color:#ef4444; margin-left:5px; display:none;">${reason ? ' ('+reason+')' : ''}</span>
+                            <select class="reason-select" onchange="window.setNonWorkdayReason('${d}', this.value)" style="background:rgba(15,23,42,0.8); color:#f8fafc; border:1px solid rgba(255,255,255,0.1); border-radius:6px; padding:2px 6px; font-size:0.75rem; margin-left:6px; outline:none; max-width:160px; cursor:pointer;">
+                                <option value="">-- Registrar Motivo --</option>
+                                <option value="Lluvia" ${reason === 'Lluvia' ? 'selected' : ''}>Lluvia 🌧️</option>
+                                <option value="Evento deportivo externo" ${reason === 'Evento deportivo externo' ? 'selected' : ''}>Evento Externo 🏟️</option>
+                                <option value="Evento deportivo interno" ${reason === 'Evento deportivo interno' ? 'selected' : ''}>Evento Interno ⚾</option>
+                                <option value="Feriado/Otro" ${reason === 'Feriado/Otro' ? 'selected' : ''}>Feriado/Otro 🗓️</option>
+                            </select>
                         </div>
-                        <div style="font-size:0.8rem; color:#64748b; margin-top:4px;">${l.srv}</div>
-                        <div style="color:var(--p); font-weight:900; margin-top:5px;">${l.cur||'USD'} ${fNum(l.amt)} ${rateNote}</div>
+                    `;
+                }).join('');
+
+                // Renderizar el Dashboard Mensual Premium
+                var monthlyDashboardHtml = `
+                    <div class="glass-panel" style="padding: 25px; margin-bottom: 25px; border-color: var(--p);">
+                        <h2 style="color:var(--p); font-size:1.3rem; margin-top:0; margin-bottom:20px; text-transform:uppercase; letter-spacing:0.5px; text-align:center; display:flex; align-items:center; justify-content:center; gap:10px;">
+                            <i class="fas fa-chart-line"></i> Dashboard de Cierre Mensual: ${filter.split('-').reverse().join('/')}
+                        </h2>
+                        
+                        <!-- Fila 1: KPIs Principales -->
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:25px;">
+                            <!-- KPI Inscripciones -->
+                            <div class="glass-panel" style="padding:20px; text-align:center; border-left:4px solid #0ea5e9; background:rgba(14,165,233,0.03); margin-top:0;">
+                                <div style="font-size:1.8rem; color:#0ea5e9; margin-bottom:5px;"><i class="fas fa-user-plus"></i></div>
+                                <span style="font-size:0.75rem; color:#94a3b8; text-transform:uppercase; font-weight:800; display:block; margin-bottom:5px;">Inscripciones</span>
+                                <b style="font-size:2.2rem; color:white;">${cI}</b>
+                            </div>
+                            
+                            <!-- KPI Membresías -->
+                            <div class="glass-panel" style="padding:20px; text-align:center; border-left:4px solid #10b981; background:rgba(16,185,129,0.03); margin-top:0;">
+                                <div style="font-size:1.8rem; color:#10b981; margin-bottom:5px;"><i class="fas fa-id-card"></i></div>
+                                <span style="font-size:0.75rem; color:#94a3b8; text-transform:uppercase; font-weight:800; display:block; margin-bottom:5px;">Membresías</span>
+                                <b style="font-size:2.2rem; color:white;">${cM}</b>
+                            </div>
+                            
+                            <!-- KPI Prácticas Totales -->
+                            <div class="glass-panel" style="padding:20px; text-align:center; border-left:4px solid #facc15; background:rgba(250,204,21,0.03); margin-top:0;">
+                                <div style="font-size:1.8rem; color:#facc15; margin-bottom:5px;"><i class="fas fa-baseball-ball"></i></div>
+                                <span style="font-size:0.75rem; color:#94a3b8; text-transform:uppercase; font-weight:800; display:block; margin-bottom:5px;">Prácticas Totales</span>
+                                <b style="font-size:2.2rem; color:white;">${
+                                    Object.keys(counts)
+                                        .filter(k => k.toLowerCase().includes('practica') || k.toLowerCase().includes('práctica'))
+                                        .reduce((acc, k) => acc + (counts[k] || 0), 0)
+                                }</b>
+                            </div>
+                        </div>
+                        
+                        <!-- Fila 2: Prácticas Desglosadas y Calendario de Actividad -->
+                        <div style="display:grid; grid-template-columns: 1fr 1.2fr; gap:20px; margin-bottom:25px; align-items: stretch;">
+                            
+                            <!-- Prácticas Desglosadas -->
+                            <div class="glass-panel" style="padding:20px; border-color: rgba(250,204,21,0.15); margin-top:0;">
+                                <h3 style="color:#facc15; font-size:0.95rem; margin-top:0; margin-bottom:15px; text-transform:uppercase; display:flex; align-items:center; gap:8px;">
+                                    <i class="fas fa-tasks"></i> Prácticas Desglosadas
+                                </h3>
+                                <div style="display:flex; flex-direction:column; gap:10px;">
+                                    ${
+                                        Object.keys(counts)
+                                            .filter(k => k.toLowerCase().includes('practica') || k.toLowerCase().includes('práctica'))
+                                            .map(k => {
+                                                return `
+                                                    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:8px;">
+                                                        <span style="font-size:0.85rem; font-weight:500;">${k}</span>
+                                                        <span style="background:#facc15; color:#0f172a; padding:3px 10px; border-radius:12px; font-weight:800; font-size:0.8rem;">x${counts[k]}</span>
+                                                    </div>
+                                                `;
+                                            }).join('') || '<p style="color:#64748b; font-size:0.85rem; text-align:center; margin:0;">Ninguna práctica registrada.</p>'
+                                    }
+                                </div>
+                            </div>
+                            
+                            <!-- Días Trabajados vs No Trabajados -->
+                            <div class="glass-panel" style="padding:20px; border-color: rgba(16,185,129,0.15); margin-top:0;">
+                                <h3 style="color:#10b981; font-size:0.95rem; margin-top:0; margin-bottom:15px; text-transform:uppercase; display:flex; align-items:center; gap:8px;">
+                                    <i class="fas fa-calendar-alt"></i> Control de Calendario
+                                </h3>
+                                
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; max-height: 250px; overflow-y: auto; padding-right: 5px;">
+                                    <div>
+                                        <h4 style="margin-top:0; margin-bottom:10px; color:#10b981; font-size:0.8rem; border-bottom:1px solid rgba(16,185,129,0.2); padding-bottom:5px; text-transform:uppercase; display:flex; justify-content:space-between; align-items:center;">
+                                            <span>Trabajados</span> <b style="background:#10b981; color:#0f172a; padding:2px 6px; border-radius:6px; font-size:0.75rem;">x${workedDays.length}</b>
+                                        </h4>
+                                        <div style="display:flex; flex-direction:column; gap:4px;">
+                                            ${workedHtml}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 style="margin-top:0; margin-bottom:10px; color:#ef4444; font-size:0.8rem; border-bottom:1px solid rgba(239,68,68,0.2); padding-bottom:5px; text-transform:uppercase; display:flex; justify-content:space-between; align-items:center;">
+                                            <span>No Trabajados</span> <b style="background:#ef4444; color:white; padding:2px 6px; border-radius:6px; font-size:0.75rem;">x${notWorkedDays.length}</b>
+                                        </h4>
+                                        <div style="display:flex; flex-direction:column; gap:4px;">
+                                            ${notWorkedHtml}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fila 3: Balance del Mes Detallado por Moneda -->
+                        <div class="glass-panel" style="padding:20px; border-color: rgba(14,165,233,0.15); background: rgba(14,165,233,0.01); margin-top:0;">
+                            <h3 style="color:#0ea5e9; font-size:0.95rem; margin-top:0; margin-bottom:15px; text-transform:uppercase; display:flex; align-items:center; gap:8px;">
+                                <i class="fas fa-money-bill-wave"></i> Finanzas por Moneda
+                            </h3>
+                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:20px;">
+                                <!-- Panel USD -->
+                                <div style="padding:15px; background:rgba(0,0,0,0.15); border:1px solid rgba(16,185,129,0.2); border-radius:12px;">
+                                    <h4 style="margin-top:0; color:#10b981; font-size:0.85rem; text-transform:uppercase; border-bottom:1px solid rgba(16,185,129,0.1); padding-bottom:6px; display:flex; align-items:center; gap:6px;"><i class="fas fa-dollar-sign"></i> Flujo de Divisas (USD)</h4>
+                                    <div style="display:flex; flex-direction:column; gap:8px; font-size:0.85rem; margin-top:10px;">
+                                        <div style="display:flex; justify-content:space-between;">
+                                            <span style="color:#94a3b8;">Ingresos USD:</span>
+                                            <b style="color:#10b981;">+$ ${fNum(pU)}</b>
+                                        </div>
+                                        <div style="display:flex; justify-content:space-between;">
+                                            <span style="color:#94a3b8;">Egresos USD:</span>
+                                            <b style="color:#ef4444;">-$ ${fNum(egUSD)}</b>
+                                        </div>
+                                        <hr style="opacity:0.1; margin:8px 0; border:0; border-top:1px solid var(--border);">
+                                        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1rem;">
+                                            <span>Balance USD:</span>
+                                            <span style="color:${netUSD >= 0 ? '#10b981' : '#ef4444'};">${netUSD >= 0 ? '+' : ''}$ ${fNum(netUSD)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Panel BS -->
+                                <div style="padding:15px; background:rgba(0,0,0,0.15); border:1px solid rgba(250,204,21,0.2); border-radius:12px;">
+                                    <h4 style="margin-top:0; color:#facc15; font-size:0.85rem; text-transform:uppercase; border-bottom:1px solid rgba(250,204,21,0.1); padding-bottom:6px; display:flex; align-items:center; gap:6px;"><i class="fas fa-coins"></i> Flujo de Moneda Local (BS)</h4>
+                                    <div style="display:flex; flex-direction:column; gap:8px; font-size:0.85rem; margin-top:10px;">
+                                        <div style="display:flex; justify-content:space-between;">
+                                            <span style="color:#94a3b8;">Ingresos BS:</span>
+                                            <b style="color:#facc15;">+${fNum(pB)} BS</b>
+                                        </div>
+                                        <div style="display:flex; justify-content:space-between;">
+                                            <span style="color:#94a3b8;">Egresos BS:</span>
+                                            <b style="color:#ef4444;">-${fNum(egBS)} BS</b>
+                                        </div>
+                                        <hr style="opacity:0.1; margin:8px 0; border:0; border-top:1px solid var(--border);">
+                                        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1rem;">
+                                            <span>Balance BS:</span>
+                                            <span style="color:${netBS >= 0 ? '#facc15' : '#ef4444'};">${netBS >= 0 ? '+' : ''}${fNum(netBS)} BS</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 `;
-            }).join(''); 
-            
-            // Renderizar la lista de gastos en el cierre diario
-            var container = document.getElementById('report-egresos-container');
-            if (container) {
-                if (matchingEgresos.length > 0) {
-                    var egHtml = `
-                        <div class="glass-panel" style="margin-top:25px; border-color: #ef4444; background: rgba(239, 68, 68, 0.02);">
-                            <h3 style="color:#ef4444; font-size:0.9rem; padding:20px; border-bottom:1px solid var(--border); margin:0; text-transform:uppercase;"><i class="fas fa-hand-holding-usd"></i> Desglose de Egresos / Gastos</h3>
-                            <div style="padding:15px; max-height:250px; overflow-y:auto;">
-                    `;
-                    egHtml += matchingEgresos.map(eg => {
-                        var rUsed = eg.rate || getRateForDate(eg.date);
-                        var rateNote = eg.cur === 'BS' ? `<small style="color:#64748b; font-weight:normal; margin-left: 8px;">(Tasa: ${fNum(rUsed)} BS)</small>` : '';
-                        return `
-                        <div class="glass-panel" style="padding:15px; margin-bottom:10px; border: 1px solid rgba(239,68,68,0.2); position:relative;">
-                            <button class="icon-btn" style="position:absolute; right:15px; bottom:15px; color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="window.delEgreso('${eg.id}')">
+                document.getElementById('report-monthly-dashboard').innerHTML = monthlyDashboardHtml;
+            } else {
+                // Mostrar elementos diarios y ocultar el dashboard mensual
+                document.getElementById('report-inventory-container').classList.remove('hidden');
+                document.getElementById('report-kpis').classList.remove('hidden');
+                document.getElementById('report-details-container').classList.remove('hidden');
+                document.getElementById('report-monthly-dashboard').classList.add('hidden');
+
+                // Renderizar items del cierre diario
+                var cHtml = ""; 
+                Object.keys(counts).forEach(k => { 
+                    if(counts[k] > 0) cHtml += `<div class="count-row"><span class="count-name">${k}</span><span class="count-qty">x${counts[k]}</span></div>`; 
+                }); 
+                
+                document.getElementById('report-item-counts-list').innerHTML = cHtml || "<p style='text-align:center; margin:0;'>Vacío</p>"; 
+                
+                var cI = counts['Inscripción'] || counts['Inscripcion'] || pays.filter(l => l.srv.toLowerCase().includes('ins')).length, 
+                    cM = counts['Mensualidad'] || pays.filter(l => (l.srv.toLowerCase().includes('men') || l.srv.toLowerCase().includes('mem'))).length, 
+                    cA = logs.filter(l => l.type === 'ATT').length; 
+                
+                document.getElementById('report-kpis').innerHTML = `<div class="status-chip"><label>Inscritos</label><b>${cI}</b></div><div class="status-chip"><label>Mensuales</label><b>${cM}</b></div><div class="status-chip"><label>Puerta</label><b>${cA}</b></div>`; 
+                
+                document.getElementById('report-items-list').innerHTML = pays.length === 0 ? "<p style='text-align:center; margin:0;'>Ningún recibo.</p>" : pays.map(l => {
+                    var rateNote = l.cur === 'BS' ? `<small style="color:#64748b; font-weight:normal; margin-left: 8px;">(Tasa: ${fNum(l.rate || getRateForDate(l.iso))} BS)</small>` : '';
+                    return `
+                        <div class="glass-panel" style="padding:15px; margin-bottom:10px; position:relative;">
+                            <button class="icon-btn" style="position:absolute; right:15px; bottom:15px; color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="window.delPayment('${l.id}')">
                                 <i class="fas fa-trash"></i>
                             </button>
                             <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding-right: 30px;">
-                                <b>${eg.description}</b>
-                                <span>${new Date(eg.date + 'T00:00:00').toLocaleDateString()}</span>
+                                <b>${l.name}</b>
+                                <span>${l.date}</span>
                             </div>
-                            <div style="color:#ef4444; font-weight:900; margin-top:5px;">-${eg.cur === 'USD' ? '$' : ''} ${fNum(eg.amount)} ${eg.cur === 'BS' ? 'BS' : ''} ${rateNote}</div>
+                            <div style="font-size:0.8rem; color:#64748b; margin-top:4px;">${l.srv}</div>
+                            <div style="color:var(--p); font-weight:900; margin-top:5px;">${l.cur||'USD'} ${fNum(l.amt)} ${rateNote}</div>
                         </div>
+                    `;
+                }).join('');
+            }
+            
+            // Renderizar la lista de gastos (cierre diario) o el resumen agrupado (cierre mensual)
+            var container = document.getElementById('report-egresos-container');
+            if (container) {
+                if (matchingEgresos.length > 0) {
+                    if (isMonthly) {
+                        // Calcular agrupados
+                        var fixedSummary = {};
+                        var variableSummary = {};
+                        
+                        matchingEgresos.forEach(eg => {
+                            var rateApplied = eg.rate || getRateForDate(eg.date) || state.rate;
+                            var amtBS = eg.cur === 'BS' ? eg.amount : eg.amount * rateApplied;
+                            var amtUSD = eg.cur === 'USD' ? eg.amount : eg.amount / rateApplied;
+                            
+                            var isFixed = false;
+                            var conceptName = eg.description;
+                            
+                            var match = eg.description.match(/(.+)\s+x(\d+)$/);
+                            if (match) {
+                                var potentialConcept = match[1].trim();
+                                if (state.egresos_catalog && state.egresos_catalog.hasOwnProperty(potentialConcept)) {
+                                    isFixed = true;
+                                    conceptName = potentialConcept;
+                                }
+                            } else {
+                                if (state.egresos_catalog && state.egresos_catalog.hasOwnProperty(eg.description)) {
+                                    isFixed = true;
+                                }
+                            }
+                            
+                            if (isFixed) {
+                                if (!fixedSummary[conceptName]) {
+                                    fixedSummary[conceptName] = { bs: 0, usd: 0 };
+                                }
+                                fixedSummary[conceptName].bs += amtBS;
+                                fixedSummary[conceptName].usd += amtUSD;
+                            } else {
+                                if (!variableSummary[conceptName]) {
+                                    variableSummary[conceptName] = { bs: 0, usd: 0 };
+                                }
+                                variableSummary[conceptName].bs += amtBS;
+                                variableSummary[conceptName].usd += amtUSD;
+                            }
+                        });
+                        
+                        var egHtml = `
+                            <div class="glass-panel" style="margin-top:25px; border-color: #ef4444; background: rgba(239, 68, 68, 0.02);">
+                                <h3 style="color:#ef4444; font-size:0.9rem; padding:20px; border-bottom:1px solid var(--border); margin:0; text-transform:uppercase;"><i class="fas fa-hand-holding-usd"></i> Resumen de Egresos del Mes</h3>
+                                <div style="padding:20px; display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
                         `;
-                    }).join('');
-                    egHtml += `</div></div>`;
-                    container.innerHTML = egHtml;
+                        
+                        // Render fijos
+                        var fixedKeys = Object.keys(fixedSummary);
+                        var fixedListHtml = fixedKeys.map(k => {
+                            return `
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.03);">
+                                    <span style="font-size:0.85rem; font-weight:500;"><i class="fas fa-tag" style="color:#ef4444; font-size:0.75rem; margin-right:6px;"></i> ${k}</span>
+                                    <span style="font-size:0.85rem; font-weight:bold; color:#ef4444;">$ ${fNum(fixedSummary[k].usd)} / ${fNum(fixedSummary[k].bs)} BS</span>
+                                </div>
+                            `;
+                        }).join('');
+                        
+                        egHtml += `
+                            <div class="glass-panel" style="padding:15px; border-color: rgba(239,68,68,0.2); margin-top:0;">
+                                <h4 style="margin-top:0; color:#ef4444; font-size:0.8rem; border-bottom:1px solid rgba(239,68,68,0.2); padding-bottom:5px; text-transform:uppercase;">Egresos Fijos Totales</h4>
+                                <div style="display:flex; flex-direction:column;">
+                                    ${fixedListHtml || '<p style="color:#64748b; font-size:0.8rem; margin:0;">Ninguno.</p>'}
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Render variables
+                        var varKeys = Object.keys(variableSummary);
+                        var varListHtml = varKeys.map(k => {
+                            return `
+                                <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.03);">
+                                    <span style="font-size:0.85rem; font-weight:500;"><i class="fas fa-edit" style="color:#ef4444; font-size:0.75rem; margin-right:6px;"></i> ${k}</span>
+                                    <span style="font-size:0.85rem; font-weight:bold; color:#ef4444;">$ ${fNum(variableSummary[k].usd)} / ${fNum(variableSummary[k].bs)} BS</span>
+                                </div>
+                            `;
+                        }).join('');
+                        
+                        egHtml += `
+                            <div class="glass-panel" style="padding:15px; border-color: rgba(239,68,68,0.2); margin-top:0;">
+                                <h4 style="margin-top:0; color:#ef4444; font-size:0.8rem; border-bottom:1px solid rgba(239,68,68,0.2); padding-bottom:5px; text-transform:uppercase;">Gastos Variables Totales</h4>
+                                <div style="display:flex; flex-direction:column;">
+                                    ${varListHtml || '<p style="color:#64748b; font-size:0.8rem; margin:0;">Ninguno.</p>'}
+                                </div>
+                            </div>
+                        `;
+                        
+                        egHtml += `</div></div>`;
+                        container.innerHTML = egHtml;
+                    } else {
+                        // Cierre diario - listado detallado
+                        var egHtml = `
+                            <div class="glass-panel" style="margin-top:25px; border-color: #ef4444; background: rgba(239, 68, 68, 0.02);">
+                                <h3 style="color:#ef4444; font-size:0.9rem; padding:20px; border-bottom:1px solid var(--border); margin:0; text-transform:uppercase;"><i class="fas fa-hand-holding-usd"></i> Desglose de Egresos / Gastos</h3>
+                                <div style="padding:15px; max-height:250px; overflow-y:auto;">
+                        `;
+                        egHtml += matchingEgresos.map(eg => {
+                            var rUsed = eg.rate || getRateForDate(eg.date);
+                            var rateNote = eg.cur === 'BS' ? `<small style="color:#64748b; font-weight:normal; margin-left: 8px;">(Tasa: ${fNum(rUsed)} BS)</small>` : '';
+                            return `
+                            <div class="glass-panel" style="padding:15px; margin-bottom:10px; border: 1px solid rgba(239,68,68,0.2); position:relative;">
+                                <button class="icon-btn" style="position:absolute; right:15px; bottom:15px; color:#ef4444; border:none; background:transparent; cursor:pointer;" onclick="window.delEgreso('${eg.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                                <div style="display:flex; justify-content:space-between; font-size:0.75rem; padding-right: 30px;">
+                                    <b>${eg.description}</b>
+                                    <span>${new Date(eg.date + 'T00:00:00').toLocaleDateString()}</span>
+                                </div>
+                                <div style="color:#ef4444; font-weight:900; margin-top:5px;">-${eg.cur === 'USD' ? '$' : ''} ${fNum(eg.amount)} ${eg.cur === 'BS' ? 'BS' : ''} ${rateNote}</div>
+                            </div>
+                            `;
+                        }).join('');
+                        egHtml += `</div></div>`;
+                        container.innerHTML = egHtml;
+                    }
                 } else {
                     container.innerHTML = "";
                 }
@@ -1328,11 +2327,30 @@
             renderCatalogManagement();
             alert("Catálogo Maestro Actualizado con precios en BS redondeados a múltiplos de 5."); 
         };
-        function delCat(k) { if(confirm("Borrar item?")) { delete state.prices[k]; save(); renderCatalogManagement(); } }
+        function delCat(k) { 
+            var role = sessionStorage.getItem('acad_user_role') || 'admin';
+            if (role === 'observador') {
+                alert("Acceso denegado: El rol de observador no permite eliminar items del catálogo.");
+                return;
+            }
+            if(confirm("Borrar item?")) { delete state.prices[k]; save(); renderCatalogManagement(); } 
+        }
         
         function initNav() { 
             document.querySelectorAll('#main-nav li').forEach(li => li.onclick = function() { 
                 var pg = li.dataset.page; 
+                
+                // Control de navegación preventiva según rol
+                var role = sessionStorage.getItem('acad_user_role') || 'admin';
+                if (role === 'observador' && pg !== 'dashboard' && pg !== 'reports-view') {
+                    alert("Acceso denegado: Tu rol de observador no permite acceder a esta sección.");
+                    return;
+                }
+                if (role === 'gestor' && pg === 'users-view') {
+                    alert("Acceso denegado: Solo los administradores pueden gestionar usuarios.");
+                    return;
+                }
+                
                 document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active')); 
                 document.getElementById(pg).classList.add('active'); 
                 document.querySelectorAll('#main-nav li').forEach(i => i.classList.remove('active')); 
@@ -1341,13 +2359,410 @@
                 else if(pg=='students') renderStudents(); 
                 else if(pg=='catalogo') { renderCatalogManagement(); renderGastoFijoCatalog(); }
                 else if(pg=='egresos-view') renderEgresos();
-                else if(pg=='reports-view') document.getElementById('report-result-area').classList.add('hidden'); 
+                else if(pg=='users-view') renderUsers();
+                else if(pg=='reports-view') { document.getElementById('report-result-area').classList.add('hidden'); populateReportFilters(); renderWorkdayCheckboxes(); } 
                 if(window.innerWidth <= 768) window.scrollTo(0, 0); 
             }); 
         }
+
+        window.applyPermissions = function() {
+            var role = sessionStorage.getItem('acad_user_role') || 'admin';
+            var username = sessionStorage.getItem('acad_username') || 'admin';
+            
+            // Render active user in sidebar
+            var userContainer = document.getElementById('active-user-container');
+            var userNameEl = document.getElementById('active-user-name');
+            var userRoleEl = document.getElementById('active-user-role');
+            if (userContainer && userNameEl && userRoleEl) {
+                userContainer.style.display = 'flex';
+                userNameEl.innerText = username;
+                
+                var roleText = 'Administrador';
+                if (role === 'gestor') roleText = 'Gestor';
+                else if (role === 'observador') roleText = 'Observador';
+                userRoleEl.innerText = roleText;
+            }
+            
+            // Sidebar Navigation visibilities
+            var navAttendance = document.getElementById('nav-attendance');
+            var navStudents = document.getElementById('nav-students');
+            var navPayments = document.getElementById('nav-payments');
+            var navCatalogo = document.getElementById('nav-catalogo');
+            var navEgresos = document.getElementById('nav-egresos');
+            var navUsers = document.getElementById('nav-users');
+            var btnHistorial = document.getElementById('btn-historial-tasas');
+            var btnSaveWorkdays = document.getElementById('btn-save-workdays');
+            
+            if (role === 'observador') {
+                if (navAttendance) navAttendance.style.setProperty('display', 'none', 'important');
+                if (navStudents) navStudents.style.setProperty('display', 'none', 'important');
+                if (navPayments) navPayments.style.setProperty('display', 'none', 'important');
+                if (navCatalogo) navCatalogo.style.setProperty('display', 'none', 'important');
+                if (navEgresos) navEgresos.style.setProperty('display', 'none', 'important');
+                if (navUsers) navUsers.style.setProperty('display', 'none', 'important');
+                if (btnHistorial) btnHistorial.style.setProperty('display', 'none', 'important');
+                if (btnSaveWorkdays) btnSaveWorkdays.style.setProperty('display', 'none', 'important');
+                
+                // Hide write/edit buttons globally
+                var correctorBanner = document.querySelector('#reports-view > div[style*="border-color:#f59e0b"]');
+                if (correctorBanner) correctorBanner.style.setProperty('display', 'none', 'important');
+                
+                var dangerButtons = document.querySelector('#students > div[style*="justify-content:flex-end"]');
+                if (dangerButtons) dangerButtons.style.setProperty('display', 'none', 'important');
+                
+                var btnNewStudent = document.querySelector('#students button[onclick*="openNewStudent"]');
+                if (btnNewStudent) btnNewStudent.style.setProperty('display', 'none', 'important');
+                var btnNewEgreso = document.querySelector('#egresos-view button[onclick*="openNewEgreso"]');
+                if (btnNewEgreso) btnNewEgreso.style.setProperty('display', 'none', 'important');
+                var btnNewItem = document.querySelector('#catalogo button[onclick*="catOpenAdd"]');
+                if (btnNewItem) btnNewItem.style.setProperty('display', 'none', 'important');
+                var btnNewGF = document.querySelector('#catalogo button[onclick*="gastoFijoOpenAdd"]');
+                if (btnNewGF) btnNewGF.style.setProperty('display', 'none', 'important');
+                var btnUpdatePrices = document.querySelector('#catalogo button[onclick*="catSave"]');
+                if (btnUpdatePrices) btnUpdatePrices.style.setProperty('display', 'none', 'important');
+                var btnUpdateGF = document.querySelector('#catalogo button[onclick*="gastoFijoSave"]');
+                if (btnUpdateGF) btnUpdateGF.style.setProperty('display', 'none', 'important');
+            } else if (role === 'gestor') {
+                if (navAttendance) navAttendance.style.setProperty('display', 'flex', 'important');
+                if (navStudents) navStudents.style.setProperty('display', 'flex', 'important');
+                if (navPayments) navPayments.style.setProperty('display', 'flex', 'important');
+                if (navCatalogo) navCatalogo.style.setProperty('display', 'flex', 'important');
+                if (navEgresos) navEgresos.style.setProperty('display', 'flex', 'important');
+                if (navUsers) navUsers.style.setProperty('display', 'none', 'important');
+                if (btnHistorial) btnHistorial.style.setProperty('display', 'block', 'important');
+                if (btnSaveWorkdays) btnSaveWorkdays.style.display = 'block';
+                
+                // Restore elements hidden for observador
+                var correctorBanner = document.querySelector('#reports-view > div[style*="border-color:#f59e0b"]');
+                if (correctorBanner) correctorBanner.style.display = 'block';
+                var dangerButtons = document.querySelector('#students > div[style*="justify-content:flex-end"]');
+                if (dangerButtons) dangerButtons.style.display = 'flex';
+                var btnNewStudent = document.querySelector('#students button[onclick*="openNewStudent"]');
+                if (btnNewStudent) btnNewStudent.style.display = 'block';
+                var btnNewEgreso = document.querySelector('#egresos-view button[onclick*="openNewEgreso"]');
+                if (btnNewEgreso) btnNewEgreso.style.display = 'block';
+                var btnNewItem = document.querySelector('#catalogo button[onclick*="catOpenAdd"]');
+                if (btnNewItem) btnNewItem.style.display = 'block';
+                var btnNewGF = document.querySelector('#catalogo button[onclick*="gastoFijoOpenAdd"]');
+                if (btnNewGF) btnNewGF.style.display = 'block';
+                var btnUpdatePrices = document.querySelector('#catalogo button[onclick*="catSave"]');
+                if (btnUpdatePrices) btnUpdatePrices.style.display = 'block';
+                var btnUpdateGF = document.querySelector('#catalogo button[onclick*="gastoFijoSave"]');
+                if (btnUpdateGF) btnUpdateGF.style.display = 'block';
+            } else {
+                // admin has full access
+                if (navAttendance) navAttendance.style.setProperty('display', 'flex', 'important');
+                if (navStudents) navStudents.style.setProperty('display', 'flex', 'important');
+                if (navPayments) navPayments.style.setProperty('display', 'flex', 'important');
+                if (navCatalogo) navCatalogo.style.setProperty('display', 'flex', 'important');
+                if (navEgresos) navEgresos.style.setProperty('display', 'flex', 'important');
+                if (navUsers) {
+                    navUsers.style.setProperty('display', 'flex', 'important');
+                    navUsers.classList.remove('hidden');
+                }
+                if (btnHistorial) btnHistorial.style.setProperty('display', 'block', 'important');
+                if (btnSaveWorkdays) btnSaveWorkdays.style.display = 'block';
+                
+                // Restore elements hidden for observador
+                var correctorBanner = document.querySelector('#reports-view > div[style*="border-color:#f59e0b"]');
+                if (correctorBanner) correctorBanner.style.display = 'block';
+                var dangerButtons = document.querySelector('#students > div[style*="justify-content:flex-end"]');
+                if (dangerButtons) dangerButtons.style.display = 'flex';
+                var btnNewStudent = document.querySelector('#students button[onclick*="openNewStudent"]');
+                if (btnNewStudent) btnNewStudent.style.display = 'block';
+                var btnNewEgreso = document.querySelector('#egresos-view button[onclick*="openNewEgreso"]');
+                if (btnNewEgreso) btnNewEgreso.style.display = 'block';
+                var btnNewItem = document.querySelector('#catalogo button[onclick*="catOpenAdd"]');
+                if (btnNewItem) btnNewItem.style.display = 'block';
+                var btnNewGF = document.querySelector('#catalogo button[onclick*="gastoFijoOpenAdd"]');
+                if (btnNewGF) btnNewGF.style.display = 'block';
+                var btnUpdatePrices = document.querySelector('#catalogo button[onclick*="catSave"]');
+                if (btnUpdatePrices) btnUpdatePrices.style.display = 'block';
+                var btnUpdateGF = document.querySelector('#catalogo button[onclick*="gastoFijoSave"]');
+                if (btnUpdateGF) btnUpdateGF.style.display = 'block';
+            }
+            renderWorkdayCheckboxes();
+        };
+
+        window.populateLocationsDatalist = function() {
+            var datalist = document.getElementById('locations-list');
+            if (!datalist) {
+                datalist = document.createElement('datalist');
+                datalist.id = 'locations-list';
+                document.body.appendChild(datalist);
+            }
+            
+            var locs = new Set();
+            locs.add('Caracas'); // Default fallback
+            
+            // Gather from users
+            if (state.users) {
+                state.users.forEach(u => {
+                    if (u.location && u.location !== 'Todos') {
+                        locs.add(u.location);
+                    }
+                });
+            }
+            
+            // Gather from existing students
+            if (state.students) {
+                state.students.forEach(s => {
+                    if (s.location) locs.add(s.location);
+                });
+            }
+            
+            // Gather from existing egresos
+            if (state.egresos) {
+                state.egresos.forEach(e => {
+                    if (e.location) locs.add(e.location);
+                });
+            }
+            
+            datalist.innerHTML = Array.from(locs).map(l => `<option value="${l}"></option>`).join('');
+        };
+
+        window.setupModalLocationField = function(inputEl, currentVal) {
+            var activeUserLocation = sessionStorage.getItem('acad_user_location') || 'Caracas';
+            var username = sessionStorage.getItem('acad_username') || 'admin';
+            var activeUser = state.users.find(u => u.username.toLowerCase() === username.toLowerCase());
+            if (activeUser && activeUser.location) {
+                activeUserLocation = activeUser.location;
+            }
+            
+            window.populateLocationsDatalist();
+            
+            if (activeUserLocation === 'Todos') {
+                inputEl.disabled = false;
+                inputEl.value = currentVal || 'Caracas';
+            } else {
+                inputEl.disabled = true;
+                inputEl.value = activeUserLocation;
+            }
+        };
+
+        window.getRecordLocation = function(rec) {
+            if (rec.location) return rec.location;
+            if (rec.sid) {
+                var s = state.students.find(x => x.id == rec.sid);
+                if (s && s.location) return s.location;
+            }
+            var username = rec.user || 'admin';
+            var u = state.users.find(x => x.username.toLowerCase() === username.toLowerCase());
+            return u ? (u.location || 'Caracas') : 'Caracas';
+        };
+
+        window.filterLogsForReport = function(logsList) {
+            var locSelect = document.getElementById('report-filter-location');
+            var userSelect = document.getElementById('report-filter-user');
+            if (!locSelect || !userSelect) return logsList;
+            
+            var selectedLoc = locSelect.value;
+            var selectedUser = userSelect.value;
+            
+            return logsList.filter(l => {
+                var matchesLoc = (selectedLoc === 'Todos') || (window.getRecordLocation(l) === selectedLoc);
+                var matchesUser = (selectedUser === 'Todos') || ((l.user || 'admin').toLowerCase() === selectedUser.toLowerCase());
+                return matchesLoc && matchesUser;
+            });
+        };
+        
+        window.filterEgresosForReport = function(egresosList) {
+            var locSelect = document.getElementById('report-filter-location');
+            var userSelect = document.getElementById('report-filter-user');
+            if (!locSelect || !userSelect) return egresosList;
+            
+            var selectedLoc = locSelect.value;
+            var selectedUser = userSelect.value;
+            
+            return egresosList.filter(e => {
+                var matchesLoc = (selectedLoc === 'Todos') || (window.getRecordLocation(e) === selectedLoc);
+                var matchesUser = (selectedUser === 'Todos') || ((e.user || 'admin').toLowerCase() === selectedUser.toLowerCase());
+                return matchesLoc && matchesUser;
+            });
+        };
+
+        window.populateReportFilters = function() {
+            var locSelect = document.getElementById('report-filter-location');
+            var userSelect = document.getElementById('report-filter-user');
+            if (!locSelect || !userSelect) return;
+            
+            var role = sessionStorage.getItem('acad_user_role') || 'admin';
+            var currentActiveUser = sessionStorage.getItem('acad_username') || 'admin';
+            
+            // Find active user object
+            var activeUserObj = state.users.find(u => u.username.toLowerCase() === currentActiveUser.toLowerCase());
+            var activeUserLocation = activeUserObj ? (activeUserObj.location || 'Caracas') : 'Caracas';
+            
+            // Get unique locations
+            var locations = ['Todos'];
+            state.users.forEach(u => {
+                var loc = u.location || 'Caracas';
+                if (!locations.includes(loc)) {
+                    locations.push(loc);
+                }
+            });
+            // Also include custom locations from students or egresos
+            if (state.students) {
+                state.students.forEach(s => {
+                    if (s.location && !locations.includes(s.location)) {
+                        locations.push(s.location);
+                    }
+                });
+            }
+            if (state.egresos) {
+                state.egresos.forEach(e => {
+                    if (e.location && !locations.includes(e.location)) {
+                        locations.push(e.location);
+                    }
+                });
+            }
+            
+            // Get unique users
+            var usersList = ['Todos'];
+            state.users.forEach(u => {
+                if (!usersList.includes(u.username)) {
+                    usersList.push(u.username);
+                }
+            });
+            
+            // Populate Location Dropdown
+            locSelect.innerHTML = locations.map(l => `<option value="${l}">${l}</option>`).join('');
+            
+            // Populate User Dropdown
+            userSelect.innerHTML = usersList.map(u => `<option value="${u}">${u}</option>`).join('');
+            
+            // Set values and disable based on location property
+            if (activeUserLocation === 'Todos') {
+                locSelect.disabled = false;
+                userSelect.disabled = false;
+                if (!locSelect.value) locSelect.value = 'Todos';
+                if (!userSelect.value) userSelect.value = 'Todos';
+            } else {
+                locSelect.value = activeUserLocation;
+                userSelect.value = currentActiveUser;
+                locSelect.disabled = true;
+                userSelect.disabled = true;
+            }
+        };
+
+        window.refreshActiveReport = function() {
+            var titleEl = document.getElementById('report-title');
+            var title = titleEl ? titleEl.innerText : "";
+            if (title.includes("CORTE DIA")) {
+                runDailyReport();
+            } else if (title.includes("CORTE MES")) {
+                runMonthlyReport();
+            }
+        };
+
+        window.renderWorkdayCheckboxes = function() {
+            var container = document.getElementById('workday-checkboxes');
+            if (!container) return;
+            var days = state.workdays || [1, 2, 3];
+            container.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = days.includes(parseInt(cb.value));
+                var role = sessionStorage.getItem('acad_user_role') || 'admin';
+                cb.disabled = (role === 'observador');
+            });
+        };
+
+        window.saveWorkdays = function() {
+            var role = sessionStorage.getItem('acad_user_role') || 'admin';
+            if (role === 'observador') {
+                alert("Acceso denegado: El rol de observador no permite modificar días de trabajo.");
+                return;
+            }
+            var selected = [];
+            document.querySelectorAll('#workday-checkboxes input[type="checkbox"]:checked').forEach(cb => {
+                selected.push(parseInt(cb.value));
+            });
+            state.workdays = selected;
+            save();
+            alert("Días de trabajo actualizados con éxito.");
+            
+            var reportMonthInput = document.getElementById('report-month-input');
+            if (reportMonthInput && reportMonthInput.value) {
+                runMonthlyReport();
+            }
+        };
+
+        window.renderUsers = function() {
+            var tbody = document.getElementById('users-table-body');
+            if (!tbody) return;
+            
+            var currentActiveUser = sessionStorage.getItem('acad_username') || 'admin';
+            
+            tbody.innerHTML = state.users.map(u => {
+                var roleText = 'Administrador';
+                if (u.role === 'gestor') roleText = 'Gestor / Coordinador';
+                else if (u.role === 'observador') roleText = 'Observador';
+                
+                var isSelf = u.username.toLowerCase() === currentActiveUser.toLowerCase();
+                
+                var actionButtons = `
+                    <button class="icon-btn" onclick="window.editUser('${u.username}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    ${isSelf ? '' : `
+                    <button class="icon-btn" style="color:#ef4444;" onclick="window.deleteUser('${u.username}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                    `}
+                `;
+                
+                return `
+                    <tr>
+                        <td><strong>${u.username}</strong> ${isSelf ? '<small style="color:var(--p); font-weight:700;">(Tú)</small>' : ''}</td>
+                        <td>${u.location || 'Caracas'}</td>
+                        <td><span style="background:rgba(14,165,233,0.15); color:var(--p); padding:4px 8px; border-radius:6px; font-size:0.75rem; font-weight:700;">${roleText}</span></td>
+                        <td align="center">${actionButtons}</td>
+                    </tr>
+                `;
+            }).join('');
+        };
+
+        window.openNewUser = function() {
+            document.getElementById('modal-user-title').innerText = "Nuevo Usuario";
+            document.getElementById('user-edit-username').value = "";
+            document.getElementById('user-username').value = "";
+            document.getElementById('user-username').disabled = false;
+            document.getElementById('user-password').value = "";
+            document.getElementById('user-role').value = "gestor";
+            document.getElementById('user-location').value = "";
+            document.getElementById('modal-user').classList.add('active');
+        };
+        
+        window.editUser = function(username) {
+            var u = state.users.find(x => x.username.toLowerCase() === username.toLowerCase());
+            if (!u) return;
+            
+            document.getElementById('modal-user-title').innerText = "Editar Usuario";
+            document.getElementById('user-edit-username').value = u.username;
+            document.getElementById('user-username').value = u.username;
+            document.getElementById('user-username').disabled = true;
+            document.getElementById('user-password').value = u.password;
+            document.getElementById('user-role').value = u.role;
+            document.getElementById('user-location').value = u.location || "";
+            document.getElementById('modal-user').classList.add('active');
+        };
+        
+        window.deleteUser = function(username) {
+            var currentActiveUser = sessionStorage.getItem('acad_username') || 'admin';
+            if (username.toLowerCase() === currentActiveUser.toLowerCase()) {
+                alert("No puedes eliminarte a ti mismo.");
+                return;
+            }
+            if (confirm(`¿Seguro que deseas eliminar al usuario "${username}"?`)) {
+                state.users = state.users.filter(u => u.username.toLowerCase() !== username.toLowerCase());
+                save();
+                renderUsers();
+                alert("Usuario eliminado.");
+            }
+        };
         
         window.openNewStudent = function(defName = "") { document.getElementById('modal-st-title').innerText = "Nuevo Alumno"; document.getElementById('st-edit-id').value=""; document.getElementById('st-form').reset(); if(defName) document.getElementById('st-name').value = defName; document.getElementById('modal-student').classList.add('active'); }
         window.catOpenAdd = function() { document.getElementById('modal-add-cat').classList.add('active'); }
+
 
         // MÓDULO DE GESTIÓN DE EGRESOS (GASTOS)
         window.openNewEgreso = function() {
@@ -1367,10 +2782,11 @@
                 var rateApplied = eg.rate || getRateForDate(eg.date) || state.rate;
                 var eqUsd = eg.cur === 'USD' ? eg.amount : eg.amount / rateApplied;
                 var rateText = eg.cur === 'BS' ? ` <small style="color:#64748b;">(Tasa: ${fNum(rateApplied)})</small>` : '';
+                var userTag = eg.user ? `<span style="font-size: 0.7rem; color: #94a3b8; background: rgba(255, 255, 255, 0.05); padding: 2px 6px; border-radius: 4px; margin-left: 6px;"><i class="fas fa-user" style="font-size: 0.6rem; margin-right: 3px;"></i>${eg.user}</span>` : '';
                 return `
                     <tr>
                         <td>${new Date(eg.date + 'T00:00:00').toLocaleDateString()}</td>
-                        <td><strong>${eg.description}${rateText}</strong></td>
+                        <td><strong>${eg.description}${rateText}${userTag}</strong></td>
                         <td><b style="color:#ef4444;">-${eg.cur === 'USD' ? '$' : ''} ${fNum(eg.amount)} ${eg.cur === 'BS' ? 'BS' : ''}</b></td>
                         <td style="color:#ef4444;">-$ ${fNum(eqUsd)}</td>
                         <td align="center">
@@ -1382,6 +2798,11 @@
         };
 
         window.delEgreso = function(id) {
+            var role = sessionStorage.getItem('acad_user_role') || 'admin';
+            if (role === 'observador') {
+                alert("Acceso denegado: El rol de observador no permite eliminar gastos.");
+                return;
+            }
             if (confirm("¿Seguro que deseas eliminar este registro de gasto?")) {
                 state.egresos = state.egresos.filter(x => String(x.id) !== String(id));
                 save();
@@ -1489,9 +2910,10 @@
                 Object.keys(state.egresos_catalog).forEach(k => {
                     var cost = state.egresos_catalog[k].usd;
                     var cleanId = k.replace(/\s/g, '');
+                    var priceLabel = (k === "10% Ingresos del Día") ? "<b>(Cálculo)</b>" : `<b>$${cost.toFixed(2)}</b>`;
                     html += `
                         <button type="button" class="eg-chip-btn" id="chip-${cleanId}" onclick="window.selectEgType('${k}')">
-                            <i class="fas fa-tag"></i><br>${k}<br><b>$${cost.toFixed(2)}</b>
+                            <i class="fas fa-tag"></i><br>${k}<br>${priceLabel}
                         </button>
                     `;
                 });
@@ -1567,14 +2989,44 @@
             const summaryDiv = document.getElementById('eg-fixed-summary');
             if (!summaryDiv) return;
             
+            var dynamicCalculationText = '';
+            if (val === "10% Ingresos del Día") {
+                var targetDate = document.getElementById('eg-date').value || getTodayISO();
+                var pays = state.logs.filter(l => l.type === 'PAY' && l.iso === targetDate);
+                var totalDailyIncomeUsd = pays.reduce((a,b) => a+b.usd, 0);
+                var rateApplied = getRateForDate(targetDate);
+                var formattedDate = targetDate.split('-').reverse().join('/');
+                
+                if (cur === 'BS') {
+                    var totalDailyIncomeBs = totalDailyIncomeUsd * rateApplied;
+                    dynamicCalculationText = `
+                        <div style="margin-bottom:12px; padding:10px; background:rgba(14,165,233,0.08); border:1px solid rgba(14,165,233,0.3); border-radius:8px; font-size:0.8rem; color:#f8fafc; text-align:left; line-height:1.4;">
+                            <span style="color:#0ea5e9; font-weight:800; display:block; text-transform:uppercase; font-size:0.65rem; margin-bottom:4px;"><i class="fas fa-calculator"></i> Origen del Cálculo (10%)</span>
+                            <b>Ingresos del día (${formattedDate}):</b> ${fNum(totalDailyIncomeBs)} BS
+                            <br><span style="color:#94a3b8; font-size:0.75rem;">10% calculado: ${fNum(totalDailyIncomeBs * 0.1)} BS</span>
+                        </div>
+                    `;
+                } else {
+                    dynamicCalculationText = `
+                        <div style="margin-bottom:12px; padding:10px; background:rgba(14,165,233,0.08); border:1px solid rgba(14,165,233,0.3); border-radius:8px; font-size:0.8rem; color:#f8fafc; text-align:left; line-height:1.4;">
+                            <span style="color:#0ea5e9; font-weight:800; display:block; text-transform:uppercase; font-size:0.65rem; margin-bottom:4px;"><i class="fas fa-calculator"></i> Origen del Cálculo (10%)</span>
+                            <b>Ingresos del día (${formattedDate}):</b> $${fNum(totalDailyIncomeUsd)} USD
+                            <br><span style="color:#94a3b8; font-size:0.75rem;">10% calculado: $${fNum(totalDailyIncomeUsd * 0.1)} USD</span>
+                        </div>
+                    `;
+                }
+            }
+            
             if (cur === 'USD') {
                 summaryDiv.innerHTML = `
+                    ${dynamicCalculationText}
                     <span style="color:#94a3b8; font-size:0.75rem; text-transform:uppercase; font-weight:800; display:block;">Costo Unitario Ajustado: $${costUsd.toFixed(2)}</span>
                     <h3 style="color:#ef4444; font-size:1.5rem; margin:8px 0; font-weight:900;">Total: $ ${fNum(totalUsd)}</h3>
                     <small style="color:#64748b;">(Ref: ${fNum(roundedBs)} BS redondeado a múltiplos de 5)</small>
                 `;
             } else {
                 summaryDiv.innerHTML = `
+                    ${dynamicCalculationText}
                     <span style="color:#94a3b8; font-size:0.75rem; text-transform:uppercase; font-weight:800; display:block;">Costo Unitario Ajustado: ${fNum(costUsd * state.rate)} BS</span>
                     <h3 style="color:#ef4444; font-size:1.5rem; margin:8px 0; font-weight:900;">Total: ${fNum(roundedBs)} BS</h3>
                     <small style="color:#64748b;">(Ref redondeada: $${fNum(roundedBs / state.rate)} USD | Sin redondear: ${fNum(rawBs)} BS)</small>

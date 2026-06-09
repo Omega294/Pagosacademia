@@ -6,7 +6,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780427374708,
@@ -14,7 +15,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 1,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780427850705,
@@ -22,7 +24,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780427952441,
@@ -30,7 +33,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780428010857,
@@ -38,7 +42,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780428211049,
@@ -46,7 +51,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780428253203,
@@ -54,7 +60,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780428281818,
@@ -62,7 +69,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780428321792,
@@ -70,15 +78,17 @@
             "cedula": "",
             "balance": 0,
             "classes": 1,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780428692082,
             "name": "PABLO VASQUEZ",
             "cedula": "",
             "balance": 0,
-            "classes": 4,
-            "expiry": "2026-06-04"
+            "classes": 3,
+            "expiry": "2026-06-04",
+            "user": "Walter"
         },
         {
             "id": 1780431602553,
@@ -86,15 +96,17 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780431666843,
             "name": "CARLOS QUINTERO",
             "cedula": "",
             "balance": 0,
-            "classes": 1,
-            "expiry": null
+            "classes": 2,
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780431704248,
@@ -102,7 +114,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780431732947,
@@ -110,7 +123,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780431762968,
@@ -118,7 +132,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780432083521,
@@ -126,7 +141,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780432227176,
@@ -134,7 +150,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780432408328,
@@ -142,7 +159,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 1,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780432648368,
@@ -150,7 +168,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780432703498,
@@ -158,7 +177,8 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
         },
         {
             "id": 1780432845856,
@@ -166,10 +186,675 @@
             "cedula": "",
             "balance": 0,
             "classes": 0,
-            "expiry": null
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780933479607,
+            "name": "JOSE ZAMBRANO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780936579405,
+            "name": "MIGUEL GATAS",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780936630126,
+            "name": "JOSE PABLOS",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780936665062,
+            "name": "JUAN TORRES",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780937188390,
+            "name": "JOHAN MOTA",
+            "cedula": "",
+            "balance": 10,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780937263510,
+            "name": "IRVING HERNANDEZ",
+            "cedula": "",
+            "balance": 3,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780938556429,
+            "name": "CESITA",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780938590765,
+            "name": "SEBASTIAN CESITA (HNO)",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780938684605,
+            "name": "DAVID ALVARADO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780938775829,
+            "name": "ROBERT MORENO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780939000533,
+            "name": "GREGORY ANGULO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780939051757,
+            "name": "RA",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780939160518,
+            "name": "EDWIN BARRIOS ",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780945675615,
+            "name": "AMISTOSO 5/5",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780949130979,
+            "name": "YOSMAR MARCANO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780949343044,
+            "name": "JULIO BOLWINE",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780949471254,
+            "name": "HENRY RAMIREZ",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780949514101,
+            "name": "EDGAR FERRER",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780949623452,
+            "name": "LUIS HENRIQUEZ",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780949709979,
+            "name": "LUIS AREVALO",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780949747071,
+            "name": "CRISTOPHER SALAZAR",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780950467799,
+            "name": "AMISTOSO 6/5",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
+        },
+        {
+            "id": 1780950488140,
+            "name": "AMISTOSO 6/5 2",
+            "cedula": "",
+            "balance": 0,
+            "classes": 0,
+            "expiry": null,
+            "user": "Walter"
         }
     ],
     "logs": [
+        {
+            "id": "log_fz7e2q3bj_1780950508245",
+            "type": "PAY",
+            "sid": "1780950488140",
+            "name": "AMISTOSO 6/5 2",
+            "srv": "Amistoso [Pago Móvil Ref:]",
+            "usd": 60.80505898090721,
+            "amt": 30000,
+            "cur": "BS",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_9fcjx5sfz_1780950477566",
+            "type": "PAY",
+            "sid": "1780950467799",
+            "name": "AMISTOSO 6/5",
+            "srv": "Amistoso [Efectivo]",
+            "usd": 60.80505898090721,
+            "amt": 30000,
+            "cur": "BS",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_xqk81k84h_1780949760132",
+            "type": "PAY",
+            "sid": "1780949747071",
+            "name": "CRISTOPHER SALAZAR",
+            "srv": "Practica de bateo [Pago Móvil Ref:5469]",
+            "usd": 14.187847095545017,
+            "amt": 7000,
+            "cur": "BS",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_vw46o5tpj_1780949733548",
+            "type": "PAY",
+            "sid": "1780949709979",
+            "name": "LUIS AREVALO",
+            "srv": "Practica de bateo [Pago Móvil Ref:3127]",
+            "usd": 14.187847095545017,
+            "amt": 7000,
+            "cur": "BS",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_9u7adrznj_1780949671660",
+            "type": "PAY",
+            "sid": "1780949623452",
+            "name": "LUIS HENRIQUEZ",
+            "srv": "Practica de bateo [Pago Móvil Ref:0975]",
+            "usd": 14.187847095545017,
+            "amt": 7000,
+            "cur": "BS",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_pa7g131rx_1780949582644",
+            "type": "PAY",
+            "sid": "1780937263510",
+            "name": "IRVING HERNANDEZ",
+            "srv": "Practica de bateo",
+            "usd": 10,
+            "amt": 10,
+            "cur": "USD",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": -2,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_uip71zltq_1780949549372",
+            "type": "PAY",
+            "sid": "1780949514101",
+            "name": "EDGAR FERRER",
+            "srv": "Practica de bateo",
+            "usd": 12,
+            "amt": 12,
+            "cur": "USD",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_uvnel6ezc_1780949489796",
+            "type": "PAY",
+            "sid": "1780949471254",
+            "name": "HENRY RAMIREZ",
+            "srv": "Practica de bateo [Pago Móvil Ref:6181]",
+            "usd": 14.187847095545017,
+            "amt": 7000,
+            "cur": "BS",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_7bn4cgzuo_1780949450380",
+            "type": "PAY",
+            "sid": "1780949343044",
+            "name": "JULIO BOLWINE",
+            "srv": "Practica de bateo [Pago Móvil Ref:0263]",
+            "usd": 14.187847095545017,
+            "amt": 7000,
+            "cur": "BS",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_m9nr2zswa_1780949321564",
+            "type": "PAY",
+            "sid": "1780939051757",
+            "name": "RA",
+            "srv": "Practica de bateo [Pago Móvil Ref:3448]",
+            "usd": 14.187847095545017,
+            "amt": 7000,
+            "cur": "BS",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_bge7eyglk_1780949261628",
+            "type": "PAY",
+            "sid": "1780949130979",
+            "name": "YOSMAR MARCANO",
+            "srv": "Practica de bateo [Pago Móvil Ref:0369]",
+            "usd": 14.187847095545017,
+            "amt": 7000,
+            "cur": "BS",
+            "date": "06/05/2026",
+            "iso": "2026-05-06",
+            "rate": 493.38,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_gtjrcdkck_1780945696816",
+            "type": "PAY",
+            "sid": "1780945675615",
+            "name": "AMISTOSO 5/5",
+            "srv": "Amistoso [Pago Móvil Ref:]",
+            "usd": 61.21949228634397,
+            "amt": 30000,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_qv9h9gpjm_1780940520245",
+            "type": "PAY",
+            "sid": "1780939051757",
+            "name": "RA",
+            "srv": "Juego [Pago Móvil Ref:7495]",
+            "usd": 4.999591870051424,
+            "amt": 2450,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_3i7rlgc40_1780939191774",
+            "type": "PAY",
+            "sid": "1780939160518",
+            "name": "EDWIN BARRIOS ",
+            "srv": "Juego [Pago Móvil Ref:4291]",
+            "usd": 4.999591870051424,
+            "amt": 2450,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_9zknds8y8_1780939015685",
+            "type": "PAY",
+            "sid": "1780939000533",
+            "name": "GREGORY ANGULO",
+            "srv": "Juego [Pago Móvil Ref:4889]",
+            "usd": 4.999591870051424,
+            "amt": 2450,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_ut3llkim1_1780938800341",
+            "type": "PAY",
+            "sid": "1780938775829",
+            "name": "ROBERT MORENO",
+            "srv": "Juego [Pago Móvil Ref:6769]",
+            "usd": 4.999591870051424,
+            "amt": 2450,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_ojb78s7it_1780938702262",
+            "type": "PAY",
+            "sid": "1780938684605",
+            "name": "DAVID ALVARADO",
+            "srv": "Juego [Pago Móvil Ref:5918]",
+            "usd": 4.999591870051424,
+            "amt": 2450,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_u4uv2m42c_1780938597350",
+            "type": "PAY",
+            "sid": "1780938590765",
+            "name": "SEBASTIAN CESITA (HNO)",
+            "srv": "CORTESÍA PAGADA: Practica + juego",
+            "usd": 0,
+            "amt": 0,
+            "cur": "USD",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_swnzlzgle_1780938573285",
+            "type": "PAY",
+            "sid": "1780938556429",
+            "name": "CESITA",
+            "srv": "CORTESÍA PAGADA: Practica + juego",
+            "usd": 0,
+            "amt": 0,
+            "cur": "USD",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "type": "ATT",
+            "sid": 1780428692082,
+            "name": "PABLO VASQUEZ",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "id": "log_rdeh3yxq4_1780939044766",
+            "user": "Walter"
+        },
+        {
+            "id": "log_ty6vat9vr_1780938379029",
+            "type": "PAY",
+            "sid": "1780937188390",
+            "name": "JOHAN MOTA",
+            "srv": "Juego [Pago Móvil Ref:0016]",
+            "usd": 4.999591870051424,
+            "amt": 2450,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_c9e5wo1ig_1780937304318",
+            "type": "PAY",
+            "sid": "1780937263510",
+            "name": "IRVING HERNANDEZ",
+            "srv": "Practica + juego",
+            "usd": 20,
+            "amt": 20,
+            "cur": "USD",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 5,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_awq0gkxwq_1780937250350",
+            "type": "PAY",
+            "sid": "1780937188390",
+            "name": "JOHAN MOTA",
+            "srv": "Practica",
+            "usd": 20,
+            "amt": 20,
+            "cur": "USD",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 10,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_km9kmvszt_1780936701790",
+            "type": "PAY",
+            "sid": "1780936665062",
+            "name": "JUAN TORRES",
+            "srv": "Practica + juego [Pago Móvil Ref:8320]",
+            "usd": 14.998775610154272,
+            "amt": 7350,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_u57mlfbr3_1780936653022",
+            "type": "PAY",
+            "sid": "1780936630126",
+            "name": "JOSE PABLOS",
+            "srv": "Practica + juego [Pago Móvil Ref:1644]",
+            "usd": 14.998775610154272,
+            "amt": 7350,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_ixrt9w4my_1780936614383",
+            "type": "PAY",
+            "sid": "1780936579405",
+            "name": "MIGUEL GATAS",
+            "srv": "Practica + juego [Pago Móvil Ref:1843]",
+            "usd": 14.998775610154272,
+            "amt": 7350,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_4f2dpumed_1780936562905",
+            "type": "PAY",
+            "sid": "1780933479607",
+            "name": "JOSE ZAMBRANO",
+            "srv": "Practica + juego [Pago Móvil Ref:1644]",
+            "usd": 14.998775610154272,
+            "amt": 7350,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_1n7uzovw5_1780933463984",
+            "type": "PAY",
+            "sid": "1780428281818",
+            "name": "MIGNER ARELLANO",
+            "srv": "Practica + juego [Pago Móvil Ref:6978]",
+            "usd": 14.998775610154272,
+            "amt": 7350,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 0,
+            "user": "Walter"
+        },
+        {
+            "id": "log_y86znhjhn_1780933255585",
+            "type": "PAY",
+            "sid": "1780431666843",
+            "name": "CARLOS QUINTERO",
+            "srv": "Practica Guardianes [Pago Móvil Ref:2370]",
+            "usd": 4.999591870051424,
+            "amt": 2450,
+            "cur": "BS",
+            "date": "05/05/2026",
+            "iso": "2026-05-05",
+            "rate": 490.04,
+            "difUSD": 0,
+            "cls": 1,
+            "user": "Walter"
+        },
         {
             "id": "log_cb3wb48dw_1780432864168",
             "type": "PAY",
@@ -183,7 +868,8 @@
             "iso": "2026-05-05",
             "rate": 490.04,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_a149x1jmp_1780432772608",
@@ -198,7 +884,8 @@
             "iso": "2026-05-05",
             "rate": 490.04,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_85x90434n_1780432693760",
@@ -213,7 +900,8 @@
             "iso": "2026-05-05",
             "rate": 490.04,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_mp5piaaqd_1780432640760",
@@ -228,7 +916,8 @@
             "iso": "2026-05-05",
             "rate": 490.04,
             "difUSD": 0,
-            "cls": 1
+            "cls": 1,
+            "user": "Walter"
         },
         {
             "id": "log_u8jpldmzw_1780432210944",
@@ -243,7 +932,8 @@
             "iso": "2026-05-05",
             "rate": 490.04,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_8yrv7lhm4_1780432027273",
@@ -258,7 +948,8 @@
             "iso": "2026-05-05",
             "rate": 490.04,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_qxcbg9kso_1780431861009",
@@ -273,7 +964,8 @@
             "iso": "2026-05-05",
             "rate": 490.04,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_0hwpszfvq_1780431839264",
@@ -288,7 +980,8 @@
             "iso": "2026-05-05",
             "rate": 490.04,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_1x0bd75bu_1780431691937",
@@ -303,7 +996,8 @@
             "iso": "2026-06-05",
             "rate": 557.97,
             "difUSD": 0,
-            "cls": 1
+            "cls": 1,
+            "user": "Walter"
         },
         {
             "id": "log_58owk65dq_1780431655089",
@@ -318,7 +1012,8 @@
             "iso": "2026-05-05",
             "rate": 490.04,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "type": "ATT",
@@ -326,7 +1021,8 @@
             "name": "PABLO VASQUEZ",
             "date": "2/6/2026",
             "iso": "2026-06-02",
-            "id": "log_192pjtfmy_1780429402705"
+            "id": "log_192pjtfmy_1780429402705",
+            "user": "Walter"
         },
         {
             "id": "log_b6rlrsryi_1780428707442",
@@ -341,7 +1037,8 @@
             "iso": "2026-05-04",
             "rate": 489.55,
             "difUSD": 0,
-            "cls": 5
+            "cls": 5,
+            "user": "Walter"
         },
         {
             "type": "ATT",
@@ -349,7 +1046,8 @@
             "name": "PABLO VASQUEZ",
             "date": "2/6/2026",
             "iso": "2026-06-02",
-            "id": "log_67cdag8bd_1780429402705"
+            "id": "log_67cdag8bd_1780429402705",
+            "user": "Walter"
         },
         {
             "id": "log_ydk6ctval_1780428360609",
@@ -364,7 +1062,8 @@
             "iso": "2026-05-04",
             "rate": 489.55,
             "difUSD": 0,
-            "cls": 1
+            "cls": 1,
+            "user": "Walter"
         },
         {
             "id": "log_wq008xlqu_1780428306689",
@@ -379,7 +1078,8 @@
             "iso": "2026-05-04",
             "rate": 489.55,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_vh5ved91j_1780428271545",
@@ -394,7 +1094,8 @@
             "iso": "2026-05-04",
             "rate": 489.55,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_k8e4ocrpv_1780428237049",
@@ -409,7 +1110,8 @@
             "iso": "2026-05-04",
             "rate": 489.55,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_pebclt5aa_1780428199465",
@@ -424,7 +1126,8 @@
             "iso": "2026-05-04",
             "rate": 489.55,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_uulna0w2e_1780428168537",
@@ -439,7 +1142,8 @@
             "iso": "2026-05-04",
             "rate": 489.55,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_s0an9tl9r_1780428141065",
@@ -454,7 +1158,8 @@
             "iso": "2026-05-04",
             "rate": 489.55,
             "difUSD": 0,
-            "cls": 1
+            "cls": 1,
+            "user": "Walter"
         },
         {
             "id": "log_0kife46i5_1780428107801",
@@ -469,7 +1174,8 @@
             "iso": "2026-05-04",
             "rate": 489.55,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         },
         {
             "id": "log_59cqfcm8d_1780428076713",
@@ -484,13 +1190,14 @@
             "iso": "2026-05-04",
             "rate": 489.55,
             "difUSD": 0,
-            "cls": 0
+            "cls": 0,
+            "user": "Walter"
         }
     ],
     "rate": 557.97,
     "prices": {
         "Mensualidad": {
-            "usd": 69.8,
+            "usd": 70,
             "bs": 2800,
             "classes": 5,
             "type": "SER"
@@ -530,6 +1237,24 @@
             "bs": 7350,
             "classes": 0,
             "type": "SER"
+        },
+        "Juego": {
+            "usd": 5,
+            "bs": 2450,
+            "classes": 0,
+            "type": "SER"
+        },
+        "Amistoso": {
+            "usd": 60,
+            "bs": 30000,
+            "classes": 0,
+            "type": "SER"
+        },
+        "Practica de bateo": {
+            "usd": 12,
+            "bs": 7000,
+            "classes": 0,
+            "type": "SER"
         }
     },
     "egresos": [
@@ -539,7 +1264,8 @@
             "description": "Estadio x1",
             "amount": 28395,
             "cur": "BS",
-            "rate": 489.55
+            "rate": 489.55,
+            "user": "Walter"
         },
         {
             "id": 1780429498586,
@@ -547,7 +1273,8 @@
             "description": "Profesores x2",
             "amount": 14685,
             "cur": "BS",
-            "rate": 489.55
+            "rate": 489.55,
+            "user": "Walter"
         },
         {
             "id": 1780429517154,
@@ -555,7 +1282,8 @@
             "description": "Administracion x1",
             "amount": 7345,
             "cur": "BS",
-            "rate": 489.55
+            "rate": 489.55,
+            "user": "Walter"
         },
         {
             "id": 1780429557850,
@@ -563,7 +1291,8 @@
             "description": "Ticket de Estacionamiento x5",
             "amount": 6120,
             "cur": "BS",
-            "rate": 489.55
+            "rate": 489.55,
+            "user": "Walter"
         },
         {
             "id": 1780429582713,
@@ -571,7 +1300,116 @@
             "description": "10% Ingresos del Día x1",
             "amount": 4375,
             "cur": "BS",
-            "rate": 489.55
+            "rate": 489.55,
+            "user": "Walter"
+        },
+        {
+            "id": 1780939356911,
+            "date": "2026-05-05",
+            "description": "Profesores x2",
+            "amount": 14700,
+            "cur": "BS",
+            "rate": 490.04,
+            "user": "Walter"
+        },
+        {
+            "id": 1780939456912,
+            "date": "2026-05-05",
+            "description": "Estadio x2",
+            "amount": 56845,
+            "cur": "BS",
+            "rate": 490.04,
+            "user": "Walter"
+        },
+        {
+            "id": 1780939489262,
+            "date": "2026-05-05",
+            "description": "Umpier x1",
+            "amount": 7350,
+            "cur": "BS",
+            "rate": 490.04,
+            "user": "Walter"
+        },
+        {
+            "id": 1780939536472,
+            "date": "2026-05-05",
+            "description": "Administracion x1",
+            "amount": 7350,
+            "cur": "BS",
+            "rate": 490.04,
+            "user": "Walter"
+        },
+        {
+            "id": 1780939859222,
+            "date": "2026-05-05",
+            "description": "10% Ingresos del Día x1",
+            "amount": 11270,
+            "cur": "BS",
+            "rate": 490.04,
+            "user": "Walter"
+        },
+        {
+            "id": 1780939952158,
+            "date": "2026-05-05",
+            "description": "Ticket de Estacionamiento x6",
+            "amount": 7350,
+            "cur": "BS",
+            "rate": 490.04,
+            "user": "Walter"
+        },
+        {
+            "id": 1780940998103,
+            "date": "2026-05-05",
+            "description": "vueltos",
+            "amount": 10,
+            "cur": "USD",
+            "rate": 490.04,
+            "user": "Walter"
+        },
+        {
+            "id": 1780950006389,
+            "date": "2026-05-06",
+            "description": "Prf. Walter x1",
+            "amount": 12335,
+            "cur": "BS",
+            "rate": 493.38,
+            "user": "Walter"
+        },
+        {
+            "id": 1780950028166,
+            "date": "2026-05-06",
+            "description": "Estadio x2",
+            "amount": 57230,
+            "cur": "BS",
+            "rate": 493.38,
+            "user": "Walter"
+        },
+        {
+            "id": 1780950074933,
+            "date": "2026-05-06",
+            "description": "Profesores x1",
+            "amount": 7400,
+            "cur": "BS",
+            "rate": 493.38,
+            "user": "Walter"
+        },
+        {
+            "id": 1780950097488,
+            "date": "2026-05-06",
+            "description": "Administracion x1",
+            "amount": 7400,
+            "cur": "BS",
+            "rate": 493.38,
+            "user": "Walter"
+        },
+        {
+            "id": 1780950537655,
+            "date": "2026-05-06",
+            "description": "10% Ingresos del Día x1",
+            "amount": 11985,
+            "cur": "BS",
+            "rate": 493.38,
+            "user": "Walter"
         }
     ],
     "egresos_catalog": {
@@ -595,6 +1433,9 @@
         },
         "Umpier 2": {
             "usd": 10
+        },
+        "Prf. Walter": {
+            "usd": 25
         }
     },
     "rates_history": {
@@ -659,5 +1500,25 @@
         "2026-05-31": 549.37,
         "2026-06-01": 554.43,
         "2026-06-02": 557.97
-    }
+    },
+    "non_workday_reasons": {},
+    "users": [
+        {
+            "username": "admin",
+            "password": "123",
+            "role": "admin",
+            "location": "Todos"
+        },
+        {
+            "username": "Walter",
+            "password": "19444294",
+            "role": "gestor",
+            "location": "Caracas"
+        }
+    ],
+    "workdays": [
+        1,
+        2,
+        3
+    ]
 }
