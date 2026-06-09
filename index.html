@@ -941,7 +941,7 @@
             }
         }
 
-        async function syncWithLocalServer() {
+        async function syncWithLocalServer(isManual = false) {
             if (initSupabase()) {
                 setCloudServerStatus('syncing', 'Sincronizando Nube...');
                 try {
@@ -1023,6 +1023,9 @@
                 } catch (e) {
                     console.error("Error al sincronizar con Supabase:", e);
                     setCloudServerStatus('error', 'Error Conexión Nube');
+                    if (isManual) {
+                        alert("Error de conexión a Supabase:\n" + e.message + "\n\n1. Verifica que las credenciales sean correctas.\n2. Asegúrate de haber creado la tabla en el SQL Editor de Supabase.");
+                    }
                 }
                 return;
             }
@@ -1331,7 +1334,7 @@
                 alert("Configuración guardada. Conectando a Supabase...");
                 
                 if (initSupabase()) {
-                    await syncWithLocalServer();
+                    await syncWithLocalServer(true);
                     renderDashboard();
                     renderStudents();
                     renderUsers();
